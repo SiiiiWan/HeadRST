@@ -60,4 +60,13 @@ public class EyeGaze : Singleton<EyeGaze>
         return new Ray(_combinedGazeOrigin, _combinedGazeDir);
     }
 
+    public Transform GetGazeHitTrans()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(GetGazeRay(), out hit, 100f))
+        {
+            return hit.transform;
+        }
+        return null;
+    }
 }

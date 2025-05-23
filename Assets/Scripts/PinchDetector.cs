@@ -7,8 +7,9 @@ public class PinchDetector : Singleton<PinchDetector>
 
     void Update()
     {
-        bool IsRightPinching = RightHand.GetFingerIsPinching(OVRHand.HandFinger.Index);
-        bool IsLeftPinching = LeftHand.GetFingerIsPinching(OVRHand.HandFinger.Index);
+        IsRightPinching = RightHand.GetFingerIsPinching(OVRHand.HandFinger.Index);
+        IsLeftPinching = LeftHand.GetFingerIsPinching(OVRHand.HandFinger.Index);
         IsPinching = IsRightPinching || IsLeftPinching;
     }
+
 }
