@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 public class ManipulatableObject : MonoBehaviour
 {
@@ -21,15 +22,13 @@ public class ManipulatableObject : MonoBehaviour
             _isGrabed = false;
         }
     
-        if(_isGrabed && PinchDetector.GetInstance().IsLeftPinching)
+        if(_isGrabed && PinchDetector.GetInstance().IsPinching)
         {
-            transform.position += HandPosition.GetInstance().LeftHandPosition_delta;
-            transform.rotation = HandPosition.GetInstance().LeftHandRotation_delta * transform.rotation;
-        }
-        else if(_isGrabed && PinchDetector.GetInstance().IsRightPinching)
-        {
-            transform.position += HandPosition.GetInstance().RightHandPosition_delta;
-            transform.rotation = HandPosition.GetInstance().RightHandRotation_delta * transform.rotation;
+            Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandPosition_delta : HandPosition.GetInstance().RightHandPosition_delta;
+            Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
+
+            transform.position += deltaPos;
+            transform.rotation = deltaRot * transform.rotation;
         }
 
 
@@ -37,4 +36,6 @@ public class ManipulatableObject : MonoBehaviour
         // transform.GetComponent<Outline>().enabled = _isHitbyGaze;
     }
     
+    
+
 }
