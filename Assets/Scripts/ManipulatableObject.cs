@@ -6,7 +6,7 @@ public class ManipulatableObject : MonoBehaviour
     private bool _isHitbyGaze;
     private bool _isGrabed;
 
-    private System.Action<Transform> _manipulationBehavior;
+    private IManipulationBehavior _manipulationBehavior;
 
     void Update()
     {
@@ -25,29 +25,15 @@ public class ManipulatableObject : MonoBehaviour
 
         if (_isGrabed && PinchDetector.GetInstance().IsPinching)
         {
-            _manipulationBehavior?.Invoke(transform);
+            _manipulationBehavior?.Apply(transform);
         }
 
         // transform.GetComponent<Outline>().enabled = _isHitbyGaze;
     }
     
-    public void SetManipulationBehavior(ManipulationBehaviorNames behaviorName)
+    public void SetManipulationBehavior(IManipulationBehavior behavior)
     {
-        switch (behaviorName)
-        {
-            case ManipulationBehaviorNames.OneToOne:
-                _manipulationBehavior = ManipulationBehaviors.OneToOne;
-                break;
-            case ManipulationBehaviorNames.ImplicitGaze:
-                _manipulationBehavior = ManipulationBehaviors.ImplicitGaze;
-                break;
-            // case "PositionOnly":
-            //     _manipulationBehavior = ManipulationBehaviors.PositionOnly;
-            //     break;
-            default:
-                Debug.LogWarning($"Unknown manipulation behavior: {behaviorName}");
-                break;
-        }
+        _manipulationBehavior = behavior;
     }
 
 }

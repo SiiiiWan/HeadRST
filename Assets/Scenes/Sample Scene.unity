@@ -6237,7 +6237,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1006584912}
-  - component: {fileID: 1006584911}
+  - component: {fileID: 1006584915}
+  - component: {fileID: 1006584914}
+  - component: {fileID: 1006584913}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -6245,19 +6247,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1006584911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ManipulationBehavior: 1
 --- !u!4 &1006584912
 Transform:
   m_ObjectHideFlags: 0
@@ -6273,6 +6262,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1006584913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a1a393188f731418474f622c1f7cd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f57dd46a598ff264c814a4086f47ad29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ManipulationBehavior: {fileID: 0}
 --- !u!1 &1014960979
 GameObject:
   m_ObjectHideFlags: 0

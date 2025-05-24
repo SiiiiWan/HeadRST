@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class StudyControl : MonoBehaviour
 {
-
-    public ManipulationBehaviorNames ManipulationBehavior;
+    public ManipulationTechnique ManipulationBehavior;
 
     void Update()
     {
