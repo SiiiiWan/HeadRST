@@ -1,17 +1,18 @@
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
 public class ManipulatableObject : MonoBehaviour
 {
-
+    // public bool UseGlobalManipulationBehavior;
     private bool _isHitbyGaze;
     private bool _isGrabed;
+
+    private System.Action<Transform> _manipulationBehavior;
 
     void Update()
     {
         _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
 
-    
+
         if (_isHitbyGaze && PinchDetector.GetInstance().IsPinching)
         {
             _isGrabed = true;
@@ -21,21 +22,32 @@ public class ManipulatableObject : MonoBehaviour
         {
             _isGrabed = false;
         }
-    
-        if(_isGrabed && PinchDetector.GetInstance().IsPinching)
+
+        if (_isGrabed && PinchDetector.GetInstance().IsPinching)
         {
-            Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandPosition_delta : HandPosition.GetInstance().RightHandPosition_delta;
-            Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
-
-            transform.position += deltaPos;
-            transform.rotation = deltaRot * transform.rotation;
+            _manipulationBehavior?.Invoke(transform);
         }
-
-
 
         // transform.GetComponent<Outline>().enabled = _isHitbyGaze;
     }
     
-    
+    public void SetManipulationBehavior(ManipulationBehaviorNames behaviorName)
+    {
+        switch (behaviorName)
+        {
+            case ManipulationBehaviorNames.OneToOne:
+                _manipulationBehavior = ManipulationBehaviors.OneToOne;
+                break;
+            case ManipulationBehaviorNames.ImplicitGaze:
+                _manipulationBehavior = ManipulationBehaviors.ImplicitGaze;
+                break;
+            // case "PositionOnly":
+            //     _manipulationBehavior = ManipulationBehaviors.PositionOnly;
+            //     break;
+            default:
+                Debug.LogWarning($"Unknown manipulation behavior: {behaviorName}");
+                break;
+        }
+    }
 
 }
