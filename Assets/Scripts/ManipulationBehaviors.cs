@@ -11,10 +11,11 @@ public static class ManipulationBehaviors
 {
     public static void OneToOne(Transform target)
     {
-        Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandPosition_delta : HandPosition.GetInstance().RightHandPosition_delta;
-        Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
-
+        // Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandPosition_delta : HandPosition.GetInstance().RightHandPosition_delta;
+        Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftPinchTipPosition_delta : HandPosition.GetInstance().RightPinchTipPosition_delta;
         target.position += deltaPos;
+
+        Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
         target.rotation = deltaRot * target.rotation;
     }
 

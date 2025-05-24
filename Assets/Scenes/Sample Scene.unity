@@ -849,10 +849,14 @@ MonoBehaviour:
   LeftHandAnchor: {fileID: 306345214}
   RightHandPosition: {x: 0, y: 0, z: 0}
   LeftHandPosition: {x: 0, y: 0, z: 0}
+  RightPinchTipPosition: {x: 0, y: 0, z: 0}
+  LeftPinchTipPosition: {x: 0, y: 0, z: 0}
   RightHandRotation: {x: 0, y: 0, z: 0, w: 0}
   LeftHandRotation: {x: 0, y: 0, z: 0, w: 0}
   RightHandPosition_delta: {x: 0, y: 0, z: 0}
   LeftHandPosition_delta: {x: 0, y: 0, z: 0}
+  RightPinchTipPosition_delta: {x: 0, y: 0, z: 0}
+  LeftPinchTipPosition_delta: {x: 0, y: 0, z: 0}
   RightHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
   LeftHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &97233028
@@ -6253,7 +6257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: 0
+  ManipulationBehavior: 1
 --- !u!4 &1006584912
 Transform:
   m_ObjectHideFlags: 0
