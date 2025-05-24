@@ -6240,6 +6240,7 @@ GameObject:
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584914}
   - component: {fileID: 1006584913}
+  - component: {fileID: 1006584916}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -6298,7 +6299,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 0}
+  ManipulationBehavior: {fileID: 1006584916}
+--- !u!114 &1006584916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db1161bb94744b24897ebc67268f441e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minHeadSpd: 0.2
+  maxHeadSpd: 0.6
+  minGainDeg: 30
+  maxGainDeg: 10
 --- !u!1 &1014960979
 GameObject:
   m_ObjectHideFlags: 0
@@ -9182,7 +9199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _monoscopic: 0
   _sharpenType: 0
-  _enableDynamicResolution: 0
+  _enableDynamicResolution: 1
   minDynamicResolutionScale: 1
   maxDynamicResolutionScale: 1
   quest2MinDynamicResolutionScale: 0.7
@@ -9231,7 +9248,7 @@ MonoBehaviour:
   shouldBoundaryVisibilityBeSuppressed: 0
   requestBodyTrackingPermissionOnStartup: 0
   requestFaceTrackingPermissionOnStartup: 0
-  requestEyeTrackingPermissionOnStartup: 0
+  requestEyeTrackingPermissionOnStartup: 1
   requestScenePermissionOnStartup: 0
   requestRecordAudioPermissionOnStartup: 0
   _localDimming: 1
@@ -12111,6 +12128,7 @@ MonoBehaviour:
   RightEye: {fileID: 2085531140}
   ShowGazeCursor: 0
   GazeCursor: {fileID: 36583383}
+  SaccadeThr: 120
   FilteringGaze: 1
   FilterFrequency: 90
   FilterMinCutOff: 0.05

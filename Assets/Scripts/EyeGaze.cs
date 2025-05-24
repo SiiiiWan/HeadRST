@@ -6,14 +6,17 @@ using UnityEngine;
 public class EyeGaze : Singleton<EyeGaze>
 {
     public OVREyeGaze LeftEye, RightEye;
-    
+
     public bool ShowGazeCursor;
     public Transform GazeCursor;
 
     private Vector3 _combinedGazeOrigin, _combinedGazeDir;
-    // private Vector3 _gazeOrigin, _gazeDir;
 
+    private Vector3 _combinedGazeDir_pre;
 
+    private float _gazeSpeed;
+
+    public float SaccadeThr = 120f;
 
     [Header("One Euro Filter")]
 
@@ -42,17 +45,21 @@ public class EyeGaze : Singleton<EyeGaze>
         _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
         _combinedGazeDir = Vector3.Lerp(LeftEye.transform.forward, RightEye.transform.forward, 0.5f).normalized;
 
-        if(FilteringGaze)
+        if (FilteringGaze)
         {
             _gazeDirFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FitlerDcutoff);
             _gazePosFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FitlerDcutoff);
 
             _combinedGazeDir = _gazeDirFilter.Filter(_combinedGazeDir);
-            _combinedGazeOrigin = _gazePosFilter.Filter(_combinedGazeOrigin);   
+            _combinedGazeOrigin = _gazePosFilter.Filter(_combinedGazeOrigin);
         }
 
         GazeCursor.transform.position = GetGazeRay().origin + GetGazeRay().direction * 2f;
         GazeCursor.gameObject.SetActive(ShowGazeCursor);
+
+        _gazeSpeed = Vector3.Angle(_combinedGazeDir, _combinedGazeDir_pre) / Time.deltaTime;
+
+        _combinedGazeDir_pre = _combinedGazeDir;
     }
 
     public Ray GetGazeRay()
@@ -68,5 +75,10 @@ public class EyeGaze : Singleton<EyeGaze>
             return hit.transform;
         }
         return null;
+    }
+
+    public bool IsSaccading()
+    {
+        return _gazeSpeed >= SaccadeThr;
     }
 }
