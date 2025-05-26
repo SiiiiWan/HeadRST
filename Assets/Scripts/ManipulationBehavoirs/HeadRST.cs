@@ -17,10 +17,10 @@ public class HeadRST : ManipulationTechnique
         Vector3 gazeOrigin = eyeGaze.GetGazeRay().origin;
         Vector3 gazeDirection = eyeGaze.GetGazeRay().direction;
 
-        Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftPinchTipPosition_delta : HandPosition.GetInstance().RightPinchTipPosition_delta;
+        Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
         target.position += deltaPos;
 
-        Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
         target.rotation = deltaRot * target.rotation;
 
         float distance = Vector3.Distance(gazeOrigin, target.position);

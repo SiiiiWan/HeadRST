@@ -11,13 +11,13 @@ public class ImplicitGaze : ManipulationTechnique
         Vector3 gazeOrigin = EyeGaze.GetInstance().GetGazeRay().origin;
         Vector3 gazeDirection = EyeGaze.GetInstance().GetGazeRay().direction;
 
-        Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
         target.rotation = deltaRot * target.rotation;
 
 
         if (IsGazeInSafeRegion(gazeOrigin, gazeDirection, target.position))
         {
-            Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftPinchTipPosition_delta : HandPosition.GetInstance().RightPinchTipPosition_delta;
+            Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
             target.position += deltaPos;
         }
         else

@@ -4,10 +4,10 @@ public class OneToOne : ManipulationTechnique
 {
     public override void Apply(Transform target)
     {
-        Vector3 deltaPos = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftPinchTipPosition_delta : HandPosition.GetInstance().RightPinchTipPosition_delta;
+        Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
         target.position += deltaPos;
 
-        Quaternion deltaRot = PinchDetector.GetInstance().IsLeftPinching ? HandPosition.GetInstance().LeftHandRotation_delta : HandPosition.GetInstance().RightHandRotation_delta;
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
         target.rotation = deltaRot * target.rotation;
     }
 }

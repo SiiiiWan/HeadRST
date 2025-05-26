@@ -53,5 +53,38 @@ public class HandPosition : Singleton<HandPosition>
         return Vector3.zero;
     }
 
+    public Vector3 GetHandPosition(bool usePinchTip)
+    {
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftPinchTipPosition : LeftHandPosition;
+        }
+        else
+        {
+            return usePinchTip ? RightPinchTipPosition : RightHandPosition;
+        }
+    }
+
+    public Vector3 GetDeltaHandPosition(bool usePinchTip)
+    {
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftPinchTipPosition_delta : LeftHandPosition_delta;
+        }
+        else
+        {
+            return usePinchTip ? RightPinchTipPosition_delta : RightHandPosition_delta;
+        }
+    }
+
+    public Quaternion GetHandRotation()
+    {
+        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandRotation : RightHandRotation;
+    }
+
+    public Quaternion GetDeltaHandRotation()
+    {
+        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandRotation_delta : RightHandRotation_delta;
+    }
 
 }
