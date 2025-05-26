@@ -10,7 +10,10 @@ public class ManipulatableObject : MonoBehaviour
 
     void Update()
     {
-        _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+        //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
+        // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+        _isHitbyGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin) <= 5f;
+
 
 
         if (_isHitbyGaze && PinchDetector.GetInstance().IsPinching)
@@ -28,7 +31,7 @@ public class ManipulatableObject : MonoBehaviour
             _manipulationBehavior?.Apply(transform);
         }
 
-        // transform.GetComponent<Outline>().enabled = _isHitbyGaze;
+        transform.GetComponent<Outline>().enabled = _isHitbyGaze;
     }
     
     public void SetManipulationBehavior(IManipulationBehavior behavior)
