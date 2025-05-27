@@ -6269,7 +6269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584917}
+  ManipulationBehavior: {fileID: 1006584918}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class HandPosition : Singleton<HandPosition>
     public Vector3 RightPinchTipPosition_delta, LeftPinchTipPosition_delta;
     public Quaternion RightHandRotation_delta, LeftHandRotation_delta;
 
-
+    public float RightHandSpeed, LeftHandSpeed;
 
     void Update()
     {
@@ -35,7 +35,8 @@ public class HandPosition : Singleton<HandPosition>
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
 
-
+        RightHandSpeed = RightHandPosition_delta.magnitude / Time.deltaTime;
+        LeftHandSpeed = LeftHandPosition_delta.magnitude / Time.deltaTime;
     }
 
     private Vector3 GetPinchTipPosition(OVRHand hand)
@@ -87,4 +88,8 @@ public class HandPosition : Singleton<HandPosition>
         return PinchDetector.GetInstance().IsLeftPinching ? LeftHandRotation_delta : RightHandRotation_delta;
     }
 
+    public float GetHandSpeed()
+    {
+        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandSpeed : RightHandSpeed;
+    }
 }
