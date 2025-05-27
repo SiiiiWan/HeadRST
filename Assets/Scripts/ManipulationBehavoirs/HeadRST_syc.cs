@@ -4,8 +4,8 @@ using UnityEngine.Assertions.Comparers;
 public class HeadRST_sync : ManipulationTechnique
 {
 
-    private bool _isHandMovingOutwards;
-    private Vector3 _handPosition;
+    public bool HeadBoost = true;
+
     private float _depthGain;
     private float _depthOffset;
 
@@ -50,7 +50,7 @@ public class HeadRST_sync : ManipulationTechnique
 
         // target.position = gazeOrigin + gazeDirection * Vector3.Distance(gazeOrigin, target.position);
 
-        _depthOffset += Vector3.Dot(deltaHandPos, gazeDirection) * _depthGain;
+        if(HeadBoost) _depthOffset += Vector3.Dot(deltaHandPos, gazeDirection) * _depthGain;
 
         _accumulatedHandOffset += deltaHandPos;
 
