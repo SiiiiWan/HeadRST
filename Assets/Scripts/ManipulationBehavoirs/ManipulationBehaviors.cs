@@ -10,4 +10,5 @@ public enum ManipulationBehaviorNames
 public interface IManipulationBehavior
 {
     void Apply(Transform target);
+    void OnGrabbed(Transform target);
 }

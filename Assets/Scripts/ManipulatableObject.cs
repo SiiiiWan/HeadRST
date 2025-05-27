@@ -18,6 +18,7 @@ public class ManipulatableObject : MonoBehaviour
 
         if (_isHitbyGaze && PinchDetector.GetInstance().IsPinching)
         {
+            if(_isGrabed == false) _manipulationBehavior?.OnGrabbed(transform);
             _isGrabed = true;
         }
 
@@ -33,10 +34,11 @@ public class ManipulatableObject : MonoBehaviour
 
         transform.GetComponent<Outline>().enabled = _isHitbyGaze;
     }
-    
+
     public void SetManipulationBehavior(IManipulationBehavior behavior)
     {
         _manipulationBehavior = behavior;
     }
+    
 
 }
