@@ -3,11 +3,20 @@ using UnityEngine;
 public class HeadRST : ManipulationTechnique
 {
 
-    public float minHeadSpd = 0.2f;
-    public float maxHeadSpd = 0.6f;
+    public float minHeadSpd = 0.1f;
+    public float maxHeadSpd = 0.3f;
 
     public float minGainDeg = 30;
     public float maxGainDeg = 10;
+
+    private float _depthOffset;
+    private Vector3 _accumulatedHandOffset;
+
+
+    public override void OnGrabbed(Transform target)
+    {
+        _depthOffset = Vector3.Distance(EyeGaze.GetInstance().GetGazeRay().origin, target.position);
+    }
 
     public override void Apply(Transform target)
     {
@@ -17,15 +26,12 @@ public class HeadRST : ManipulationTechnique
         Vector3 gazeOrigin = eyeGaze.GetGazeRay().origin;
         Vector3 gazeDirection = eyeGaze.GetGazeRay().direction;
 
-        Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
-        target.position += deltaPos;
+        Vector3 deltaHandPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
 
         Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
         target.rotation = deltaRot * target.rotation;
 
-        float distance = Vector3.Distance(gazeOrigin, target.position);
-
-        if (eyeGaze.IsSaccading() || head.HeadSpeed >= 0.2f)
+        if (head.HeadSpeed >= 0.1f)
         {
             float offset;
 
@@ -34,10 +40,17 @@ public class HeadRST : ManipulationTechnique
 
             offset = head.DeltaHeadY * VitLerp(head.HeadSpeed, min_gain, max_gain, minHeadSpd, maxHeadSpd);
 
-            distance = distance + offset;
-            distance = Mathf.Clamp(distance, 1f, 5f);
-            target.position = gazeOrigin + gazeDirection * distance;
+            _depthOffset += offset;
         }
+
+        _accumulatedHandOffset += deltaHandPos;
+
+        if (eyeGaze.IsSaccading())
+        {
+            _accumulatedHandOffset = Vector3.zero;
+        }
+
+        target.position = gazeOrigin + gazeDirection * Mathf.Clamp(_depthOffset, 1f, 10f) + _accumulatedHandOffset;
 
     }
     

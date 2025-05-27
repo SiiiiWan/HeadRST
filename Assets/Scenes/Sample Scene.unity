@@ -859,6 +859,8 @@ MonoBehaviour:
   LeftPinchTipPosition_delta: {x: 0, y: 0, z: 0}
   RightHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
   LeftHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
+  RightHandSpeed: 0
+  LeftHandSpeed: 0
 --- !u!1 &97233028
 GameObject:
   m_ObjectHideFlags: 0
@@ -6269,7 +6271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584918}
+  ManipulationBehavior: {fileID: 1006584914}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
