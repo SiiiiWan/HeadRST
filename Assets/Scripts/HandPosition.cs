@@ -33,13 +33,13 @@ public class HandPosition : Singleton<HandPosition>
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
 
-        PinchTipPose rightTip = GetPinchTipPose(PinchDetector.GetInstance().RightHand);
+        Transform rightTip = GetPinchTipTransform(PinchDetector.GetInstance().RightHand);
         RightPinchTipPosition_delta = rightTip.position - RightPinchTipPosition;
         RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
         RightPinchTipPosition = rightTip.position;
         RightPinchTipRotation = rightTip.rotation;
 
-        PinchTipPose leftTip = GetPinchTipPose(PinchDetector.GetInstance().LeftHand);
+        Transform leftTip = GetPinchTipTransform(PinchDetector.GetInstance().LeftHand);
         LeftPinchTipPosition_delta = leftTip.position - LeftPinchTipPosition;
         LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
         LeftPinchTipPosition = leftTip.position;
@@ -56,31 +56,20 @@ public class HandPosition : Singleton<HandPosition>
         LeftHandDirection = LeftHandAnchor.forward;
     }
 
-
-    public struct PinchTipPose
+    private Transform GetPinchTipTransform(OVRHand hand)
     {
-        public Vector3 position;
-        public Quaternion rotation;
-        public PinchTipPose(Vector3 pos, Quaternion rot)
-        {
-            position = pos;
-            rotation = rot;
-        }
-    }
-
-    private PinchTipPose GetPinchTipPose(OVRHand hand)
-    {
-        if (hand == null) return new PinchTipPose(Vector3.zero, Quaternion.identity);
+        if (hand == null) return null;
         var skeleton = hand.GetComponent<OVRSkeleton>();
-        if (skeleton == null || skeleton.Bones == null) return new PinchTipPose(Vector3.zero, Quaternion.identity);
+        if (skeleton == null || skeleton.Bones == null) return null;
 
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip)
-                return new PinchTipPose(bone.Transform.position, bone.Transform.rotation);
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip) // Use Hand_IndexTip for OVR
+                return bone.Transform;
         }
-        return new PinchTipPose(Vector3.zero, Quaternion.identity);
+        return null;
     }
+
 
     public Vector3 GetHandPosition(bool usePinchTip)
     {
@@ -144,4 +133,18 @@ public class HandPosition : Singleton<HandPosition>
     {
         return PinchDetector.GetInstance().IsLeftPinching ? LeftHandDirection_delta : RightHandDirection_delta;
     }
+
+    public Transform GetHandTransform(bool usePinchTip)
+    {
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? GetPinchTipTransform(PinchDetector.GetInstance().LeftHand) : LeftHandAnchor;
+        }
+        else
+        {
+            return usePinchTip ? GetPinchTipTransform(PinchDetector.GetInstance().RightHand) : RightHandAnchor;
+        }
+    }
+
+
 }

@@ -7,14 +7,21 @@ public class GazenPinch : ManipulationTechnique
     private float _headDepthOffset;
 
     public GameObject test;
-
+    Quaternion _rotationOffset;
     private Linescript _handRayLine;
+
+    private Vector3 _localOffset;
+    private Quaternion _localRotationOffset;
+    private Transform _handTransform;
 
     public override void OnGrabbed(Transform target)
     {
-        Vector3 objectOffset = target.position - HandPosition.GetInstance().GetHandPosition(usePinchTip: true);
-        _objectDirectionFromHand = objectOffset.normalized;
-        _headDepthOffset = objectOffset.magnitude;
+        // Use pinch tip or hand anchor as the "hand"
+        _handTransform = HandPosition.GetInstance().GetHandTransform(usePinchTip: true);
+
+        // Calculate local position and rotation offset as if target is a child of hand
+        _localOffset = _handTransform.InverseTransformPoint(target.position);
+        _localRotationOffset = Quaternion.Inverse(_handTransform.rotation) * target.rotation;
     }
 
     public override void Apply(Transform target)
@@ -24,27 +31,30 @@ public class GazenPinch : ManipulationTechnique
         Quaternion deltaRot = hand.GetDeltaHandRotation(usePinchTip: true);
         // target.rotation = deltaRot * target.rotation;
 
+        target.position = _handTransform.TransformPoint(_localOffset);
+        target.rotation = _handTransform.rotation * _localRotationOffset;
+
+        // if (HeadMovement.GetInstance().HeadSpeed <= 0.2f)
+        // {
+        //     // target.position = target.position + HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true) * Mathf.Clamp(Vector3.Distance(target.position, Camera.main.transform.position), 1f, 1000f);
+        //     target.position = target.position + hand.GetDeltaHandPosition(usePinchTip: true);
+
+        //     _handRayLine.IsVisible = false;
+        // }
+        // else
+        // {
+        //     // _objectDirectionFromHand = hand.GetHandDirectionDelta() * _objectDirectionFromHand;
+        //     _objectDirectionFromHand = deltaRot * _objectDirectionFromHand;
 
 
-        if (HeadMovement.GetInstance().HeadSpeed <= 0.2f)
-        {
-            // target.position = target.position + HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true) * Mathf.Clamp(Vector3.Distance(target.position, Camera.main.transform.position), 1f, 1000f);
-            target.position = target.position + hand.GetDeltaHandPosition(usePinchTip: true);
+        //     // _headDepthOffset += HeadMovement.GetInstance().DeltaHeadY * 0.2f;
 
-            _handRayLine.IsVisible = false;
-        }
-        else
-        {
-            _objectDirectionFromHand = hand.GetHandDirectionDelta() * _objectDirectionFromHand;
+        //     // //TODO: can add a eye head angle exiding just warp to the depth limits
+        //     // _headDepthOffset = Mathf.Clamp(_headDepthOffset, 0f, 10f);
+        //     target.position = hand.GetHandPosition(usePinchTip: true) + _objectDirectionFromHand * _headDepthOffset;
 
-            // _headDepthOffset += HeadMovement.GetInstance().DeltaHeadY * 0.2f;
-
-            // //TODO: can add a eye head angle exiding just warp to the depth limits
-            // _headDepthOffset = Mathf.Clamp(_headDepthOffset, 0f, 10f);
-            target.position = hand.GetHandPosition(usePinchTip: true) + _objectDirectionFromHand * _headDepthOffset;
-
-            _handRayLine.IsVisible = true;
-        }
+        //     _handRayLine.IsVisible = true;
+        // }
 
         test.transform.position = target.position;
 
