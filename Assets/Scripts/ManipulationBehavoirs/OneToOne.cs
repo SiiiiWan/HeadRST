@@ -7,7 +7,7 @@ public class OneToOne : ManipulationTechnique
         Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
         target.position += deltaPos;
 
-        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
     }
 }

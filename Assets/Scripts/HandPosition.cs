@@ -8,10 +8,12 @@ public class HandPosition : Singleton<HandPosition>
     public Vector3 RightHandPosition, LeftHandPosition;
     public Vector3 RightPinchTipPosition, LeftPinchTipPosition;
     public Quaternion RightHandRotation, LeftHandRotation;
+    public Quaternion RightPinchTipRotation, LeftPinchTipRotation;
 
     public Vector3 RightHandPosition_delta, LeftHandPosition_delta;
     public Vector3 RightPinchTipPosition_delta, LeftPinchTipPosition_delta;
     public Quaternion RightHandRotation_delta, LeftHandRotation_delta;
+    public Quaternion RightPinchTipRotation_delta, LeftPinchTipRotation_delta;
 
     public Vector3 RightHandDirection, LeftHandDirection;
     public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
@@ -22,9 +24,6 @@ public class HandPosition : Singleton<HandPosition>
         RightHandPosition_delta = RightHandAnchor.position - RightHandPosition;
         LeftHandPosition_delta = LeftHandAnchor.position - LeftHandPosition;
 
-        RightPinchTipPosition_delta = GetPinchTipPosition(PinchDetector.GetInstance().RightHand) - RightPinchTipPosition;
-        LeftPinchTipPosition_delta = GetPinchTipPosition(PinchDetector.GetInstance().LeftHand) - LeftPinchTipPosition;
-
         RightHandRotation_delta = RightHandAnchor.rotation * Quaternion.Inverse(RightHandRotation);
         LeftHandRotation_delta = LeftHandAnchor.rotation * Quaternion.Inverse(LeftHandRotation);
 
@@ -34,9 +33,18 @@ public class HandPosition : Singleton<HandPosition>
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
 
-        RightPinchTipPosition = GetPinchTipPosition(PinchDetector.GetInstance().RightHand);
-        LeftPinchTipPosition = GetPinchTipPosition(PinchDetector.GetInstance().LeftHand);
-        
+        PinchTipPose rightTip = GetPinchTipPose(PinchDetector.GetInstance().RightHand);
+        RightPinchTipPosition_delta = rightTip.position - RightPinchTipPosition;
+        RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
+        RightPinchTipPosition = rightTip.position;
+        RightPinchTipRotation = rightTip.rotation;
+
+        PinchTipPose leftTip = GetPinchTipPose(PinchDetector.GetInstance().LeftHand);
+        LeftPinchTipPosition_delta = leftTip.position - LeftPinchTipPosition;
+        LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
+        LeftPinchTipPosition = leftTip.position;
+        LeftPinchTipRotation = leftTip.rotation;
+
 
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
@@ -48,19 +56,30 @@ public class HandPosition : Singleton<HandPosition>
         LeftHandDirection = LeftHandAnchor.forward;
     }
 
-    private Vector3 GetPinchTipPosition(OVRHand hand)
-    {
-        if (hand == null) return Vector3.zero;
-        var skeleton = hand.GetComponent<OVRSkeleton>();
-        if (skeleton == null || skeleton.Bones == null) return Vector3.zero;
 
-        // Index tip is BoneId.Hand_IndexTip
+    public struct PinchTipPose
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+        public PinchTipPose(Vector3 pos, Quaternion rot)
+        {
+            position = pos;
+            rotation = rot;
+        }
+    }
+
+    private PinchTipPose GetPinchTipPose(OVRHand hand)
+    {
+        if (hand == null) return new PinchTipPose(Vector3.zero, Quaternion.identity);
+        var skeleton = hand.GetComponent<OVRSkeleton>();
+        if (skeleton == null || skeleton.Bones == null) return new PinchTipPose(Vector3.zero, Quaternion.identity);
+
         foreach (var bone in skeleton.Bones)
         {
             if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip)
-                return bone.Transform.position;
+                return new PinchTipPose(bone.Transform.position, bone.Transform.rotation);
         }
-        return Vector3.zero;
+        return new PinchTipPose(Vector3.zero, Quaternion.identity);
     }
 
     public Vector3 GetHandPosition(bool usePinchTip)
@@ -87,14 +106,28 @@ public class HandPosition : Singleton<HandPosition>
         }
     }
 
-    public Quaternion GetHandRotation()
+    public Quaternion GetHandRotation(bool usePinchTip)
     {
-        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandRotation : RightHandRotation;
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftPinchTipRotation : LeftHandRotation;
+        }
+        else
+        {
+            return usePinchTip ? RightPinchTipRotation : RightHandRotation;
+        }
     }
 
-    public Quaternion GetDeltaHandRotation()
+    public Quaternion GetDeltaHandRotation(bool usePinchTip)
     {
-        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandRotation_delta : RightHandRotation_delta;
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftPinchTipRotation_delta : LeftHandRotation_delta;
+        }
+        else
+        {
+            return usePinchTip ? RightPinchTipRotation_delta : RightHandRotation_delta;
+        }
     }
 
     public float GetHandSpeed()

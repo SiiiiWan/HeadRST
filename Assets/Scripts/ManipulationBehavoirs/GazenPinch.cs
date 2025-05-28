@@ -21,7 +21,7 @@ public class GazenPinch : ManipulationTechnique
     {
         HandPosition hand = HandPosition.GetInstance();
 
-        Quaternion deltaRot = hand.GetDeltaHandRotation();
+        Quaternion deltaRot = hand.GetDeltaHandRotation(usePinchTip: true);
         // target.rotation = deltaRot * target.rotation;
 
 
