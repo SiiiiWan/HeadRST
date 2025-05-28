@@ -26,7 +26,7 @@ public class GazenPinch : ManipulationTechnique
 
 
 
-        if (HeadMovement.GetInstance().HeadSpeed <= 0.1f)
+        if (HeadMovement.GetInstance().HeadSpeed <= 0.2f)
         {
             // target.position = target.position + HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true) * Mathf.Clamp(Vector3.Distance(target.position, Camera.main.transform.position), 1f, 1000f);
             target.position = target.position + hand.GetDeltaHandPosition(usePinchTip: true);
