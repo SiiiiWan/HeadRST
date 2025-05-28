@@ -961,12 +961,16 @@ MonoBehaviour:
   LeftPinchTipPosition: {x: 0, y: 0, z: 0}
   RightHandRotation: {x: 0, y: 0, z: 0, w: 0}
   LeftHandRotation: {x: 0, y: 0, z: 0, w: 0}
+  RightPinchTipRotation: {x: 0, y: 0, z: 0, w: 0}
+  LeftPinchTipRotation: {x: 0, y: 0, z: 0, w: 0}
   RightHandPosition_delta: {x: 0, y: 0, z: 0}
   LeftHandPosition_delta: {x: 0, y: 0, z: 0}
   RightPinchTipPosition_delta: {x: 0, y: 0, z: 0}
   LeftPinchTipPosition_delta: {x: 0, y: 0, z: 0}
   RightHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
   LeftHandRotation_delta: {x: 0, y: 0, z: 0, w: 0}
+  RightPinchTipRotation_delta: {x: 0, y: 0, z: 0, w: 0}
+  LeftPinchTipRotation_delta: {x: 0, y: 0, z: 0, w: 0}
   RightHandDirection: {x: 0, y: 0, z: 0}
   LeftHandDirection: {x: 0, y: 0, z: 0}
   RightHandDirection_delta: {x: 0, y: 0, z: 0, w: 0}
@@ -15382,7 +15386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &8164078559956953091
 MeshCollider:
   m_ObjectHideFlags: 0

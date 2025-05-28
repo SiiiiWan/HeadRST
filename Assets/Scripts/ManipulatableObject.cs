@@ -32,7 +32,7 @@ public class ManipulatableObject : MonoBehaviour
             _manipulationBehavior?.Apply(transform);
         }
 
-        transform.GetComponent<Outline>().enabled = _isHitbyGaze;
+        transform.GetComponent<Outline>().enabled = _isHitbyGaze && !_isGrabed;
     }
 
     public void SetManipulationBehavior(IManipulationBehavior behavior)
