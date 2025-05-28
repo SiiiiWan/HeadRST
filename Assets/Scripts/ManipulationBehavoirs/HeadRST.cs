@@ -41,6 +41,9 @@ public class HeadRST : ManipulationTechnique
             offset = head.DeltaHeadY * VitLerp(head.HeadSpeed, min_gain, max_gain, minHeadSpd, maxHeadSpd);
 
             _depthOffset += offset;
+
+            target.position = gazeOrigin + gazeDirection * Mathf.Clamp(_depthOffset, 1f, 10f) + _accumulatedHandOffset;
+
         }
 
         _accumulatedHandOffset += deltaHandPos;
@@ -50,7 +53,7 @@ public class HeadRST : ManipulationTechnique
             _accumulatedHandOffset = Vector3.zero;
         }
 
-        target.position = gazeOrigin + gazeDirection * Mathf.Clamp(_depthOffset, 1f, 10f) + _accumulatedHandOffset;
+        target.position += deltaHandPos;
 
     }
     

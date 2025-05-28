@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class HandPosition : Singleton<HandPosition>
 {
+
     public Transform RightHandAnchor, LeftHandAnchor;
 
     public Vector3 RightHandPosition, LeftHandPosition;
@@ -12,6 +13,8 @@ public class HandPosition : Singleton<HandPosition>
     public Vector3 RightPinchTipPosition_delta, LeftPinchTipPosition_delta;
     public Quaternion RightHandRotation_delta, LeftHandRotation_delta;
 
+    public Vector3 RightHandDirection, LeftHandDirection;
+    public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
     public float RightHandSpeed, LeftHandSpeed;
 
     void Update()
@@ -25,18 +28,24 @@ public class HandPosition : Singleton<HandPosition>
         RightHandRotation_delta = RightHandAnchor.rotation * Quaternion.Inverse(RightHandRotation);
         LeftHandRotation_delta = LeftHandAnchor.rotation * Quaternion.Inverse(LeftHandRotation);
 
+        RightHandDirection_delta = Quaternion.FromToRotation(RightHandDirection, RightHandAnchor.forward);
+        LeftHandDirection_delta = Quaternion.FromToRotation(LeftHandDirection, LeftHandAnchor.forward);
+
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
 
         RightPinchTipPosition = GetPinchTipPosition(PinchDetector.GetInstance().RightHand);
         LeftPinchTipPosition = GetPinchTipPosition(PinchDetector.GetInstance().LeftHand);
-
+        
 
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
 
         RightHandSpeed = RightHandPosition_delta.magnitude / Time.deltaTime;
         LeftHandSpeed = LeftHandPosition_delta.magnitude / Time.deltaTime;
+
+        RightHandDirection = RightHandAnchor.forward;
+        LeftHandDirection = LeftHandAnchor.forward;
     }
 
     private Vector3 GetPinchTipPosition(OVRHand hand)
@@ -48,7 +57,7 @@ public class HandPosition : Singleton<HandPosition>
         // Index tip is BoneId.Hand_IndexTip
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.Hand_IndexTip)
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip)
                 return bone.Transform.position;
         }
         return Vector3.zero;
@@ -91,5 +100,15 @@ public class HandPosition : Singleton<HandPosition>
     public float GetHandSpeed()
     {
         return PinchDetector.GetInstance().IsLeftPinching ? LeftHandSpeed : RightHandSpeed;
+    }
+
+    public Vector3 GetHandDirection()
+    {
+        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandDirection : RightHandDirection;
+    }
+
+    public Quaternion GetHandDirectionDelta()
+    {
+        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandDirection_delta : RightHandDirection_delta;
     }
 }
