@@ -11,7 +11,7 @@ public class ImplicitGaze : ManipulationTechnique
         Vector3 gazeOrigin = EyeGaze.GetInstance().GetGazeRay().origin;
         Vector3 gazeDirection = EyeGaze.GetInstance().GetGazeRay().direction;
 
-        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
 
 

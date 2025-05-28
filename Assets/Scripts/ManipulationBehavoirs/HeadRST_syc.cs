@@ -25,7 +25,7 @@ public class HeadRST_sync : ManipulationTechnique
         Vector3 gazeOrigin = eyeGaze.GetGazeRay().origin;
         Vector3 gazeDirection = eyeGaze.GetGazeRay().direction;
 
-        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
 
         Vector3 deltaHandPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);

@@ -26,7 +26,7 @@ public class Head_momentum : ManipulationTechnique
         Vector3 gazeOrigin = eyeGaze.GetGazeRay().origin;
         Vector3 gazeDirection = eyeGaze.GetGazeRay().direction;
 
-        Quaternion deltaRot = hand.GetDeltaHandRotation();
+        Quaternion deltaRot = hand.GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
 
         Vector3 deltaHandPos = hand.GetDeltaHandPosition(usePinchTip: true);

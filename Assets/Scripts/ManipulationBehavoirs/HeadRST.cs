@@ -28,7 +28,7 @@ public class HeadRST : ManipulationTechnique
 
         Vector3 deltaHandPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
 
-        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation();
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
 
         if (head.HeadSpeed >= 0.1f)
