@@ -15,10 +15,9 @@ public class ManipulatableObject : MonoBehaviour
         _isHitbyGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin) <= 10f;
 
 
-
         if (_isHitbyGaze && PinchDetector.GetInstance().IsPinching)
         {
-            if(_isGrabed == false) _manipulationBehavior?.OnGrabbed(transform);
+            if (_isGrabed == false) _manipulationBehavior?.OnGrabbed(transform);
             _isGrabed = true;
         }
 
@@ -27,10 +26,9 @@ public class ManipulatableObject : MonoBehaviour
             _isGrabed = false;
         }
 
-        if (_isGrabed && PinchDetector.GetInstance().IsPinching)
-        {
-            _manipulationBehavior?.Apply(transform);
-        }
+
+        if (_isGrabed) _manipulationBehavior?.ApplyGrabbedBehaviour(transform);
+        else _manipulationBehavior?.ApplyReleasedBehaviour(transform);
 
         transform.GetComponent<Outline>().enabled = _isHitbyGaze && !_isGrabed;
     }
@@ -39,6 +37,5 @@ public class ManipulatableObject : MonoBehaviour
     {
         _manipulationBehavior = behavior;
     }
-    
 
 }

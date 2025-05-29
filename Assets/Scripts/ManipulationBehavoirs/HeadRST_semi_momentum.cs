@@ -18,7 +18,7 @@ public class HeadRST_semi_momentum : ManipulationTechnique
         // _accumulatedHandOffset = Vector3.zero;
     }
 
-    public override void Apply(Transform target)
+    public override void ApplyGrabbedBehaviour(Transform target)
     {
 
         EyeGaze eyeGaze = EyeGaze.GetInstance();

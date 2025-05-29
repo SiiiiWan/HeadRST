@@ -18,7 +18,7 @@ public class HeadRST : ManipulationTechnique
         _depthOffset = Vector3.Distance(EyeGaze.GetInstance().GetGazeRay().origin, target.position);
     }
 
-    public override void Apply(Transform target)
+    public override void ApplyGrabbedBehaviour(Transform target)
     {
         EyeGaze eyeGaze = EyeGaze.GetInstance();
         HeadMovement head = HeadMovement.GetInstance();

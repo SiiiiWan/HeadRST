@@ -25,7 +25,7 @@ public class GazenPinch : ManipulationTechnique
         _localRotationOffset = Quaternion.Inverse(_handTransform.rotation) * target.rotation;
     }
 
-    public override void Apply(Transform target)
+    public override void ApplyGrabbedBehaviour(Transform target)
     {
         HandPosition hand = HandPosition.GetInstance();
 
