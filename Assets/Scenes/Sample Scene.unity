@@ -6786,6 +6786,7 @@ GameObject:
   - component: {fileID: 1006584914}
   - component: {fileID: 1006584921}
   - component: {fileID: 1006584922}
+  - component: {fileID: 1006584923}
   - component: {fileID: 1006584913}
   - component: {fileID: 1006584916}
   - component: {fileID: 1006584917}
@@ -6850,7 +6851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584922}
+  ManipulationBehavior: {fileID: 1006584923}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6942,7 +6943,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9dbb41f95d5f294fb5201e0cd2736da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedThreshold: 1
+  speedMultiplier: 1.5
+  wallTag: Invisible wall
+--- !u!114 &1006584923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822fa274c1533b349927d7f23ccafdf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   speedThreshold: 0.5
+  speedMultiplier: 1.5
   wallTag: Invisible wall
 --- !u!1 &1014636024
 GameObject:
