@@ -3,18 +3,13 @@ using UnityEngine;
 public class GazeNPinch1 : ManipulationTechnique
 {
     private Linescript _handRayLine;
-    private Transform _handTransform;
 
-    private Vector3 _localOffsetDir;
-    private float _localOffsetDistance;
-    private Quaternion _localRotationOffset;
+    private float _targetDepthOffset;
 
     public override void OnGrabbed(Transform target)
     {
-        // Use pinch tip or hand anchor as the "hand"
-        _handTransform = HandPosition.GetInstance().GetHandTransform(usePinchTip: false);
+        _targetDepthOffset = Vector3.Distance(target.position, HandPosition.GetInstance().GetHandPosition(usePinchTip: true));
 
-        UpdateTargetOffset(target);
     }
 
     public override void Apply(Transform target)
@@ -24,32 +19,18 @@ public class GazeNPinch1 : ManipulationTechnique
         Vector3 deltaPos = hand.GetDeltaHandPosition(usePinchTip: true);
         target.position += deltaPos;
         
+        // target.position = hand.GetHandPosition(usePinchTip: true) + hand.GetHandDirection() * _targetDepthOffset;
 
-        if (HeadMovement.GetInstance().HeadSpeed >= 0.2f && hand.GetHandSpeed() <= 0.8f)
+        if (HeadMovement.GetInstance().HeadSpeed >= 0.2f && hand.GetHandSpeed() <= 0.5f)
         {
-            _localOffsetDistance += HeadMovement.GetInstance().DeltaHeadY * 0.15f;
-            _localOffsetDistance = Mathf.Clamp(_localOffsetDistance, 0.1f, 5f);
-
-            if (_handTransform)
-            {
-                target.position = _handTransform.TransformPoint(_localOffsetDir * _localOffsetDistance);
-                // target.rotation = _handTransform.rotation * _localRotationOffset;
-            }
+            Vector3 targetDir = (target.position - EyeGaze.GetInstance().GetGazeRay().origin).normalized;
+            target.position += new Vector3(targetDir.x, 0, targetDir.z).normalized * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
         }
 
-        UpdateTargetOffset(target);
+        // UpdateTargetOffset(target);
         _handRayLine.SetPostion(hand.GetHandPosition(usePinchTip: true), target.position);
     }
 
-    void UpdateTargetOffset(Transform target)
-    {
-        if (!_handTransform) return;
-
-        Vector3 localOffset = _handTransform.InverseTransformPoint(target.position);
-        _localOffsetDir = localOffset.normalized;
-        _localOffsetDistance = localOffset.magnitude;
-        _localRotationOffset = Quaternion.Inverse(_handTransform.rotation) * target.rotation;
-    }
 
     void Awake()
     {
