@@ -1,3 +1,5 @@
+using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class GazeNPinch1 : ManipulationTechnique
@@ -30,7 +32,7 @@ public class GazeNPinch1 : ManipulationTechnique
             Vector3 deltaPos = hand.GetDeltaHandPosition(usePinchTip: true);
             target.position += deltaPos;
 
-            if (HeadMovement.GetInstance().HeadSpeed >= 0.2f && hand.GetHandSpeed() <= 0.5f)
+            if ((HeadMovement.GetInstance().HeadSpeed >= 0.2f || Math.Abs(HeadMovement.GetInstance().HeadAcc) >= 1f)&& hand.GetHandSpeed() <= 0.5f)
             {
                 // Vector3 targetDir = (target.position - EyeGaze.GetInstance().GetGazeRay().origin).normalized;
                 // target.position += new Vector3(targetDir.x, 0, targetDir.z).normalized * HeadMovement.GetInstance().DeltaHeadY * 0.2f;

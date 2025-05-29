@@ -5,8 +5,8 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class HeadMovement : Singleton<HeadMovement>
 {
-    protected override void Awake() 
-    {          
+    protected override void Awake()
+    {
         base.Awake();
 
         _headVelWindow = new List<float>();
@@ -16,6 +16,8 @@ public class HeadMovement : Singleton<HeadMovement>
 
         _rollSpdFilter = new OneEuroFilter(90f);
         _rollAccFilter = new OneEuroFilter(90f);
+        
+        _pitchSpdFilter = new OneEuroFilter(90f);
     }
 
     void Start()
@@ -45,7 +47,7 @@ public class HeadMovement : Singleton<HeadMovement>
         CamRotation = Camera.main.transform.rotation;
 
         Pre_HeadAngle_WorldY = HeadAngle_WorldY;
-        HeadAngle_WorldY = MathFunctions.AngleFrom_XZ_Plane(CamDir);
+        HeadAngle_WorldY = _pitchSpdFilter.Filter(MathFunctions.AngleFrom_XZ_Plane(CamDir));
     }
 
     public Quaternion CamRotation {get; private set;}
@@ -57,7 +59,8 @@ public class HeadMovement : Singleton<HeadMovement>
     public Vector3 CamDir  {get; private set;}
     public Vector3 PreCamDir {get; private set;}
 
-    public float HeadAngle_WorldY {get; private set;}
+    private OneEuroFilter _pitchSpdFilter;
+    public float HeadAngle_WorldY { get; private set; }
     public float Pre_HeadAngle_WorldY {get; private set;}
 
 
