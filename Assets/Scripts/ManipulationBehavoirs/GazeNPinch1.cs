@@ -1,8 +1,14 @@
 using System;
 using UnityEngine;
 
+public enum CentricType
+{
+    HandCentric,
+    HeadCentric,
+}
 public class GazeNPinch1 : ManipulationTechnique
 {
+    public CentricType CentricType;
     private Linescript _handRayLine;
 
     public override void Apply(Transform target)
@@ -15,7 +21,7 @@ public class GazeNPinch1 : ManipulationTechnique
         _handRayLine.IsVisible = false;
 
         // if (IsGazeInSafeRegion(gazeOrigin, gazeDirection, target.position))
-        if(EyeGaze.GetInstance().IsSaccading() == false)
+        if (EyeGaze.GetInstance().IsSaccading() == false)
         {
             Vector3 deltaPos = hand.GetDeltaHandPosition(usePinchTip: true);
             target.position += deltaPos;
@@ -24,7 +30,8 @@ public class GazeNPinch1 : ManipulationTechnique
             {
                 // Vector3 targetDir = (target.position - EyeGaze.GetInstance().GetGazeRay().origin).normalized;
                 // target.position += new Vector3(targetDir.x, 0, targetDir.z).normalized * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
-                Vector3 movementDirection = (target.position - hand.GetHandPosition(usePinchTip: true)).normalized;
+                Vector3 startPoint = CentricType == CentricType.HandCentric? hand.GetHandPosition(usePinchTip: true): gazeOrigin;
+                Vector3 movementDirection = (target.position - startPoint).normalized;
 
                 Vector3 nextTargetPosition = target.position + movementDirection * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
                 // float nextTargetEyeInHeadAngle = Vector3.Angle(HeadMovement.GetInstance().CamDir, nextTargetPosition - HeadMovement.GetInstance().CamPos);
@@ -60,5 +67,5 @@ public class GazeNPinch1 : ManipulationTechnique
     {
         _handRayLine = new Linescript();
     }
-    
+
 }

@@ -6639,13 +6639,14 @@ GameObject:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584914}
+  - component: {fileID: 1006584921}
+  - component: {fileID: 1006584922}
   - component: {fileID: 1006584913}
   - component: {fileID: 1006584916}
   - component: {fileID: 1006584917}
   - component: {fileID: 1006584918}
   - component: {fileID: 1006584919}
   - component: {fileID: 1006584920}
-  - component: {fileID: 1006584921}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -6704,7 +6705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584914}
+  ManipulationBehavior: {fileID: 1006584921}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6781,6 +6782,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ae36f0a44337fd46bb60075c7435e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84602d4faab5e494c9289dbd8c8105c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1014960979
