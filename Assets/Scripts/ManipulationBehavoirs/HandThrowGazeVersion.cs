@@ -5,8 +5,10 @@ public class HandThrowGazeVersion : ManipulationTechnique
     private Vector3 _targetVelocity;
     public float speedThreshold = 1f;
     public float speedMultiplier = 1.5f;
-    
+
     public string wallTag = "Invisible wall";
+
+    private Linescript _handRayLine;
 
     public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
@@ -28,13 +30,15 @@ public class HandThrowGazeVersion : ManipulationTechnique
             float distance = Vector3.Distance(gazeOrigin, target.position);
             target.position = gazeOrigin + gazeDirection * distance;
         }
-        
+
         Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
+        _handRayLine.IsVisible = false;
     }
 
     public override void ApplyHandReleasedBehaviour(Transform target)
     {
+
 
         Vector3 handToTargetDirection = (target.position - HandPosition.GetInstance().GetHandPosition(usePinchTip: true)).normalized;
         Vector3 movementVelocity = Vector3.Project(_targetVelocity, handToTargetDirection);
@@ -56,5 +60,13 @@ public class HandThrowGazeVersion : ManipulationTechnique
 
         // if (Vector3.Distance(nextTargetPosition, Camera.main.transform.position) < 10f)
         target.position = nextTargetPosition;
+        
+        _handRayLine.SetPostion(HandPosition.GetInstance().GetHandPosition(usePinchTip: true), target.position);
+        _handRayLine.IsVisible = true;
+    }
+    
+    void Awake()
+    {
+        _handRayLine = new Linescript();
     }
 }
