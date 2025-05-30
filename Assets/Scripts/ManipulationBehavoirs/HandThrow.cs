@@ -8,7 +8,7 @@ public class HandThrow : ManipulationTechnique
     
     public string wallTag = "Invisible wall";
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
         Vector3 deltaPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
         Vector3 nextTargetPosition = target.position + deltaPos;
@@ -21,7 +21,7 @@ public class HandThrow : ManipulationTechnique
         target.rotation = deltaRot * target.rotation;
     }
 
-    public override void ApplyReleasedBehaviour(Transform target)
+    public override void ApplySingleHandReleasedBehaviour(Transform target)
     {
         if (_targetVelocity.magnitude < speedThreshold) return;
 

@@ -8,7 +8,7 @@ public class HandThrowGazeVersion : ManipulationTechnique
     
     public string wallTag = "Invisible wall";
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
 
         Vector3 gazeOrigin = EyeGaze.GetInstance().GetGazeRay().origin;
@@ -33,7 +33,7 @@ public class HandThrowGazeVersion : ManipulationTechnique
         target.rotation = deltaRot * target.rotation;
     }
 
-    public override void ApplyReleasedBehaviour(Transform target)
+    public override void ApplySingleHandReleasedBehaviour(Transform target)
     {
 
         Vector3 handToTargetDirection = (target.position - HandPosition.GetInstance().GetHandPosition(usePinchTip: true)).normalized;

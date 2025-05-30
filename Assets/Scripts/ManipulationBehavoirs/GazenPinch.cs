@@ -14,7 +14,7 @@ public class GazenPinch : ManipulationTechnique
     private Quaternion _localRotationOffset;
     private Transform _handTransform;
 
-    public override void OnGrabbed(Transform target)
+    public override void OnSingleHandGrabbed(Transform target)
     {
         // Use pinch tip or hand anchor as the "hand"
         _handTransform = HandPosition.GetInstance().GetHandTransform(usePinchTip: true);
@@ -25,7 +25,7 @@ public class GazenPinch : ManipulationTechnique
         _localRotationOffset = Quaternion.Inverse(_handTransform.rotation) * target.rotation;
     }
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
         HandPosition hand = HandPosition.GetInstance();
 

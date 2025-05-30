@@ -11,13 +11,13 @@ public class HeadRST_sync : ManipulationTechnique
 
     private Vector3 _accumulatedHandOffset;
 
-    public override void OnGrabbed(Transform target)
+    public override void OnSingleHandGrabbed(Transform target)
     {
         _depthOffset = Vector3.Distance(EyeGaze.GetInstance().GetGazeRay().origin, target.position);
         // _accumulatedHandOffset = Vector3.zero;
     }
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
         EyeGaze eyeGaze = EyeGaze.GetInstance();
         HeadMovement head = HeadMovement.GetInstance();

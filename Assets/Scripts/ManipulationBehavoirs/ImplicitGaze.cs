@@ -6,7 +6,7 @@ public class ImplicitGaze : ManipulationTechnique
     private float _resetTimeStamp;
 
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
         Vector3 gazeOrigin = EyeGaze.GetInstance().GetGazeRay().origin;
         Vector3 gazeDirection = EyeGaze.GetInstance().GetGazeRay().direction;

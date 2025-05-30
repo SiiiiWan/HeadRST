@@ -34,16 +34,24 @@ public class HandPosition : Singleton<HandPosition>
         LeftHandPosition = LeftHandAnchor.position;
 
         Transform rightTip = GetPinchTipTransform(PinchDetector.GetInstance().RightHand);
-        RightPinchTipPosition_delta = rightTip.position - RightPinchTipPosition;
-        RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
-        RightPinchTipPosition = rightTip.position;
-        RightPinchTipRotation = rightTip.rotation;
+        if (rightTip)
+        {
+            RightPinchTipPosition_delta = rightTip.position - RightPinchTipPosition;
+            RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
+            RightPinchTipPosition = rightTip.position;
+            RightPinchTipRotation = rightTip.rotation;
+        }
+
 
         Transform leftTip = GetPinchTipTransform(PinchDetector.GetInstance().LeftHand);
-        LeftPinchTipPosition_delta = leftTip.position - LeftPinchTipPosition;
-        LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
-        LeftPinchTipPosition = leftTip.position;
-        LeftPinchTipRotation = leftTip.rotation;
+        if (leftTip)
+        {
+            LeftPinchTipPosition_delta = leftTip.position - LeftPinchTipPosition;
+            LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
+            LeftPinchTipPosition = leftTip.position;
+            LeftPinchTipRotation = leftTip.rotation;
+        }
+
 
 
         RightHandRotation = RightHandAnchor.rotation;

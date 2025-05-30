@@ -7,7 +7,7 @@ public class StudyControl : MonoBehaviour
 
     void Update()
     {
-        if (PinchDetector.GetInstance().IsPinching)
+        if (PinchDetector.GetInstance().IsOneHandPinching)
         {
             // Get the manipulatable object under gaze
             Transform target = EyeGaze.GetInstance().GetGazeHitTrans();

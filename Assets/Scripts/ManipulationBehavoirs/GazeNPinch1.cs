@@ -11,7 +11,7 @@ public class GazeNPinch1 : ManipulationTechnique
     public CentricType CentricType;
     private Linescript _handRayLine;
 
-    public override void ApplyGrabbedBehaviour(Transform target)
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
         HandPosition hand = HandPosition.GetInstance();
 

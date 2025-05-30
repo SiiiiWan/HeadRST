@@ -15,20 +15,20 @@ public class ManipulatableObject : MonoBehaviour
         _isHitbyGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin) <= 10f;
 
 
-        if (_isHitbyGaze && PinchDetector.GetInstance().IsPinching)
+        if (_isHitbyGaze && PinchDetector.GetInstance().IsOneHandPinching)
         {
-            if (_isGrabed == false) _manipulationBehavior?.OnGrabbed(transform);
+            if (_isGrabed == false) _manipulationBehavior?.OnSingleHandGrabbed(transform);
             _isGrabed = true;
         }
 
-        if (!PinchDetector.GetInstance().IsPinching)
+        if (!PinchDetector.GetInstance().IsOneHandPinching)
         {
             _isGrabed = false;
         }
 
 
-        if (_isGrabed) _manipulationBehavior?.ApplyGrabbedBehaviour(transform);
-        else _manipulationBehavior?.ApplyReleasedBehaviour(transform);
+        if (_isGrabed) _manipulationBehavior?.ApplySingleHandGrabbedBehaviour(transform);
+        else _manipulationBehavior?.ApplySingleHandReleasedBehaviour(transform);
 
         transform.GetComponent<Outline>().enabled = _isHitbyGaze && !_isGrabed;
     }
