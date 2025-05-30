@@ -33,7 +33,7 @@ public class HandThrowGazeVersion : ManipulationTechnique
         target.rotation = deltaRot * target.rotation;
     }
 
-    public override void ApplySingleHandReleasedBehaviour(Transform target)
+    public override void ApplyHandReleasedBehaviour(Transform target)
     {
 
         Vector3 handToTargetDirection = (target.position - HandPosition.GetInstance().GetHandPosition(usePinchTip: true)).normalized;

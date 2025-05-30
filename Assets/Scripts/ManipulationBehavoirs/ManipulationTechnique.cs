@@ -10,12 +10,11 @@ public enum ManipulationBehaviorNames
 public interface IManipulationBehavior
 {
     void ApplySingleHandGrabbedBehaviour(Transform target);
-    void ApplySingleHandReleasedBehaviour(Transform target);
+    void ApplyHandReleasedBehaviour(Transform target);
     void OnSingleHandGrabbed(Transform target);
 
 
     void ApplyBothHandGrabbedBehaviour(Transform target);
-    void ApplyBothHandReleasedBehaviour(Transform target);
 }
 
 public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
@@ -29,18 +28,13 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     {
         // Debug.LogWarning("Apply method not implemented in " + this.GetType().Name);
     }
-    public virtual void ApplySingleHandReleasedBehaviour(Transform target)
+    public virtual void ApplyHandReleasedBehaviour(Transform target)
     {
         // Debug.LogWarning("Apply method not implemented in " + this.GetType().Name);
     }
 
-    public void ApplyBothHandGrabbedBehaviour(Transform target)
+    public virtual void ApplyBothHandGrabbedBehaviour(Transform target)
     {
-        // throw new System.NotImplementedException();
-    }
-
-    public void ApplyBothHandReleasedBehaviour(Transform target)
-    {
-        // throw new System.NotImplementedException();
+        print("both hands released");
     }
 }

@@ -1,10 +1,17 @@
 using UnityEngine;
 
+public enum GrabbedState
+{
+    NotGrabbed,
+    OneHandGrabbed,
+    BothHandsGrabbed
+}
+
 public class ManipulatableObject : MonoBehaviour
 {
     // public bool UseGlobalManipulationBehavior;
     private bool _isHitbyGaze;
-    private bool _isGrabed;
+    private GrabbedState _grabbedState = GrabbedState.NotGrabbed;
 
     private IManipulationBehavior _manipulationBehavior;
 
@@ -17,20 +24,35 @@ public class ManipulatableObject : MonoBehaviour
 
         if (_isHitbyGaze && PinchDetector.GetInstance().IsOneHandPinching)
         {
-            if (_isGrabed == false) _manipulationBehavior?.OnSingleHandGrabbed(transform);
-            _isGrabed = true;
+            if (_grabbedState == GrabbedState.NotGrabbed) _manipulationBehavior?.OnSingleHandGrabbed(transform);
+            _grabbedState = GrabbedState.OneHandGrabbed;
         }
 
-        if (!PinchDetector.GetInstance().IsOneHandPinching)
+
+        if( PinchDetector.GetInstance().IsBothHandsPinching && _grabbedState == GrabbedState.OneHandGrabbed)
         {
-            _isGrabed = false;
+            _grabbedState = GrabbedState.BothHandsGrabbed;
         }
 
+        if (PinchDetector.GetInstance().IsNoHandPinching)
+        {
+            _grabbedState = GrabbedState.NotGrabbed;
+        }
 
-        if (_isGrabed) _manipulationBehavior?.ApplySingleHandGrabbedBehaviour(transform);
-        else _manipulationBehavior?.ApplySingleHandReleasedBehaviour(transform);
+        switch (_grabbedState)
+        {
+            case GrabbedState.NotGrabbed:
+                _manipulationBehavior?.ApplyHandReleasedBehaviour(transform);
+                break;
+            case GrabbedState.OneHandGrabbed:
+                _manipulationBehavior?.ApplySingleHandGrabbedBehaviour(transform);
+                break;
+            case GrabbedState.BothHandsGrabbed:
+                _manipulationBehavior?.ApplyBothHandGrabbedBehaviour(transform);
+                break;  
+        }
 
-        transform.GetComponent<Outline>().enabled = _isHitbyGaze && !_isGrabed;
+        transform.GetComponent<Outline>().enabled = _isHitbyGaze && _grabbedState == GrabbedState.NotGrabbed;
     }
 
     public void SetManipulationBehavior(IManipulationBehavior behavior)

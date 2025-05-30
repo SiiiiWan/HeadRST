@@ -21,7 +21,7 @@ public class HandThrow : ManipulationTechnique
         target.rotation = deltaRot * target.rotation;
     }
 
-    public override void ApplySingleHandReleasedBehaviour(Transform target)
+    public override void ApplyHandReleasedBehaviour(Transform target)
     {
         if (_targetVelocity.magnitude < speedThreshold) return;
 
