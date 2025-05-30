@@ -1031,9 +1031,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RightHand: {fileID: 1736594311}
   LeftHand: {fileID: 1433731092}
-  IsPinching: 0
   IsRightPinching: 0
   IsLeftPinching: 0
+  IsBothHandsPinching: 0
+  IsOneHandPinching: 0
+  IsNoHandPinching: 0
+  PinchState: 0
 --- !u!4 &94030551
 Transform:
   m_ObjectHideFlags: 0
@@ -1085,6 +1088,10 @@ MonoBehaviour:
   LeftHandDirection_delta: {x: 0, y: 0, z: 0, w: 0}
   RightHandSpeed: 0
   LeftHandSpeed: 0
+  HandDistance: 0
+  HandDistance_delta: 0
+  HandMidPosition: {x: 0, y: 0, z: 0}
+  HandMidPosition_delta: {x: 0, y: 0, z: 0}
 --- !u!1 &97233028
 GameObject:
   m_ObjectHideFlags: 0
@@ -6851,7 +6858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584923}
+  ManipulationBehavior: {fileID: 1006584914}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0

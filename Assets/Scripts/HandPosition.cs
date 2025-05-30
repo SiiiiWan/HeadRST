@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum Hand
+{
+    Left,
+    Right
+}
+
 public class HandPosition : Singleton<HandPosition>
 {
 
@@ -18,6 +24,8 @@ public class HandPosition : Singleton<HandPosition>
     public Vector3 RightHandDirection, LeftHandDirection;
     public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
     public float RightHandSpeed, LeftHandSpeed;
+    public float HandDistance, HandDistance_delta;
+    public Vector3 HandMidPosition, HandMidPosition_delta;
 
     void Update()
     {
@@ -32,6 +40,12 @@ public class HandPosition : Singleton<HandPosition>
 
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
+
+        HandDistance_delta = Vector3.Distance(RightHandPosition, LeftHandPosition) - HandDistance;
+        HandDistance = Vector3.Distance(RightHandPosition, LeftHandPosition);
+
+        HandMidPosition_delta = (RightHandPosition + LeftHandPosition) / 2 - HandMidPosition;
+        HandMidPosition = (RightHandPosition + LeftHandPosition) / 2;
 
         Transform rightTip = GetPinchTipTransform(PinchDetector.GetInstance().RightHand);
         if (rightTip)
@@ -82,6 +96,18 @@ public class HandPosition : Singleton<HandPosition>
     public Vector3 GetHandPosition(bool usePinchTip)
     {
         if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftPinchTipPosition : LeftHandPosition;
+        }
+        else
+        {
+            return usePinchTip ? RightPinchTipPosition : RightHandPosition;
+        }
+    }
+
+    public Vector3 GetHandPosition(bool usePinchTip, Hand hand)
+    {
+        if (hand == Hand.Left)
         {
             return usePinchTip ? LeftPinchTipPosition : LeftHandPosition;
         }

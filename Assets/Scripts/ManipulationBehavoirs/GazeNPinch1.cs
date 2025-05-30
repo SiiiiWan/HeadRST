@@ -62,6 +62,19 @@ public class GazeNPinch1 : ManipulationTechnique
         _handRayLine.SetPostion(hand.GetHandPosition(usePinchTip: true), target.position);
     }
 
+    public override void ApplyBothHandGrabbedBehaviour(Transform target)
+    {
+        HandPosition hand = HandPosition.GetInstance();
+
+        if (Mathf.Abs(hand.HandDistance_delta) > 0.0001f)
+        {
+
+            float scaleFactor = Vector3.Distance(Camera.main.transform.position, target.position) / Vector3.Distance(Camera.main.transform.position, hand.HandMidPosition);
+            target.localScale *= 1f + hand.HandDistance_delta * scaleFactor;
+;
+        }
+    }
+
 
     void Awake()
     {

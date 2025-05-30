@@ -35,6 +35,6 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     public virtual void ApplyBothHandGrabbedBehaviour(Transform target)
     {
-        print("both hands released");
+
     }
 }
