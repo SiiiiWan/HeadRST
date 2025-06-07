@@ -6791,6 +6791,7 @@ GameObject:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584924}
+  - component: {fileID: 1006584925}
   - component: {fileID: 1006584914}
   - component: {fileID: 1006584921}
   - component: {fileID: 1006584923}
@@ -6859,7 +6860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584924}
+  ManipulationBehavior: {fileID: 1006584913}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6983,6 +6984,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TorsoPositionIndicator: {fileID: 1932865037}
   HandPositionIndicator: {fileID: 1548497617}
+  TorsoOffset: 0.35
+--- !u!114 &1006584925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d8eb890f6ef51459cbf22282445fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   TorsoOffset: 0.35
 --- !u!1 &1014636024
 GameObject:
@@ -13973,7 +13987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
-  ShowGazeCursor: 0
+  ShowGazeCursor: 1
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 120
   FilteringGaze: 1
