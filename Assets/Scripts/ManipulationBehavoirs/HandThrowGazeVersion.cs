@@ -38,7 +38,8 @@ public class HandThrowGazeVersion : ManipulationTechnique
 
     public override void ApplyHandReleasedBehaviour(Transform target)
     {
-
+        // TODO: https://www.youtube.com/watch?v=eREYrwCwqYo better throw implementation
+        // TODO: can drag back to decrease the speed
 
         Vector3 handToTargetDirection = (target.position - HandPosition.GetInstance().GetHandPosition(usePinchTip: true)).normalized;
         Vector3 movementVelocity = Vector3.Project(_targetVelocity, handToTargetDirection);

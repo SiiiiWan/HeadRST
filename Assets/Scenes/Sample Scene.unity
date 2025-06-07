@@ -10376,10 +10376,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Eye: 0
   ConfidenceThreshold: 0.5
-  ApplyPosition: 0
+  ApplyPosition: 1
   ApplyRotation: 1
   ReferenceFrame: {fileID: 0}
-  TrackingMode: 0
+  TrackingMode: 1
 --- !u!114 &1619776465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13741,7 +13741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
-  ShowGazeCursor: 0
+  ShowGazeCursor: 1
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 120
   FilteringGaze: 1
@@ -14052,10 +14052,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Eye: 1
   ConfidenceThreshold: 0.5
-  ApplyPosition: 0
+  ApplyPosition: 1
   ApplyRotation: 1
   ReferenceFrame: {fileID: 0}
-  TrackingMode: 0
+  TrackingMode: 1
 --- !u!114 &2085531141
 MonoBehaviour:
   m_ObjectHideFlags: 0
