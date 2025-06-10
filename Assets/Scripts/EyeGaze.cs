@@ -16,7 +16,13 @@ public class EyeGaze : Singleton<EyeGaze>
 
     private float _gazeSpeed;
 
+    private List<Quaternion> _headRotationBuffer;
+
     public float SaccadeThr = 120f;
+    
+    [Header("Gaze Correction")]
+    public bool CorrectGaze;
+    public int FramOffset = 7;
 
     [Header("One Euro Filter")]
 
@@ -38,6 +44,8 @@ public class EyeGaze : Singleton<EyeGaze>
 
         _gazeDirFilter = new OneEuroFilter<Vector3>(FilterFrequency);
         _gazePosFilter = new OneEuroFilter<Vector3>(FilterFrequency);
+
+        _headRotationBuffer = new List<Quaternion>();
     }
 
     void Update()
@@ -71,13 +79,31 @@ public class EyeGaze : Singleton<EyeGaze>
             _combinedGazeOrigin = _gazePosFilter.Filter(_combinedGazeOrigin);
         }
 
+        if (CorrectGaze  && _headRotationBuffer.Count == FramOffset)
+        {
+            Quaternion headRotOffset = _headRotationBuffer[0] * Quaternion.Inverse(_headRotationBuffer[_headRotationBuffer.Count - 1]);
+            _combinedGazeDir = headRotOffset * _combinedGazeDir;
+        }
+
         GazeCursor.transform.position = GetGazeRay().origin + GetGazeRay().direction * 2f;
         GazeCursor.gameObject.SetActive(ShowGazeCursor);
 
         _gazeSpeed = Vector3.Angle(_combinedGazeDir, _combinedGazeDir_pre) / Time.deltaTime;
 
         _combinedGazeDir_pre = _combinedGazeDir;
+        UpdateHeadRotationBuffer();
     }
+
+    void UpdateHeadRotationBuffer()
+    {
+        Quaternion currentHeadRotation = Camera.main.transform.rotation;
+        _headRotationBuffer.Add(currentHeadRotation);
+        if (_headRotationBuffer.Count > FramOffset)
+        {
+            _headRotationBuffer.RemoveAt(0); // Remove oldest
+        }
+    }
+    
 
     public Ray GetGazeRay()
     {

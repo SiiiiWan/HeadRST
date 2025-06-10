@@ -6860,7 +6860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584913}
+  ManipulationBehavior: {fileID: 1006584916}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13987,9 +13987,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
-  ShowGazeCursor: 1
+  ShowGazeCursor: 0
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 120
+  CorrectGaze: 1
+  FramOffset: 10
   FilteringGaze: 1
   FilterFrequency: 90
   FilterMinCutOff: 0.05
