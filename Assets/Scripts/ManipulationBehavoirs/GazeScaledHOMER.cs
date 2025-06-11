@@ -1,4 +1,4 @@
-using Unity.Mathematics;
+using System;
 using UnityEngine;
 
 public class GazeScaledHOMER : ManipulationTechnique
@@ -9,6 +9,9 @@ public class GazeScaledHOMER : ManipulationTechnique
     private Vector3 lastHandPosition;
     private float scalingConstant = 0.15f; //TODO: fine parameters from papers
     private float minVelocityThreshold = 0.01f;
+
+    public CentricType CentricType;
+    private Linescript _handRayLine;
 
     public override void OnSingleHandGrabbed(Transform target)
     {
@@ -44,6 +47,8 @@ public class GazeScaledHOMER : ManipulationTechnique
 
         lastHandPosition = currentHandPosition;
 
+        _handRayLine.IsVisible = false;
+
         if (EyeGaze.GetInstance().IsSaccading())
         {
             Ray gazeRay = EyeGaze.GetInstance().GetGazeRay();
@@ -51,12 +56,33 @@ public class GazeScaledHOMER : ManipulationTechnique
             float targetToGazeDistance = Vector3.Distance(gazeRay.origin, target.position);
             StartManipulation_HOMER(torsoPosition, currentHandPosition, gazeRay.origin + gazeRay.direction.normalized * targetToGazeDistance);
         }
+        else if ((HeadMovement.GetInstance().HeadSpeed >= 0.2f || Math.Abs(HeadMovement.GetInstance().HeadAcc) >= 1f) && handData.GetHandSpeed() <= 0.5f)
+        {
+            Vector3 startPoint = CentricType == CentricType.HandCentric ? handData.GetHandPosition(usePinchTip: true) : EyeGaze.GetInstance().GetGazeRay().origin;
+            Vector3 movementDirection = (target.position - startPoint).normalized;
+
+            Vector3 headDepthPosOffset = movementDirection * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
+
+            offsetVector += headDepthPosOffset;
+            //TODO: can add a eye head angle exiding just warp to the depth limits
+
+            // float nextTargetDistToHand = Vector3.Distance(nextTargetPosition, handData.GetHandPosition(usePinchTip: true));
+            // if (nextTargetDistToHand >= 0.05f & nextTargetDistToHand <= 10f)
+            // {
+            //     target.position = nextTargetPosition;
+            // }
+            _handRayLine.IsVisible = true;
+        }
+
 
         target.position = UpdateObjectPosition_HOMER(scaledHandPosition);
 
 
         Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;
+
+        _handRayLine.SetPostion(handData.GetHandPosition(usePinchTip: true), target.position);
+
     }
 
     private Vector3 torsoPosition;
@@ -88,6 +114,11 @@ public class GazeScaledHOMER : ManipulationTechnique
         Vector3 bodyToHand = (currentHandPosition - torsoPosition).normalized;
         Vector3 objectPosition = torsoPosition + bodyToHand * scaledDistance + offsetVector;
         return objectPosition;
+    }
+    
+    void Awake()
+    {
+        _handRayLine = new Linescript();
     }
     
 }
