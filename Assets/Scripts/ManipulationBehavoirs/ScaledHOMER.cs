@@ -49,7 +49,9 @@ public class ScaledHOMER : ManipulationTechnique
 
         lastHandPosition = currentHandPosition;
 
-        target.position = UpdateObjectPosition_HOMER(scaledHandPosition);
+        // target.position = UpdateObjectPosition_HOMER(scaledHandPosition);
+        target.position = UpdateObjectPosition_HOMER(currentHandPosition);
+
 
         Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
         target.rotation = deltaRot * target.rotation;

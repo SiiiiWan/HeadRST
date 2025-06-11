@@ -6860,7 +6860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584916}
+  ManipulationBehavior: {fileID: 1006584921}
 --- !u!114 &1006584916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6940,6 +6940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CentricType: 0
+  HandGainFunction: 0
 --- !u!114 &1006584922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6998,6 +6999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TorsoOffset: 0.35
+  CentricType: 0
 --- !u!1 &1014636024
 GameObject:
   m_ObjectHideFlags: 0
