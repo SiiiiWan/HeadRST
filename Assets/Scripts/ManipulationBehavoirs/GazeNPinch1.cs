@@ -21,6 +21,7 @@ public class GazeNPinch1 : ManipulationTechnique
     public bool AddGaze;
     public bool AddHead;
     private Linescript _handRayLine;
+    public bool ShowRayLine = true;
 
     private float scalingConstant = 0.15f; //TODO: fine parameters from papers
     private float minVelocityThreshold = 0.01f;
@@ -60,7 +61,7 @@ public class GazeNPinch1 : ManipulationTechnique
                 {
                     target.position = nextTargetPosition;
                 }
-                _handRayLine.IsVisible = true;
+                if(ShowRayLine) _handRayLine.IsVisible = true;
             }
         }
         else if (AddGaze)

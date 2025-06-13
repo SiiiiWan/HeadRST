@@ -24,6 +24,9 @@ public class ManipulatableObject : MonoBehaviour
 
         if (_isHitbyGaze && PinchDetector.GetInstance().IsOneHandPinching)
         {
+            _manipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
+            StudyControl.GetInstance().GrabbedObject = this;
+
             if (_grabbedState == GrabbedState.NotGrabbed) _manipulationBehavior?.OnSingleHandGrabbed(transform);
             _grabbedState = GrabbedState.OneHandGrabbed;
         }

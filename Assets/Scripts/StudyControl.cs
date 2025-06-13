@@ -1,25 +1,16 @@
 
 using UnityEngine;
 
-public class StudyControl : MonoBehaviour
+public class StudyControl : Singleton<StudyControl>
 {
     public ManipulationTechnique ManipulationBehavior;
+    public ManipulatableObject GrabbedObject;
 
     void Update()
     {
-        if (PinchDetector.GetInstance().IsOneHandPinching)
+        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && GrabbedObject != null)
         {
-            // Get the manipulatable object under gaze
-            Transform target = EyeGaze.GetInstance().GetGazeHitTrans();
-            if (target != null)
-            {
-                // Set the manipulation behavior based on the selected type
-                ManipulatableObject manipulatableObject = target.GetComponent<ManipulatableObject>();
-                if (manipulatableObject != null)
-                {
-                    manipulatableObject.SetManipulationBehavior(ManipulationBehavior);
-                }
-            }
+            GrabbedObject = null;
         }
         
     }
