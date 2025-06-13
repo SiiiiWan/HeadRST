@@ -21,18 +21,22 @@ public class DockingTarget : MonoBehaviour
             _poseAligned = DistanceToGrabbedObj < 0.1f && OrientationDifference < 30f;
         }
 
-        transform.GetComponent<Outline>().OutlineColor = _poseAligned? Color.green : Color.red;
+        // transform.GetComponent<Outline>().OutlineColor = _poseAligned? Color.green : Color.red;
+        transform.GetComponent<Outline>().enabled = _poseAligned;
+
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && _poseAligned)
         {
-            Vector3 randomOffset = new Vector3(
-                Random.Range(-_offset, _offset),
-                Random.Range(-_offset, _offset),
-                Random.Range(-_offset, _offset)
-            );
-            // Quaternion randomRot = Random.rotation;
+            // Vector3 randomOffset = new Vector3(
+            //     Random.Range(-_offset, _offset),
+            //     Random.Range(-_offset, _offset),
+            //     Random.Range(-_offset, _offset)
+            // );
+            // // Quaternion randomRot = Random.rotation;
 
-            transform.position =  transform.position + randomOffset;
+            // transform.position =  transform.position + randomOffset;
+
+            gameObject.SetActive(false);
             _poseAligned = false;
         }
 

@@ -11,7 +11,10 @@ public enum HandGainFunction
 {
     isomophic,
     visual,
-    prism
+    prism,
+    gazeNpinch,
+    HOMER,
+    ScaledHOMER,
 }
 
 public class GazeNPinch1 : ManipulationTechnique

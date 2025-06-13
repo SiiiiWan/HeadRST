@@ -1,0 +1,246 @@
+using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+public class AllInOneTestTechnique : ManipulationTechnique
+{
+    public CentricType CentricType;
+    public HandGainFunction HandGainFunction;
+    public bool AddGaze;
+    public bool AddHead;
+
+    [Header("Text Bindings")]
+    public TextMeshPro HandFunctionText;
+    public TextMeshPro GazeFunctionText;
+    public TextMeshPro HeadFunctionText;
+
+    private Linescript _handRayLine;
+
+
+    [Header("PRISM Parameters")]
+    public float scalingConstant = 0.15f; //TODO: fine parameters from papers
+    public float minVelocityThreshold = 0.01f;
+
+
+    [Header("HOMER Parameters")]
+    public float TorsoOffset = 0.35f;
+
+
+    public override void OnSingleHandGrabbed(Transform target)
+    {
+        HandPosition handData = HandPosition.GetInstance();
+        Vector3 handPos = handData.GetHandPosition(usePinchTip: false);
+        Vector3 torsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
+
+        HOMER_OnGrabbed_Init(torsoPosition, handPos, target.position);
+    }
+
+    public override void ApplySingleHandGrabbedBehaviour(Transform target)
+    {
+        HandPosition handData = HandPosition.GetInstance();
+        EyeGaze gazeData = EyeGaze.GetInstance();
+        HeadMovement headData = HeadMovement.GetInstance();
+
+        Vector3 gazeOrigin = gazeData.GetGazeRay().origin;
+        Vector3 gazeDirection = gazeData.GetGazeRay().direction;
+
+
+        Vector3 handPos_delta = handData.GetDeltaHandPosition(usePinchTip: false);
+        Vector3 handPos = handData.GetHandPosition(usePinchTip: false);
+
+        bool updateObjectPosToGazePoint = gazeData.IsSaccading() && AddGaze;
+        bool addDepthOffsetWithHead = (headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f) && handData.GetHandSpeed() <= 0.5f && AddHead;
+
+        _handRayLine.IsVisible = false;
+
+        if (updateObjectPosToGazePoint)
+        {
+            float distance = Vector3.Distance(gazeOrigin, target.position);
+            target.position = gazeOrigin + gazeDirection * distance;
+        }
+        else
+        {
+            target.position = GetNextTargetPosbyHand(target, handPos, handPos_delta);
+
+            if (addDepthOffsetWithHead)
+            {
+
+                Vector3 startPoint = CentricType == CentricType.HandCentric ? handPos : gazeOrigin;
+                Vector3 movementDirection = (target.position - startPoint).normalized;
+                Vector3 nextTargetPosition = target.position + movementDirection * headData.DeltaHeadY * 0.2f;
+
+                //TODO: add a eye head angle exiding just warp to the depth limits
+
+                // Depth cap
+                float nextTargetDistToHand = Vector3.Distance(nextTargetPosition, handPos);
+                if (nextTargetDistToHand >= 0.05f & nextTargetDistToHand <= 10f) target.position = nextTargetPosition;
+
+                // ray visual feedback
+                _handRayLine.IsVisible = CentricType == CentricType.HandCentric;
+            }
+
+        }
+
+        // Apply rotation
+        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: false);
+        target.rotation = deltaRot * target.rotation;
+
+        // Update visual feedback
+        _handRayLine.SetPostion(handPos, target.position);
+
+        // Update UI text
+        UpdateUITextElements();
+    }
+
+    
+    Vector3 GetNextTargetPosbyHand(Transform target, Vector3 handPos, Vector3 handPos_delta)
+    {
+        Vector3 currentTargetPosition = target.position;
+
+        switch (HandGainFunction)
+        {
+            case HandGainFunction.isomophic:
+                return currentTargetPosition + handPos_delta;
+            case HandGainFunction.visual:
+                return currentTargetPosition + handPos_delta * GetVisualGain(target);
+            case HandGainFunction.prism:
+                return currentTargetPosition + handPos_delta * GetPrismGain();
+            case HandGainFunction.gazeNpinch:
+                return currentTargetPosition + handPos_delta * GetGazePinchGain(target);
+            case HandGainFunction.HOMER:
+                return GetObjectPosition_HOMER(handPos);
+            case HandGainFunction.ScaledHOMER:
+                return GetObjectPosition_HOMER(handPos - handPos_delta + handPos_delta * GetPrismGain());
+            default:
+                return currentTargetPosition + handPos_delta;
+        }
+    }
+
+    float GetVisualGain(Transform target)
+    {
+        return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true), Camera.main.transform.position);
+    }
+
+    float GetPrismGain()
+    {
+        float handSpeed = HandPosition.GetInstance().GetHandSpeed();
+
+        if (handSpeed < minVelocityThreshold)
+        {
+            return 0f;
+        }
+
+        return Mathf.Min(1.2f, handSpeed / scalingConstant);
+    }
+
+    float GetGazePinchGain(Transform target)
+    {
+        return Vector3.Distance(target.position, Camera.main.transform.position);
+    }
+
+
+    #region HOMER
+
+    private Vector3 _torsoPos_init;
+    private Vector3 _handPos_init;
+    private Vector3 _objectPos_init;
+    private float _distanceHandToTorso_init;
+    private float _distanceObjectToTorso_init;
+    private Vector3 _HOMER_offsetVector;
+    void HOMER_OnGrabbed_Init(Vector3 torso, Vector3 hand, Vector3 objectPosition)
+    {
+        _torsoPos_init = torso;
+        _handPos_init = hand;
+        _objectPos_init = objectPosition;
+
+        _distanceHandToTorso_init = Vector3.Distance(_torsoPos_init, _handPos_init);
+        _distanceObjectToTorso_init = Vector3.Distance(_torsoPos_init, _objectPos_init);
+
+        Vector3 rayDirection = (_handPos_init - _torsoPos_init).normalized;
+        Vector3 expectedObjectPosition = _torsoPos_init + rayDirection * _distanceObjectToTorso_init;
+        _HOMER_offsetVector = _objectPos_init - expectedObjectPosition;
+    }
+
+    Vector3 GetObjectPosition_HOMER(Vector3 currentHandPosition)
+    {
+        Vector3 currentTorsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
+
+        float currentHandDistance = Vector3.Distance(currentTorsoPosition, currentHandPosition);
+        float scaledDistance = _distanceObjectToTorso_init / _distanceHandToTorso_init * currentHandDistance;
+
+        Vector3 bodyToHand = (currentHandPosition - currentTorsoPosition).normalized;
+        Vector3 objectPosition = currentTorsoPosition + bodyToHand * scaledDistance + _HOMER_offsetVector;
+        return objectPosition;
+    }
+
+    #endregion
+
+    #region Switching Functions
+
+    public void SwitchToIsomorphic()
+    {
+        HandGainFunction = HandGainFunction.isomophic;
+        UpdateUITextElements();
+    }
+    public void SwitchToVisual()
+    {
+        HandGainFunction = HandGainFunction.visual;
+        UpdateUITextElements();
+    }
+
+    public void SwitchToPrism()
+    {
+        HandGainFunction = HandGainFunction.prism;
+        UpdateUITextElements();
+    }
+    public void SwitchToGazeNPinch()
+    {
+        HandGainFunction = HandGainFunction.gazeNpinch;
+        UpdateUITextElements();
+    }
+    public void SwitchToHOMER()
+    {
+        HandGainFunction = HandGainFunction.HOMER;
+        UpdateUITextElements();
+    }
+    public void SwitchToScaledHOMER()
+    {
+        HandGainFunction = HandGainFunction.ScaledHOMER;
+        UpdateUITextElements();
+    }
+
+    public void SwitchGaze()
+    {
+        AddGaze = !AddGaze;
+        UpdateUITextElements();
+    }
+    public void SwitchHead()
+    {
+        AddHead = !AddHead;
+        UpdateUITextElements();
+    }
+
+    public void Reset()
+    {
+        AddGaze = false;
+        AddHead = false;
+        HandGainFunction = HandGainFunction.isomophic;
+
+        UpdateUITextElements();
+    }
+
+    void UpdateUITextElements()
+    {
+        HandFunctionText.text = "Hand Function: " + HandGainFunction.ToString();
+        GazeFunctionText.text = AddGaze ? "Gaze: ON" : "Gaze: OFF";
+        HeadFunctionText.text = AddHead ? "Head: ON" : "Head: OFF";
+    }
+
+    #endregion
+
+    void Awake()
+    {
+        _handRayLine = new Linescript();
+    }
+
+}
