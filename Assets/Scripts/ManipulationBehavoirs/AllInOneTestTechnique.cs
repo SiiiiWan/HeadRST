@@ -84,8 +84,6 @@ public class AllInOneTestTechnique : ManipulationTechnique
                 float distance = Vector3.Distance(gazeOrigin, target.position);
                 target.position = gazeOrigin + gazeDirection * distance;                
             }
-
-
         }
         else
         {
