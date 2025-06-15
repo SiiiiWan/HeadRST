@@ -29,7 +29,7 @@ public class AllInOneTestTechnique : ManipulationTechnique
     public override void OnSingleHandGrabbed(Transform target)
     {
         HandPosition handData = HandPosition.GetInstance();
-        Vector3 handPos = handData.GetHandPosition(usePinchTip: false);
+        Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
         Vector3 handDirection = handData.GetHandDirection();
         Vector3 torsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
 
@@ -47,17 +47,18 @@ public class AllInOneTestTechnique : ManipulationTechnique
         Vector3 gazeDirection = gazeData.GetGazeRay().direction;
 
 
-        Vector3 handPos_delta = handData.GetDeltaHandPosition(usePinchTip: false);
-        Vector3 handPos = handData.GetHandPosition(usePinchTip: false);
+        Vector3 handPos_delta = handData.GetDeltaHandPosition(usePinchTip: true);
+        Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
 
         bool updateObjectPosToGazePoint = gazeData.IsSaccading() && AddGaze;
         bool addDepthOffsetWithHead = (headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f) && handData.GetHandSpeed() <= 0.5f && AddHead;
+        bool isHOMER = HandGainFunction == HandGainFunction.HOMER || HandGainFunction == HandGainFunction.ScaledHOMER;
 
         _handRayLine.IsVisible = false;
 
         if (updateObjectPosToGazePoint)
         {
-            if (HandGainFunction == HandGainFunction.HOMER || HandGainFunction == HandGainFunction.ScaledHOMER)
+            if (isHOMER)
             {
                 Ray gazeRay = EyeGaze.GetInstance().GetGazeRay();
                 Vector3 torsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
@@ -81,13 +82,26 @@ public class AllInOneTestTechnique : ManipulationTechnique
 
                 Vector3 startPoint = CentricType == CentricType.HandCentric ? handPos : gazeOrigin;
                 Vector3 movementDirection = (target.position - startPoint).normalized;
+
+                Vector3 headDepthPosOffset = movementDirection * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
+
                 Vector3 nextTargetPosition = target.position + movementDirection * headData.DeltaHeadY * 0.2f;
 
                 //TODO: add a eye head angle exiding just warp to the depth limits
 
                 // Depth cap
                 float nextTargetDistToHand = Vector3.Distance(nextTargetPosition, handPos);
-                if (nextTargetDistToHand >= 0.05f & nextTargetDistToHand <= 10f) target.position = nextTargetPosition;
+                if (nextTargetDistToHand >= 0.05f & nextTargetDistToHand <= 10f)
+                {
+                    if (isHOMER)
+                    {
+                        _HOMER_offsetVector += headDepthPosOffset;
+                    }
+                    else
+                    {
+                        target.position = nextTargetPosition;
+                    }
+                }   
 
                 // ray visual feedback
                 _handRayLine.IsVisible = CentricType == CentricType.HandCentric;
@@ -102,7 +116,7 @@ public class AllInOneTestTechnique : ManipulationTechnique
         // Update visual feedback
         if(HandGainFunction == HandGainFunction.HandRaycast) _handRayLine.IsVisible = true;
 
-        _handRayLine.SetPostion(handPos, target.position);
+        _handRayLine.SetPostion(handPos, handPos + (target.position - handPos) * 0.9f);
 
         // Update UI text
         UpdateUITextElements();
