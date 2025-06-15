@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 public class AllInOneTestTechnique : ManipulationTechnique
@@ -51,7 +52,13 @@ public class AllInOneTestTechnique : ManipulationTechnique
         Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
 
         bool updateObjectPosToGazePoint = gazeData.IsSaccading() && AddGaze;
-        bool addDepthOffsetWithHead = (headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f) && handData.GetHandSpeed() <= 0.5f && AddHead;
+
+        bool isBallisticHeadMovement = headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f;
+        bool isEyeHeadAngleExceededLimit = Vector3.Angle(gazeDirection, Camera.main.transform.forward) > 10f;
+        bool HandNotFastMoving = handData.GetHandSpeed() <= 0.5f;
+        bool addDepthOffsetWithHead = (isBallisticHeadMovement || isEyeHeadAngleExceededLimit) && HandNotFastMoving && AddHead;
+
+
         bool isHOMER = HandGainFunction == HandGainFunction.HOMER || HandGainFunction == HandGainFunction.ScaledHOMER;
 
         _handRayLine.IsVisible = false;
@@ -82,10 +89,19 @@ public class AllInOneTestTechnique : ManipulationTechnique
 
                 Vector3 startPoint = CentricType == CentricType.HandCentric ? handPos : gazeOrigin;
                 Vector3 movementDirection = (target.position - startPoint).normalized;
+                float DeltaHeadY = HeadMovement.GetInstance().DeltaHeadY;
+                float depthOffset = DeltaHeadY * 0.2f;
 
-                Vector3 headDepthPosOffset = movementDirection * HeadMovement.GetInstance().DeltaHeadY * 0.2f;
+                if (isEyeHeadAngleExceededLimit)
+                {
+                    if (gazeData.EyeInHeadYAngle > 0f && DeltaHeadY < 0) depthOffset = -2f * Time.deltaTime;
 
-                Vector3 nextTargetPosition = target.position + movementDirection * headData.DeltaHeadY * 0.2f;
+                    if (gazeData.EyeInHeadYAngle < 0f && DeltaHeadY > 0) depthOffset = 2f * Time.deltaTime;
+
+                }
+
+                Vector3 headDepthPosOffset = movementDirection * depthOffset;
+                Vector3 nextTargetPosition = target.position + headDepthPosOffset;
 
                 //TODO: add a eye head angle exiding just warp to the depth limits
 

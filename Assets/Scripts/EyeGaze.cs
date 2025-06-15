@@ -48,6 +48,11 @@ public class EyeGaze : Singleton<EyeGaze>
         _headRotationBuffer = new List<Quaternion>();
     }
 
+    public float EyeInHeadYAngle
+    {
+        get {return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.right);}
+    }
+
     void Update()
     {
         // TODO: blink filtering
