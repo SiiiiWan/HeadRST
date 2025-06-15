@@ -11866,6 +11866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ManipulationBehavior: {fileID: 1006584926}
   GrabbedObject: {fileID: 0}
+  ManipulationBunny: {fileID: 1133186099}
   DockingTargets:
   - {fileID: 8164078559956953090}
   - {fileID: 189024011}
