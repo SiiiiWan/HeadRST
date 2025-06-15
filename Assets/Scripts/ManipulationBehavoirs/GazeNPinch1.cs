@@ -15,6 +15,7 @@ public enum HandGainFunction
     gazeNpinch,
     HOMER,
     ScaledHOMER,
+    HandRaycast,
 }
 
 public class GazeNPinch1 : ManipulationTechnique

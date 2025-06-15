@@ -30,9 +30,11 @@ public class AllInOneTestTechnique : ManipulationTechnique
     {
         HandPosition handData = HandPosition.GetInstance();
         Vector3 handPos = handData.GetHandPosition(usePinchTip: false);
+        Vector3 handDirection = handData.GetHandDirection();
         Vector3 torsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
 
         HOMER_OnGrabbed_Init(torsoPosition, handPos, target.position);
+        HandRaycast_OnGrabbed_Init(handPos, handDirection, target.position);
     }
 
     public override void ApplySingleHandGrabbedBehaviour(Transform target)
@@ -98,6 +100,8 @@ public class AllInOneTestTechnique : ManipulationTechnique
         target.rotation = deltaRot * target.rotation;
 
         // Update visual feedback
+        if(HandGainFunction == HandGainFunction.HandRaycast) _handRayLine.IsVisible = true;
+
         _handRayLine.SetPostion(handPos, target.position);
 
         // Update UI text
@@ -123,6 +127,8 @@ public class AllInOneTestTechnique : ManipulationTechnique
                 return GetObjectPosition_HOMER(handPos);
             case HandGainFunction.ScaledHOMER:
                 return GetObjectPosition_HOMER(handPos - handPos_delta + handPos_delta * GetPrismGain());
+            case HandGainFunction.HandRaycast: 
+                return GetHandRaycastObjectPosition(handPos);
             default:
                 return currentTargetPosition + handPos_delta;
         }
@@ -150,6 +156,21 @@ public class AllInOneTestTechnique : ManipulationTechnique
         return Vector3.Distance(target.position, Camera.main.transform.position);
     }
 
+
+    Quaternion _handRaycast_directionOffset;
+    float _handRaycast_distanceOffset;
+    void HandRaycast_OnGrabbed_Init(Vector3 handPos, Vector3 handDir, Vector3 objectPosition)
+    {
+        Vector3 handToObjectDir = (objectPosition - handPos).normalized;
+        _handRaycast_directionOffset = Quaternion.FromToRotation(handDir, handToObjectDir);
+        _handRaycast_distanceOffset = Vector3.Distance(handPos, objectPosition);
+    }
+
+    Vector3 GetHandRaycastObjectPosition(Vector3 handPos)
+    {
+        Vector3 handToObjectDir = _handRaycast_directionOffset * HandPosition.GetInstance().GetHandDirection();
+        return handPos + handToObjectDir * _handRaycast_distanceOffset;
+    }
 
     #region HOMER
 
@@ -218,6 +239,11 @@ public class AllInOneTestTechnique : ManipulationTechnique
     public void SwitchToScaledHOMER()
     {
         HandGainFunction = HandGainFunction.ScaledHOMER;
+        UpdateUITextElements();
+    }
+    public void SwitchToHandRaycast()
+    {
+        HandGainFunction = HandGainFunction.HandRaycast;
         UpdateUITextElements();
     }
 
