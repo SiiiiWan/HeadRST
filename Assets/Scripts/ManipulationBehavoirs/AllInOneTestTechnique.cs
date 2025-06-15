@@ -55,8 +55,20 @@ public class AllInOneTestTechnique : ManipulationTechnique
 
         if (updateObjectPosToGazePoint)
         {
-            float distance = Vector3.Distance(gazeOrigin, target.position);
-            target.position = gazeOrigin + gazeDirection * distance;
+            if (HandGainFunction == HandGainFunction.HOMER || HandGainFunction == HandGainFunction.ScaledHOMER)
+            {
+                Ray gazeRay = EyeGaze.GetInstance().GetGazeRay();
+                Vector3 torsoPosition = Camera.main.transform.position + Vector3.down * TorsoOffset;
+                float targetToGazeDistance = Vector3.Distance(gazeRay.origin, target.position);
+                HOMER_OnGrabbed_Init(torsoPosition, handPos, gazeRay.origin + gazeRay.direction.normalized * targetToGazeDistance);
+            }
+            else
+            {
+                float distance = Vector3.Distance(gazeOrigin, target.position);
+                target.position = gazeOrigin + gazeDirection * distance;                
+            }
+
+
         }
         else
         {
