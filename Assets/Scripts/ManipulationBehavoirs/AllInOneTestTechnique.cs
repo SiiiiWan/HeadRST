@@ -14,6 +14,8 @@ public class AllInOneTestTechnique : ManipulationTechnique
     public TextMeshPro HandFunctionText;
     public TextMeshPro GazeFunctionText;
     public TextMeshPro HeadFunctionText;
+    public TextMeshPro HeadCentricText;
+
 
     private Linescript _handRayLine;
 
@@ -72,8 +74,13 @@ public class AllInOneTestTechnique : ManipulationTechnique
                 float targetToGazeDistance = Vector3.Distance(gazeRay.origin, target.position);
                 HOMER_OnGrabbed_Init(torsoPosition, handPos, gazeRay.origin + gazeRay.direction.normalized * targetToGazeDistance);
             }
-            else
+            else if (HandGainFunction == HandGainFunction.HandRaycast)
             {
+                Ray gazeRay = EyeGaze.GetInstance().GetGazeRay();
+                float targetToGazeDistance = Vector3.Distance(gazeRay.origin, target.position);
+                HandRaycast_OnGrabbed_Init(handPos, handData.GetHandDirection(), gazeRay.origin + gazeRay.direction.normalized * targetToGazeDistance);
+            }
+            else {
                 float distance = Vector3.Distance(gazeOrigin, target.position);
                 target.position = gazeOrigin + gazeDirection * distance;                
             }
@@ -103,8 +110,6 @@ public class AllInOneTestTechnique : ManipulationTechnique
                 Vector3 headDepthPosOffset = movementDirection * depthOffset;
                 Vector3 nextTargetPosition = target.position + headDepthPosOffset;
 
-                //TODO: add a eye head angle exiding just warp to the depth limits
-
                 // Depth cap
                 float nextTargetDistToHand = Vector3.Distance(nextTargetPosition, handPos);
                 if (nextTargetDistToHand >= 0.05f & nextTargetDistToHand <= 10f)
@@ -112,6 +117,10 @@ public class AllInOneTestTechnique : ManipulationTechnique
                     if (isHOMER)
                     {
                         _HOMER_offsetVector += headDepthPosOffset;
+                    }
+                    else if (HandGainFunction == HandGainFunction.HandRaycast)
+                    {
+                        _handRaycast_distanceOffset += depthOffset;
                     }
                     else
                     {
@@ -135,7 +144,7 @@ public class AllInOneTestTechnique : ManipulationTechnique
         _handRayLine.SetPostion(handPos, handPos + (target.position - handPos) * 0.9f);
 
         // Update UI text
-        UpdateUITextElements();
+        UpdateUIElements();
     }
 
     
@@ -243,49 +252,54 @@ public class AllInOneTestTechnique : ManipulationTechnique
     public void SwitchToIsomorphic()
     {
         HandGainFunction = HandGainFunction.isomophic;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchToVisual()
     {
         HandGainFunction = HandGainFunction.visual;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
 
     public void SwitchToPrism()
     {
         HandGainFunction = HandGainFunction.prism;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchToGazeNPinch()
     {
         HandGainFunction = HandGainFunction.gazeNpinch;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchToHOMER()
     {
         HandGainFunction = HandGainFunction.HOMER;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchToScaledHOMER()
     {
         HandGainFunction = HandGainFunction.ScaledHOMER;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchToHandRaycast()
     {
         HandGainFunction = HandGainFunction.HandRaycast;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
 
     public void SwitchGaze()
     {
         AddGaze = !AddGaze;
-        UpdateUITextElements();
+        UpdateUIElements();
     }
     public void SwitchHead()
     {
         AddHead = !AddHead;
-        UpdateUITextElements();
+        UpdateUIElements();
+    }
+    public void SwitchCentricType()
+    {
+        CentricType = CentricType == CentricType.HandCentric ? CentricType.HeadCentric : CentricType.HandCentric;
+        UpdateUIElements();
     }
 
     public void Reset()
@@ -294,14 +308,17 @@ public class AllInOneTestTechnique : ManipulationTechnique
         AddHead = false;
         HandGainFunction = HandGainFunction.isomophic;
 
-        UpdateUITextElements();
+        UpdateUIElements();
     }
 
-    void UpdateUITextElements()
+    void UpdateUIElements()
     {
         HandFunctionText.text = "Hand Function: " + HandGainFunction.ToString();
-        GazeFunctionText.text = AddGaze ? "Gaze: ON" : "Gaze: OFF";
-        HeadFunctionText.text = AddHead ? "Head: ON" : "Head: OFF";
+        GazeFunctionText.text = AddGaze ? "ON" : "OFF";
+        HeadFunctionText.text = AddHead ? "ON" : "OFF";
+        HeadCentricText.text = CentricType == CentricType.HandCentric ? "Hand Centric" : "Head Centric";
+
+        HeadCentricText.transform.parent.gameObject.SetActive(AddHead);
     }
 
     #endregion
