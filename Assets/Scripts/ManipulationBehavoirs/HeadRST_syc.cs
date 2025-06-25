@@ -1,15 +1,30 @@
+using System;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
 public class HeadRST_sync : ManipulationTechnique
 {
 
-    public bool HeadBoost = true;
+    [Header("One Euro Filter")]
+
+    public float FilterFrequency = 90f;
+    public float FilterMinCutOff = 0.05f;
+    public float FilterBeta = 10f;
+    public float FitlerDcutoff = 1f;
+
+    private OneEuroFilter<Vector3> _gazeDirFilter;
+    private OneEuroFilter<Vector3> _gazePosFilter;
 
     private float _depthGain;
     private float _depthOffset;
 
     private Vector3 _accumulatedHandOffset;
+
+    void Awake()
+    {
+        _gazeDirFilter = new OneEuroFilter<Vector3>(FilterFrequency);
+        _gazePosFilter = new OneEuroFilter<Vector3>(FilterFrequency);
+    }
 
     public override void OnSingleHandGrabbed(Transform target)
     {
@@ -19,47 +34,38 @@ public class HeadRST_sync : ManipulationTechnique
 
     public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
-        EyeGaze eyeGaze = EyeGaze.GetInstance();
-        HeadMovement head = HeadMovement.GetInstance();
+        EyeGaze gazeData = EyeGaze.GetInstance();
+        HeadMovement headData = HeadMovement.GetInstance();
+        HandPosition handData = HandPosition.GetInstance();
 
-        Vector3 gazeOrigin = eyeGaze.GetGazeRay().origin;
-        Vector3 gazeDirection = eyeGaze.GetGazeRay().direction;
+        Vector3 rawGazeOrigin = gazeData.GetRawGazeOrigin();
+        Vector3 rawGazeDirection = gazeData.GetRawGazeDirection();
 
-        Quaternion deltaRot = HandPosition.GetInstance().GetDeltaHandRotation(usePinchTip: true);
-        target.rotation = deltaRot * target.rotation;
+        _gazeDirFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FitlerDcutoff);
+        _gazePosFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FitlerDcutoff);
 
-        Vector3 deltaHandPos = HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true);
+        Vector3 gazeOrigin = _gazePosFilter.Filter(rawGazeOrigin);
+        Vector3 gazeDirection = _gazeDirFilter.Filter(rawGazeDirection);
 
-        bool _isHandMovingOutwards = Vector3.Dot(deltaHandPos, gazeDirection) > 0;
-        bool _isHeadTiltingUpwards = head.DeltaHeadY > 0;
-
-        _depthGain = 1;
-
-        if (_isHandMovingOutwards && _isHeadTiltingUpwards && head.HeadSpeed >= 0.1f)
-        {
-            _depthGain = 10;
-        }
-
-        if (!_isHandMovingOutwards && !_isHeadTiltingUpwards && head.HeadSpeed >= 0.1f)
-        {
-            _depthGain = 10f;
-        }
+        Quaternion deltaHandRot = handData.GetDeltaHandRotation(usePinchTip: true);
+        Vector3 deltaHandPos = handData.GetDeltaHandPosition(usePinchTip: true);
 
 
-        // target.position += deltaHandPos;
+        bool isBallisticHeadMovement = headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f;
+        bool HandNotFastMoving = handData.GetHandSpeed() <= 0.5f;
+        bool addDepthOffsetWithHead = isBallisticHeadMovement && HandNotFastMoving;
 
-        // target.position = gazeOrigin + gazeDirection * Vector3.Distance(gazeOrigin, target.position);
-
-        if(HeadBoost) _depthOffset += Vector3.Dot(deltaHandPos, gazeDirection) * _depthGain;
+        if(addDepthOffsetWithHead) _depthOffset += headData.DeltaHeadY * 0.2f;
 
         _accumulatedHandOffset += deltaHandPos;
 
-        if (eyeGaze.IsSaccading())
+        if (gazeData.IsSaccading())
         {
             _accumulatedHandOffset = Vector3.zero;
         }
 
         target.position = gazeOrigin + gazeDirection * Mathf.Clamp(_depthOffset, 1f, 10f) + _accumulatedHandOffset;
+        target.rotation = deltaHandRot * target.rotation;
 
     }
     

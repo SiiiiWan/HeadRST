@@ -11,6 +11,7 @@ public class EyeGaze : Singleton<EyeGaze>
     public Transform GazeCursor;
 
     private Vector3 _combinedGazeOrigin, _combinedGazeDir;
+    private Vector3 _rawGazeOrigin, _rawGazeDir;
 
     private Vector3 _combinedGazeDir_pre;
 
@@ -75,6 +76,9 @@ public class EyeGaze : Singleton<EyeGaze>
         _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
         _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;
 
+        _rawGazeOrigin = _combinedGazeOrigin;
+        _rawGazeDir = _combinedGazeDir;
+
         if (FilteringGaze)
         {
             _gazeDirFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FitlerDcutoff);
@@ -113,6 +117,15 @@ public class EyeGaze : Singleton<EyeGaze>
     public Ray GetGazeRay()
     {
         return new Ray(_combinedGazeOrigin, _combinedGazeDir);
+    }
+
+    public Vector3 GetRawGazeOrigin()
+    {
+        return _rawGazeOrigin;
+    }
+    public Vector3 GetRawGazeDirection()
+    {
+        return _rawGazeDir;
     }
 
     public Transform GetGazeHitTrans()

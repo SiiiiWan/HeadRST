@@ -1397,6 +1397,7 @@ MonoBehaviour:
   IsOneHandPinching: 0
   IsNoHandPinching: 0
   PinchState: 0
+  PinchThreshold: 0.01
   righHandPinchBall_index: {fileID: 1746004825}
   righHandPinchBall_thumb: {fileID: 1522639666}
   leftHandPinchBall_index: {fileID: 512847648}
@@ -5725,7 +5726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &448756907
 Transform:
   m_ObjectHideFlags: 0
@@ -13210,6 +13211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
+  - component: {fileID: 1006584917}
   - component: {fileID: 1006584926}
   - component: {fileID: 1006584924}
   - component: {fileID: 1006584925}
@@ -13219,7 +13221,6 @@ GameObject:
   - component: {fileID: 1006584922}
   - component: {fileID: 1006584913}
   - component: {fileID: 1006584916}
-  - component: {fileID: 1006584917}
   - component: {fileID: 1006584918}
   - component: {fileID: 1006584919}
   - component: {fileID: 1006584920}
@@ -13318,7 +13319,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f5d3d1c81c80a4296da33aaa2ad5ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HeadBoost: 0
+  FilterFrequency: 90
+  FilterMinCutOff: 0.05
+  FilterBeta: 10
+  FitlerDcutoff: 1
 --- !u!114 &1006584918
 MonoBehaviour:
   m_ObjectHideFlags: 0
