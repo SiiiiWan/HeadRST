@@ -86,7 +86,7 @@ public class HandPosition : Singleton<HandPosition>
 
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip) // Use Hand_IndexTip for OVR
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip) // Use Hand_IndexTip for OVR //XRHand_IndexTip
                 return bone.Transform;
         }
         return null;
