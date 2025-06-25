@@ -97,13 +97,13 @@ public class AllInOneTestTechnique : ManipulationTechnique
                 float DeltaHeadY = HeadMovement.GetInstance().DeltaHeadY;
                 float depthOffset = DeltaHeadY * 0.2f;
 
-                if (isEyeHeadAngleExceededLimit)
-                {
-                    if (gazeData.EyeInHeadYAngle > 0f && DeltaHeadY < 0) depthOffset = -2f * Time.deltaTime;
+                // if (isEyeHeadAngleExceededLimit)
+                // {
+                //     if (gazeData.EyeInHeadYAngle > 0f && DeltaHeadY < 0) depthOffset = -2f * Time.deltaTime;
 
-                    if (gazeData.EyeInHeadYAngle < 0f && DeltaHeadY > 0) depthOffset = 2f * Time.deltaTime;
+                //     if (gazeData.EyeInHeadYAngle < 0f && DeltaHeadY > 0) depthOffset = 2f * Time.deltaTime;
 
-                }
+                // }
 
                 Vector3 headDepthPosOffset = movementDirection * depthOffset;
                 Vector3 nextTargetPosition = target.position + headDepthPosOffset;
