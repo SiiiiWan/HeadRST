@@ -56,9 +56,11 @@ public class AllInOneTestTechnique : ManipulationTechnique
         bool updateObjectPosToGazePoint = gazeData.IsSaccading() && AddGaze;
 
         bool isBallisticHeadMovement = headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f;
-        bool isEyeHeadAngleExceededLimit = Vector3.Angle(gazeDirection, Camera.main.transform.forward) > 10f;
+        // bool isEyeHeadAngleExceededLimit = Vector3.Angle(gazeDirection, Camera.main.transform.forward) > 10f;
         bool HandNotFastMoving = handData.GetHandSpeed() <= 0.5f;
-        bool addDepthOffsetWithHead = (isBallisticHeadMovement || isEyeHeadAngleExceededLimit) && HandNotFastMoving && AddHead;
+        bool addDepthOffsetWithHead = isBallisticHeadMovement && HandNotFastMoving && AddHead;
+        // bool addDepthOffsetWithHead = (isBallisticHeadMovement || isEyeHeadAngleExceededLimit) && HandNotFastMoving && AddHead;
+
 
 
         bool isHOMER = HandGainFunction == HandGainFunction.HOMER || HandGainFunction == HandGainFunction.ScaledHOMER;
