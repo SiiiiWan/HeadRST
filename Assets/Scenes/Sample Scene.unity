@@ -13321,11 +13321,11 @@ GameObject:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584927}
+  - component: {fileID: 1006584924}
+  - component: {fileID: 1006584914}
   - component: {fileID: 1006584917}
   - component: {fileID: 1006584926}
-  - component: {fileID: 1006584924}
   - component: {fileID: 1006584925}
-  - component: {fileID: 1006584914}
   - component: {fileID: 1006584921}
   - component: {fileID: 1006584923}
   - component: {fileID: 1006584922}
@@ -13392,7 +13392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584927}
+  ManipulationBehavior: {fileID: 1006584924}
   GrabbedObject: {fileID: 0}
   ManipulationBunny: {fileID: 1133186099}
   DockingTargets:
@@ -13532,6 +13532,8 @@ MonoBehaviour:
   TorsoPositionIndicator: {fileID: 1932865037}
   HandPositionIndicator: {fileID: 1548497617}
   TorsoOffset: 0.35
+  scalingConstant: 0.15
+  minVelocityThreshold: 0.01
 --- !u!114 &1006584925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25710,7 +25712,7 @@ MonoBehaviour:
   ShowGazeCursor: 0
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 150
-  CorrectGaze: 1
+  CorrectGaze: 0
   FramOffset: 10
   FilteringGaze: 1
   FilterFrequency: 90
