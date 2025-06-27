@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GazeNPinchEyeHead : ManipulationTechnique
+public class HomerEyeHead : ManipulationTechnique
 {
 
     [Header("Fixation Filter")]
@@ -14,15 +14,28 @@ public class GazeNPinchEyeHead : ManipulationTechnique
     public float MinDistance = 1f; // in meters
     public float MaxDistance = 10f; // in meters
 
+
+    [Header("PRISM Parameters")]
+    public float scalingConstant = 0.15f; //TODO: fine parameters from papers
+    public float minVelocityThreshold = 0.01f;
+
+
+    [Header("HOMER Parameters")]
+    public float TorsoOffset = 0.35f;
+
     bool _updateObjectPosToGazePoint;
     float _distanceOnGrab;
     float _distanceForward, _distanceBackward;
     float _depthGain_forward, _depthGain_backward;
+
+    private Vector3 lastHandPosition;
+
     public override void OnSingleHandGrabbed(Transform target)
     {
         HandPosition handData = HandPosition.GetInstance();
         EyeGaze gazeData = EyeGaze.GetInstance();
         HeadMovement headData = HeadMovement.GetInstance();
+        Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
 
         Vector3 gazeOrigin = gazeData.GetGazeRay().origin;
         _distanceOnGrab = Vector3.Distance(target.position, gazeOrigin);
@@ -39,13 +52,14 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         _distanceForward = MaxDistance - _distanceOnGrab;
         _distanceBackward = _distanceOnGrab - MinDistance;
 
-
-
         _depthGain_forward = _distanceForward / 20f;
         _depthGain_backward = _distanceBackward / 20f;
 
+
+        StartManipulation_HOMER(GetCurrentTorsoPosition(), handPos, target.position);
+        lastHandPosition = handPos;
     }
-    
+
 
     public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
@@ -75,7 +89,6 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         }
 
 
-
         bool isBallisticHeadMovement = headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f;
         bool handNotFastMoving = handData.GetHandSpeed() <= 0.2f;
         bool addDepthOffsetWithHead = handNotFastMoving;
@@ -86,31 +99,39 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 
         if (_updateObjectPosToGazePoint)
         {
-            target.position = gazeOrigin + gazeDirection * distance;
+            target.position = gazeOrigin + gazeDirection.normalized * distance;
+            StartManipulation_HOMER(GetCurrentTorsoPosition(), handPos, target.position);
         }
         else
         {
-            Vector3 nextObjectPosition = target.position + handPos_delta * GetOriginGain(target);
-            
-            if(addDepthOffsetWithHead) nextObjectPosition += _fixationCentroid * deltaHeadY * depthGain * (isBallisticHeadMovement ? 1f : 0.5f);
+
+            if (addDepthOffsetWithHead) _offsetVector += _fixationCentroid * deltaHeadY * depthGain * (isBallisticHeadMovement ? 1f : 0.5f);
+
+
+            Vector3 handVelocity = handPos_delta / Time.deltaTime;
+            float handSpeed = handVelocity.magnitude;
+
+            float scaleFactor = Mathf.Min(1.2f, handSpeed / scalingConstant);
+            if (handSpeed < minVelocityThreshold) scaleFactor = 0f;
+
+            Vector3 scaledHandMovement = handPos_delta * scaleFactor;
+            Vector3 scaledHandPosition = lastHandPosition + scaledHandMovement;
+
+            Vector3 nextObjectPosition = UpdateObjectPosition_HOMER(scaledHandPosition);
 
             float nextDistance = Vector3.Distance(nextObjectPosition, gazeOrigin);
-            if (nextDistance <= MaxDistance && nextDistance >= MinDistance) target.position = nextObjectPosition;
+            if (nextDistance <= MaxDistance && nextDistance >= MinDistance)
+            {
+                target.position = nextObjectPosition;
+            }
 
         }
 
-
+        lastHandPosition = handPos;
         target.rotation = handRot_delta * target.rotation;
     }
 
-    
-    float GetOriginGain(Transform target)
-    {
-        // return 1;
-        return Vector3.Distance(target.position, Camera.main.transform.position);
-    }
 
-    private Vector3 _PreviousFP, _FP;
     private float _fixationWindowSize;
     private Vector3 _fixationCentroid;
     private Queue<Vector3> _fixationDirBuffer = new Queue<Vector3>();
@@ -143,7 +164,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
             _fixationDirBuffer.Clear();
             return false;
         }
-        
+
         _fixationCentroid = tmpCentroid;
         return true;
     }
@@ -160,6 +181,44 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         }
         Vector3 centroid = sum / _fixationDirBuffer.Count;
         return centroid.normalized;
+    }
+
+    private Vector3 _torsoPosition_init;
+    private Vector3 _handPosition_init;
+    private Vector3 _objectPosition_init;
+    private float _distanceHandToTorso_init;
+    private float _distanceObjectToTorso_init;
+    private Vector3 _offsetVector;
+
+    public void StartManipulation_HOMER(Vector3 torso, Vector3 hand, Vector3 objectPosition)
+    {
+        // Difference between HOMER and visual gain is that HOMER handle the depth translation
+        _torsoPosition_init = torso;
+        _handPosition_init = hand;
+        _objectPosition_init = objectPosition;
+
+        _distanceHandToTorso_init = Vector3.Distance(_torsoPosition_init, _handPosition_init);
+        _distanceObjectToTorso_init = Vector3.Distance(_torsoPosition_init, _objectPosition_init);
+
+        Vector3 torso_to_hand_Direction_init = (_handPosition_init - _torsoPosition_init).normalized;
+        Vector3 expectedObjectPosition = _torsoPosition_init + torso_to_hand_Direction_init * _distanceObjectToTorso_init;
+        _offsetVector = _objectPosition_init - expectedObjectPosition;
+    }
+
+    Vector3 GetCurrentTorsoPosition()
+    {
+        return Camera.main.transform.position + Vector3.down * TorsoOffset;
+    }
+
+    public Vector3 UpdateObjectPosition_HOMER(Vector3 currentHandPosition)
+    {
+        Vector3 currentTorsoPosition = GetCurrentTorsoPosition();
+        float distanceHandToTorso_current = Vector3.Distance(currentTorsoPosition, currentHandPosition);
+        float scaledDistance = _distanceObjectToTorso_init / _distanceHandToTorso_init * distanceHandToTorso_current;
+
+        Vector3 torso_to_hand_Direction_current = (currentHandPosition - currentTorsoPosition).normalized;
+        Vector3 objectPosition = currentTorsoPosition + torso_to_hand_Direction_current * scaledDistance + _offsetVector;
+        return objectPosition;
     }
 
 }

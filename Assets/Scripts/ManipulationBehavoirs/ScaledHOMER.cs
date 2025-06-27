@@ -33,7 +33,6 @@ public class ScaledHOMER : ManipulationTechnique
 
         Vector3 handVelocity = handPos_delta / Time.deltaTime;
         float handSpeed = handVelocity.magnitude;
-        print($"Hand Speed: {handSpeed}");
 
         float scaleFactor = Mathf.Min(1.2f, handSpeed / scalingConstant);
         if (handSpeed < minVelocityThreshold)  scaleFactor = 0f;
