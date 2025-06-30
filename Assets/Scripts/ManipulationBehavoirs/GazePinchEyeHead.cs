@@ -18,6 +18,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
     float _distanceOnGrab;
     float _distanceForward, _distanceBackward;
     float _depthGain_forward, _depthGain_backward;
+    float _depthGain;
     public override void OnSingleHandGrabbed(Transform target)
     {
         HandPosition handData = HandPosition.GetInstance();
@@ -43,6 +44,8 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 
         _depthGain_forward = _distanceForward / 20f;
         _depthGain_backward = _distanceBackward / 20f;
+
+        _depthGain = Math.Max(_depthGain_backward, _depthGain_forward);
 
     }
     
@@ -81,24 +84,29 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         bool addDepthOffsetWithHead = handNotFastMoving;
         float deltaHeadY = headData.DeltaHeadY;
 
-        float distance = Vector3.Distance(gazeOrigin, target.position);
-        float depthGain = Math.Max(_depthGain_backward, _depthGain_forward);
+        target.position += handPos_delta * GetOriginGain(target);
+
 
         if (_updateObjectPosToGazePoint)
         {
+            float distance = Vector3.Distance(gazeOrigin, target.position);
             target.position = gazeOrigin + gazeDirection * distance;
         }
         else
         {
-            Vector3 nextObjectPosition = target.position + handPos_delta * GetOriginGain(target);
-            
-            if(addDepthOffsetWithHead) nextObjectPosition += _fixationCentroid * deltaHeadY * depthGain * (isBallisticHeadMovement ? 1f : 0.5f);
-
-            float nextDistance = Vector3.Distance(nextObjectPosition, gazeOrigin);
-            if (nextDistance <= MaxDistance && nextDistance >= MinDistance) target.position = nextObjectPosition;
-
+            if (addDepthOffsetWithHead) target.position += _fixationCentroid * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.5f);
         }
-
+        
+        float nextDistance = Vector3.Distance(target.position, gazeOrigin);
+        Vector3 nextTargetDirection = (target.position - gazeOrigin).normalized;
+        if(nextDistance < MinDistance)
+        {
+            target.position = gazeOrigin + nextTargetDirection * MinDistance;
+        }
+        else if (nextDistance > MaxDistance)
+        {
+            target.position = gazeOrigin + nextTargetDirection * MaxDistance;
+        }
 
         target.rotation = handRot_delta * target.rotation;
     }

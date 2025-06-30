@@ -2565,6 +2565,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6218512689162353376, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59435e023553c584384d62981e814d3b, type: 2}
     - target: {fileID: 6897523543785559302, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
       propertyPath: m_Name
       value: Target bunny (2)
@@ -5939,6 +5943,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6218512689162353376, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59435e023553c584384d62981e814d3b, type: 2}
     - target: {fileID: 6897523543785559302, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
       propertyPath: m_Name
       value: Target bunny (4)
@@ -6398,6 +6406,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6218512689162353376, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59435e023553c584384d62981e814d3b, type: 2}
     - target: {fileID: 6897523543785559302, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
       propertyPath: m_Name
       value: Target bunny (3)
@@ -25779,6 +25791,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6218512689162353376, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59435e023553c584384d62981e814d3b, type: 2}
     - target: {fileID: 6897523543785559302, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
       propertyPath: m_Name
       value: Target bunny (1)
@@ -31635,6 +31651,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6218512689162353376, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 59435e023553c584384d62981e814d3b, type: 2}
     - target: {fileID: 6897523543785559302, guid: ba9c41576cdad1144a7f0cff55ed4ffa, type: 3}
       propertyPath: m_Name
       value: Target bunny

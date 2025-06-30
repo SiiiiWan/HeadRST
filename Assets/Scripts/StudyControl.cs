@@ -43,7 +43,7 @@ public class StudyControl : Singleton<StudyControl>
             );
 
             Vector3 randomAxis = Random.onUnitSphere;
-            float randomAngle = Random.Range(-15f, 15f);
+            float randomAngle = Random.Range(-30f, 30f);
             Quaternion randomRotation = Quaternion.AngleAxis(randomAngle, randomAxis);
             bunny.transform.rotation = randomRotation * _startingRotation;
         }
