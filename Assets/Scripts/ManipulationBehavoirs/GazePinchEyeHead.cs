@@ -114,6 +114,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
     
     float GetOriginGain(Transform target)
     {
+        // return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true), Camera.main.transform.position);
         // return 1;
         return Vector3.Distance(target.position, Camera.main.transform.position);
     }
