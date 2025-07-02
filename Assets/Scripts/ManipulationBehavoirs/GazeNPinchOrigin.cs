@@ -18,6 +18,6 @@ public class GazeNPinchOrigin : ManipulationTechnique
 
     float GetVisualGain(Transform target)
     {
-        return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetDeltaHandPosition(usePinchTip: true), Camera.main.transform.position);
+        return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetHandPosition(usePinchTip: true), Camera.main.transform.position);
     }
 }

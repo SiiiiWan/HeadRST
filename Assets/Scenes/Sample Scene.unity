@@ -15696,11 +15696,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
-  - component: {fileID: 1006584929}
+  - component: {fileID: 1006584914}
   - component: {fileID: 1006584927}
   - component: {fileID: 1006584924}
   - component: {fileID: 1006584928}
-  - component: {fileID: 1006584914}
+  - component: {fileID: 1006584929}
   - component: {fileID: 1006584917}
   - component: {fileID: 1006584926}
   - component: {fileID: 1006584925}
