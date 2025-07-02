@@ -9,8 +9,8 @@ public class ScaledHOMER : ManipulationTechnique
     public float TorsoOffset = 0.35f; // Offset from the camera to the torso
 
     private Vector3 lastHandPosition;
-    public float scalingConstant = 0.15f; //TODO: fine parameters from papers
-    public float minVelocityThreshold = 0.01f;
+    public float scalingConstant = 0.15f; // at what hand speed m/s do you want to achive a 1:1 mapping //TODO: fine parameters from papers
+    public float MinVelocityThreshold = 0.01f;
 
     public override void OnSingleHandGrabbed(Transform target)
     {
@@ -30,17 +30,15 @@ public class ScaledHOMER : ManipulationTechnique
         Quaternion handRot_delta = handData.GetDeltaHandRotation(usePinchTip: true);
         Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
 
-
-        Vector3 handVelocity = handPos_delta / Time.deltaTime;
-        float handSpeed = handVelocity.magnitude;
+        float handSpeed = handData.GetHandSpeed();
 
         float scaleFactor = Mathf.Min(1.2f, handSpeed / scalingConstant);
-        if (handSpeed < minVelocityThreshold)  scaleFactor = 0f;
+        if (handSpeed < MinVelocityThreshold)  scaleFactor = 0f;
 
         Vector3 scaledHandMovement = handPos_delta * scaleFactor;
         Vector3 scaledHandPosition = lastHandPosition + scaledHandMovement;
 
-        lastHandPosition = handPos;
+        lastHandPosition = scaledHandPosition;
 
         target.position = UpdateObjectPosition_HOMER(scaledHandPosition);
         // target.position = UpdateObjectPosition_HOMER(handPos);

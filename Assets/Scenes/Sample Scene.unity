@@ -15770,7 +15770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584929}
+  ManipulationBehavior: {fileID: 1006584927}
   GrabbedObject: {fileID: 0}
   ManipulationBunny: {fileID: 1835495035}
   DockingTargets:
@@ -15911,8 +15911,8 @@ MonoBehaviour:
   TorsoPositionIndicator: {fileID: 1932865037}
   HandPositionIndicator: {fileID: 1548497617}
   TorsoOffset: 0.35
-  scalingConstant: 0.15
-  minVelocityThreshold: 0.01
+  scalingConstant: 0.5
+  MinVelocityThreshold: 0.01
 --- !u!114 &1006584925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15982,7 +15982,7 @@ MonoBehaviour:
   FixationAngle: 1.5
   MinDistance: 1
   MaxDistance: 10
-  scalingConstant: 0.15
+  scalingConstant: 0.5
   minVelocityThreshold: 0.01
   TorsoOffset: 0.35
 --- !u!114 &1006584929
@@ -23693,7 +23693,7 @@ MonoBehaviour:
   controllerDrivenHandPosesType: 0
   SimultaneousHandsAndControllersEnabled: 0
   _readOnlyWideMotionModeHandPosesEnabled: 0
-  wideMotionModeHandPosesEnabled: 0
+  wideMotionModeHandPosesEnabled: 1
   dynamicResolutionVersion: 1
 --- !u!114 &1621147464
 MonoBehaviour:
