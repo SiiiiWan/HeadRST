@@ -37,9 +37,9 @@ public class StudyControl : Singleton<StudyControl>
         {
             bunny.SetActive(true);
             bunny.transform.position = new Vector3(
-                Random.Range(-3f, 3f),
-                Random.Range(0f, 2f),
-                Random.Range(1f, 10f)
+                Random.Range(-2.5f, 2.5f),
+                Random.Range(0.1f, 2f),
+                Random.Range(1.5f, 9.5f)
             );
 
             Vector3 randomAxis = Random.onUnitSphere;
