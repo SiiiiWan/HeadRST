@@ -132,7 +132,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         }
 
         float nextDistance = Vector3.Distance(target.position, gazeOrigin);
-        if (nextDistance < MinDistance || nextDistance > MaxDistance || target.position.y < 0) target.position = _preTargetPosition;
+        if (nextDistance < MinDistance || nextDistance > MaxDistance) target.position = _preTargetPosition;
 
         target.rotation = handRot_delta * target.rotation;
 
