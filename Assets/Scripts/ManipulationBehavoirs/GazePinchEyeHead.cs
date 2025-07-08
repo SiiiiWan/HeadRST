@@ -8,6 +8,12 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 {
 
     public TextMeshPro text;
+    [Header("Configuration")]
+    public bool VisualGain;
+    public bool UseGaze;
+    public bool UseHead;
+    public bool ForwardHeadDepthOnly;
+
 
     [Header("Fixation Filter")]
     public float FixationDuration = 0.25f; // in seconds
@@ -107,15 +113,29 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 
         if (_updateObjectPosToGazePoint)
         {
-            float distance = Vector3.Distance(gazeOrigin, target.position);
-            target.position = gazeOrigin + gazeDirection * distance;
-            text.text = "Gaze Point";
+            if (UseGaze)
+            {
+                float distance = Vector3.Distance(gazeOrigin, target.position);
+                target.position = gazeOrigin + gazeDirection * distance;
+                text.text = "Gaze Point";
+            }
+
         }
         else
         {
             // if(addDepthOffsetWithHead) target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
-            
-            target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
+
+            if (UseHead)
+            {
+                if (ForwardHeadDepthOnly)
+                {
+                    if(deltaHeadY>0) target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
+                }
+                else
+                {
+                    target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
+                }
+            }
 
             // if (Math.Abs(headY_diviation) > 2)
             // {
@@ -147,7 +167,8 @@ public class GazeNPinchEyeHead : ManipulationTechnique
     
     float GetOriginGain(Transform target)
     {
-        // return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetHandPosition(usePinchTip: true), Camera.main.transform.position);
+        if(VisualGain)
+            return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetHandPosition(usePinchTip: true), Camera.main.transform.position);
         // return 1;
         return Vector3.Distance(target.position, Camera.main.transform.position);
     }

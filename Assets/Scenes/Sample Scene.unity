@@ -16190,6 +16190,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 733681278}
+  VisualGain: 1
+  UseGaze: 1
+  UseHead: 0
+  ForwardHeadDepthOnly: 0
   FixationDuration: 0.25
   FixationAngle: 3
   MinDistance: 0.8
