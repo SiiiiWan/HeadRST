@@ -16190,12 +16190,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 733681278}
-  VisualGain: 1
+  VisualGain: 0
   UseGaze: 1
-  UseHead: 0
-  ForwardHeadDepthOnly: 0
+  UseHead: 1
+  ForwardHeadDepthOnly: 1
   FixationDuration: 0.25
   FixationAngle: 3
+  FixationDuration_HeadY: 0.25
+  FixationAngle_HeadY_High: 1
+  FixationAngle_HeadY_Low: 0.3
   MinDistance: 0.8
   MaxDistance: 11
   TimeInterval: 0.3
@@ -32927,7 +32930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5686413468568243500, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7159562464958755027, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32969,10 +32972,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8794298598623439194, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 8794298598623439194, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 8794298598623439194, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.03
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5482475416168776817, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
 --- !u!33 &7812951384757432161
 MeshFilter:
