@@ -4,16 +4,14 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class GazeNPinchEyeHead : ManipulationTechnique
+public enum StaticState
 {
+    Gaze, Head, Hand
+}
 
-    public TextMeshPro text;
-    [Header("Configuration")]
-    public bool VisualGain;
-    public bool UseGaze;
-    public bool UseHead;
-    public bool ForwardHeadDepthOnly;
-
+public class StaticAnchor : ManipulationTechnique
+{
+    public StaticState CurrentState;
 
     [Header("Fixation Filter")]
     public float FixationDuration = 0.25f; // in seconds
@@ -25,7 +23,9 @@ public class GazeNPinchEyeHead : ManipulationTechnique
     public float FixationAngle_HeadY_Low = 0.3f; // in degrees
 
     [Header("Hand Speed")]
-    public float HandSpeedThreshold = 0.3f; // in meters per second
+    public float HandSpeedThreshold = 0.1f; // in meters per second
+    public float HandRotationSpeedThreshold = 20; // in degree per second
+
 
     [Header("Depth")]
     public float MinDistance = 1f; // in meters
@@ -76,9 +76,11 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         _fixationWindowSize = (int)(FixationDuration / Time.deltaTime);
         _fixationWindowSize_HeadY = (int)(FixationDuration_HeadY / Time.deltaTime);
 
+        _isWithinReach = Vector3.Distance(target.position, gazeOrigin) < MinDistance;
+
     }
 
-    private Vector3 _preTargetPosition;
+    private bool _isWithinReach;
 
     public override void ApplySingleHandGrabbedBehaviour(Transform target)
     {
@@ -92,9 +94,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 
         Vector3 handPos_delta = handData.GetDeltaHandPosition(usePinchTip: true);
         Quaternion handRot_delta = handData.GetDeltaHandRotation(usePinchTip: true);
-
-        Vector3 handPos = handData.GetHandPosition(usePinchTip: true);
-
+        Vector3 handPosition = handData.GetHandPosition(usePinchTip: true);
 
 
         bool IsSaccading = gazeData.IsSaccading();
@@ -108,126 +108,64 @@ public class GazeNPinchEyeHead : ManipulationTechnique
 
         bool isBallisticHeadMovement = headData.HeadSpeed >= 0.2f || Math.Abs(headData.HeadAcc) >= 1f;
 
-        bool handNotFastMoving = handData.GetHandSpeed() <= 0.1f;
-        _addDepthOffsetWithHead = handNotFastMoving;
-        // bool addDepthOffsetWithHead = (headY_diviation > 0 && headY_diviation > _headY_diviation_pre) || (headY_diviation < 0 && headY_diviation < _headY_diviation_pre);
+        handRot_delta.ToAngleAxis(out float angle, out Vector3 axis);
+        // print((angle / Time.deltaTime).ToString("F2"));
+        bool gazeMoving = (IsSaccading || Vector3.Angle(gazeDirection, _fixationCentroid) > 5f) && !IsGazeFixating;
+        bool handMoving = handData.GetHandSpeed() >= HandSpeedThreshold || angle / Time.deltaTime >= HandRotationSpeedThreshold;
+        bool headMoving = !_isHeadYFixating;
 
-        // text.text = IsHeadYFixating.ToString();
-        // text.text = IsGazeFixating.ToString();
 
-        text.text = handData.GetHandSpeed().ToString("F2");
-        float deltaHeadY = headData.DeltaHeadY;
 
-        //TODO: can only use gaze when keeping hand still, as according to the natural eye hand coordination gaze and hand moves together.
-        if (_updateObjectPosToGazePoint == false && (IsSaccading || Vector3.Angle(gazeDirection, _fixationCentroid) > 5f) && !IsGazeFixating) // fixation detection is frequenly swtiching between true and false, so need state switching
-        {
-            _updateObjectPosToGazePoint = true; // swithc to gaze state
-
-            _addDepthOffsetWithHead = false;
-        }
-        else if (_updateObjectPosToGazePoint == true && IsGazeFixating)
-        {
-            _updateObjectPosToGazePoint = false; // switch to head hand state
-
-            _headY_OnFixation = headY;
-            _addDepthOffsetWithHead = true;
-        }
-
-        // if (_updateObjectPosToGazePoint == false)
+        // if (headMoving)
         // {
-        //     if (_isHeadYFixating) // can further add ballistic / corrective
-        //     {
-        //         _addDepthOffsetWithHead = false;
-        //     }
-        //     else
-        //     {
-        //         _addDepthOffsetWithHead = true;
-        //     }
+        //     CurrentState = StaticState.Head;
         // }
 
-        target.position += handPos_delta * GetOriginGain(target);
-
-        Vector3 depthDir = (target.position - gazeOrigin).normalized;
-        Vector3 deltaHand_z = Vector3.Project(handPos_delta, depthDir);
-
-        if(handData.GetHandSpeed() >= HandSpeedThreshold) target.position += deltaHand_z * 5 / 0.2f;
-
-
-        if (_updateObjectPosToGazePoint)
+        if (handMoving)
         {
-            if (UseGaze)
-            {
+            CurrentState = StaticState.Hand;
+        }
+
+        // if (gazeMoving)
+        // {
+        //     CurrentState = StaticState.Gaze;
+        // }
+
+
+        switch (CurrentState)
+        {
+            case StaticState.Gaze:
                 float distance = Vector3.Distance(gazeOrigin, target.position);
                 target.position = gazeOrigin + gazeDirection * distance;
-                // text.text = "Gaze Point";
-            }
-
-
-        }
-        else
-        {
-            // if(addDepthOffsetWithHead) target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
-            // text.text = "Not adding Depth Offset";
-
-
-            
-            if(Math.Abs(headY_diviation) > 3f) target.position += (target.position - gazeOrigin).normalized * (headY_diviation - 3f) * HeadDepthSensitivity * Time.deltaTime;
-
-            // if (_addDepthOffsetWithHead && UseHead)
-            // {
-            //     // text.text = "Depth Offset";
-            //     target.position += (target.position - gazeOrigin).normalized * deltaHeadY * 0.2f;
-            // }
-
-
-
-            // if (UseHead)
-            // {
-            //     if (ForwardHeadDepthOnly)
-            //     {
-            //         if (deltaHeadY > 0) target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
-            //     }
-            //     else
-            //     {
-            //         target.position += (target.position - gazeOrigin).normalized * deltaHeadY * _depthGain * (isBallisticHeadMovement ? 1f : 0.25f);
-            //     }
-            // }
-
-            // if (Math.Abs(headY_diviation) > 2)
-            // {
-            //     _timer += Time.deltaTime;
-            //     if (_timer >= TimeInterval)
-            //     {
-            //         _timer = 0f;
-            //         target.position += (target.position - gazeOrigin).normalized * GetOriginGain(target) * 0.1f * (headY_diviation > 0 ? 1 : -1);
-            //     }                
-            // }
-
-
-            // text.text = headY_diviation.ToString("F2") + "°";
+                break;
+            case StaticState.Head:
+                target.position += (target.position - gazeOrigin).normalized * headData.DeltaHeadY * VitLerp(headData.HeadSpeed, 0.8f / 3f, 0.8f, 0.2f, 0.6f);
+                break;
+            case StaticState.Hand:
+                target.position += handPos_delta * GetVisualGain(target);
+                target.rotation = handRot_delta * target.rotation;
+                break;
+            default:
+                target.position += handPos_delta * GetVisualGain(target);
+                target.rotation = handRot_delta * target.rotation;
+                break;
         }
 
-        float nextDistance = Vector3.Distance(target.position, gazeOrigin);
-        if (nextDistance < MinDistance || nextDistance > MaxDistance) target.position = _preTargetPosition;
+        if(_isWithinReach == false && Vector3.Distance(target.position, gazeOrigin) < MinDistance)
+            target.position = handPosition;
 
-        target.rotation = handRot_delta * target.rotation;
-
-
-        _preTargetPosition = target.position;
-        _headY_diviation_pre = headY_diviation;
-
-        text.transform.LookAt(Camera.main.transform);
-        text.transform.Rotate(0, 180f, 0); // Optional: flip to face the camera properly
-
+        _isWithinReach = Vector3.Distance(target.position, gazeOrigin) < MinDistance;
+        
     }
 
 
-    float GetOriginGain(Transform target)
+    float GetVisualGain(Transform target)
     {
-        if (VisualGain)
-            return Vector3.Distance(target.position, Camera.main.transform.position) / Vector3.Distance(HandPosition.GetInstance().GetHandPosition(usePinchTip: true), Camera.main.transform.position);
-        // return 1;
-        return Vector3.Distance(target.position, Camera.main.transform.position);
+        EyeGaze gazeData = EyeGaze.GetInstance();
+        Vector3 gazeOrigin = gazeData.GetGazeRay().origin;
+        Vector3 handPosition = HandPosition.GetInstance().GetHandPosition(usePinchTip: true);
+
+        return Vector3.Distance(target.position, gazeOrigin) / Vector3.Distance(handPosition, gazeOrigin);
     }
 
     float VitLerp(float x, float k1 = 0.1f, float k2 = 0.4f, float v1 = 0.2f, float v2 = 0.8f)
@@ -337,7 +275,7 @@ public class GazeNPinchEyeHead : ManipulationTechnique
             if (angle_diff > dispersion) dispersion = angle_diff;
         }
 
-        text.text = dispersion.ToString("F2") + "°";
+        // text.text = dispersion.ToString("F2") + "°";
 
         // if (_isHeadYFixating)
         // {
@@ -360,13 +298,13 @@ public class GazeNPinchEyeHead : ManipulationTechnique
         if (dispersion > FixationAngle_HeadY_Low)
         {
             _fixationBuffer_HeadY.Clear();
-            return false;                
-        }    
+            return false;
+        }
 
         _fixationCentroid_HeadY = tmpCentroid;
         return true;
     }
-    
+
     private float GetMeanFixationBufferHeadY()
     {
         if (_fixationBuffer_HeadY == null || _fixationBuffer_HeadY.Count == 0)

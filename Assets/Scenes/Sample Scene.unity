@@ -15917,6 +15917,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
+  - component: {fileID: 1006584932}
+  - component: {fileID: 1006584933}
+  - component: {fileID: 1006584931}
+  - component: {fileID: 1006584930}
   - component: {fileID: 1006584914}
   - component: {fileID: 1006584927}
   - component: {fileID: 1006584924}
@@ -15979,6 +15983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57dd46a598ff264c814a4086f47ad29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useVisualGain_Plus: 1
 --- !u!114 &1006584915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15991,7 +15996,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584927}
+  ManipulationBehavior: {fileID: 1006584932}
   GrabbedObject: {fileID: 0}
   TechniqueText: {fileID: 373964267}
   TargetPrefab: {fileID: 931380826127199637, guid: af46c940e16570c48937c47dedb5646f, type: 3}
@@ -16199,9 +16204,11 @@ MonoBehaviour:
   FixationDuration_HeadY: 0.25
   FixationAngle_HeadY_High: 1
   FixationAngle_HeadY_Low: 0.3
+  HandSpeedThreshold: 0.3
   MinDistance: 0.8
   MaxDistance: 11
   TimeInterval: 0.3
+  HeadDepthSensitivity: 2.5
 --- !u!114 &1006584928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16238,6 +16245,74 @@ MonoBehaviour:
   FilterMinCutOff: 0.9
   FilterBeta: 15
   FitlerDcutoff: 1
+--- !u!114 &1006584930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8b336d238eda8f44b19a1e2f2afe512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17b8e3e5bfdad2043bc941a2c5362d2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a815be9ca44773a46834b10b8ed2d298, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentState: 0
+  FixationDuration: 0.25
+  FixationAngle: 3
+  FixationDuration_HeadY: 0.25
+  FixationAngle_HeadY_High: 1
+  FixationAngle_HeadY_Low: 0.3
+  HandSpeedThreshold: 0.3
+  HandRotationSpeedThreshold: 20
+  MinDistance: 1
+  MaxDistance: 50
+  TimeInterval: 0.1
+  HeadDepthSensitivity: 2.5
+--- !u!114 &1006584933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41378a5e049995f48b6b0277a81e0acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FilterFrequency: 90
+  FilterMinCutOff: 0.5
+  FilterBeta: 1
+  FilterDcutoff: 1
+  FixationDuration: 0.25
+  FixationAngle: 3
+  MinDistance: 1
+  MaxDistance: 10
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
