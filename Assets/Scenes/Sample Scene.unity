@@ -11375,17 +11375,6 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
---- !u!114 &733681278 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7524662776517409795, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
-  m_PrefabInstance: {fileID: 7754648800135587221}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &736150617
 GameObject:
   m_ObjectHideFlags: 0
@@ -15996,7 +15985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584932}
+  ManipulationBehavior: {fileID: 1006584933}
   GrabbedObject: {fileID: 0}
   TechniqueText: {fileID: 373964267}
   TargetPrefab: {fileID: 931380826127199637, guid: af46c940e16570c48937c47dedb5646f, type: 3}
@@ -16194,7 +16183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98d5e1408c6a5943959fa15b4d62b7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 733681278}
+  text: {fileID: 0}
   VisualGain: 0
   UseGaze: 1
   UseHead: 1
@@ -32204,7 +32193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4590905341319614326
 Transform:
   m_ObjectHideFlags: 0
@@ -33062,10 +33051,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5482475416168776817, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407816687fa771f4bbc9fa98f6d5b773, type: 3}
 --- !u!33 &7812951384757432161
 MeshFilter:

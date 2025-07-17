@@ -6,7 +6,7 @@ public enum Hand
     Right
 }
 
-public class HandPosition : Singleton<HandPosition>
+public class HandData : Singleton<HandData>
 {
 
     public Transform RightHandAnchor, LeftHandAnchor;
