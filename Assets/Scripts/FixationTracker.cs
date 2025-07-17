@@ -7,7 +7,7 @@ public class FixationTracker
     public float FixationAngle { get; private set; }
     public int FixationWindowSize { get; private set; }
     public Vector3 FixationCentroid { get; private set; }
-    public bool IsFixating {get; private set;}
+    public bool IsFixating { get; private set; }
     private Queue<Vector3> _fixationDirBuffer = new Queue<Vector3>();
 
     public FixationTracker(float duration, float dispersion)
@@ -67,5 +67,10 @@ public class FixationTracker
         }
         Vector3 centroid = sum / _fixationDirBuffer.Count;
         return centroid.normalized;
+    }
+
+    public void ResetFixationBuffer()
+    {
+        _fixationDirBuffer.Clear();
     }
 }

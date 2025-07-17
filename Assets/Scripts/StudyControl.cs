@@ -210,28 +210,28 @@ public class StudyControl : Singleton<StudyControl>
         return positions;
     }
 
-    public void SwitchToGazeNPinch()
-    {
-        ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-        TechniqueText.text = "Current Technique: Gaze and Pinch";
-    }
+    // public void SwitchToGazeNPinch()
+    // {
+    //     ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
+    //     TechniqueText.text = "Current Technique: Gaze and Pinch";
+    // }
 
-    public void SwitchToScaledHOMER()
-    {
-        ManipulationBehavior = GetComponent<ScaledHOMER>();
-        TechniqueText.text = "Current Technique: Scaled HOMER";
-    }
+    // public void SwitchToScaledHOMER()
+    // {
+    //     ManipulationBehavior = GetComponent<ScaledHOMER>();
+    //     TechniqueText.text = "Current Technique: Scaled HOMER";
+    // }
 
-    public void SwitchToGazeNPinchEyeHead()
-    {
-        ManipulationBehavior = GetComponent<GazeNPinchEyeHead>();
-        TechniqueText.text = "Current Technique: Gaze and Pinch Eye Head";
-    }
+    // public void SwitchToGazeNPinchEyeHead()
+    // {
+    //     ManipulationBehavior = GetComponent<GazeNPinchEyeHead>();
+    //     TechniqueText.text = "Current Technique: Gaze and Pinch Eye Head";
+    // }
 
-    public void SwitchToHomerEyeHead()
-    {
-        ManipulationBehavior = GetComponent<HomerEyeHead>();
-        TechniqueText.text = "Current Technique: HOMER Eye Head";
-    }
+    // public void SwitchToHomerEyeHead()
+    // {
+    //     ManipulationBehavior = GetComponent<HomerEyeHead>();
+    //     TechniqueText.text = "Current Technique: HOMER Eye Head";
+    // }
 
 }

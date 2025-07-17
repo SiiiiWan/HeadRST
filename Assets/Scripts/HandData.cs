@@ -23,7 +23,8 @@ public class HandData : Singleton<HandData>
 
     public Vector3 RightHandDirection, LeftHandDirection;
     public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
-    public float RightHandSpeed, LeftHandSpeed;
+    public float RightHandSpeed_wrist, LeftHandSpeed_wrist;
+    public float RightHandSpeed_pinch, LeftHandSpeed_pinch;
     public float HandDistance, HandDistance_delta;
     public Vector3 HandMidPosition, HandMidPosition_delta;
 
@@ -54,6 +55,7 @@ public class HandData : Singleton<HandData>
             RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
             RightPinchTipPosition = rightTip.position;
             RightPinchTipRotation = rightTip.rotation;
+            RightHandSpeed_pinch = RightPinchTipPosition_delta.magnitude / Time.deltaTime;
         }
 
 
@@ -64,6 +66,7 @@ public class HandData : Singleton<HandData>
             LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
             LeftPinchTipPosition = leftTip.position;
             LeftPinchTipRotation = leftTip.rotation;
+            LeftHandSpeed_pinch = LeftPinchTipPosition_delta.magnitude / Time.deltaTime;
         }
 
 
@@ -71,8 +74,8 @@ public class HandData : Singleton<HandData>
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
 
-        RightHandSpeed = RightHandPosition_delta.magnitude / Time.deltaTime;
-        LeftHandSpeed = LeftHandPosition_delta.magnitude / Time.deltaTime;
+        RightHandSpeed_wrist = RightHandPosition_delta.magnitude / Time.deltaTime;
+        LeftHandSpeed_wrist = LeftHandPosition_delta.magnitude / Time.deltaTime;
 
         RightHandDirection = RightHandAnchor.forward;
         LeftHandDirection = LeftHandAnchor.forward;
@@ -153,9 +156,23 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public float GetHandSpeed()
+    public float GetHandRotationSpeed(bool usePinchTip)
     {
-        return PinchDetector.GetInstance().IsLeftPinching ? LeftHandSpeed : RightHandSpeed;
+        GetDeltaHandRotation(usePinchTip).ToAngleAxis(out float rotationAngle, out Vector3 axis);
+
+        return rotationAngle / Time.deltaTime;
+    }
+
+    public float GetHandSpeed(bool usePinchTip)
+    {
+        if (PinchDetector.GetInstance().IsLeftPinching)
+        {
+            return usePinchTip ? LeftHandSpeed_pinch : LeftHandSpeed_wrist;
+        }
+        else
+        {
+            return usePinchTip ? RightHandSpeed_pinch : RightHandSpeed_wrist;
+        }
     }
 
     public Vector3 GetHandDirection()

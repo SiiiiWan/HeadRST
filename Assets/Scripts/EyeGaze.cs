@@ -54,6 +54,11 @@ public class EyeGaze : Singleton<EyeGaze>
         get {return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.right);}
     }
 
+    public float EyeInHeadXAngle
+    {
+        get {return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.up);}
+    }
+    
     void Update()
     {
         // TODO: blink filtering
