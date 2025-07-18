@@ -36,6 +36,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float HeadFixationDuration = 0.25f; // in seconds
     public float HeadFixationAngle = 1.5f; // in degrees
 
+    public float HandStablizeDuration = 0.25f; // in seconds
+    public float HandStablizeThr = 0.1f; // in meters
 
     // Hand
     public HandData HandData { get; private set; }
@@ -44,6 +46,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public Quaternion HandRotation_delta { get; private set; }
     public float HandTranslationSpeed { get; private set; }
     public float HandRotationSpeed { get; private set; }
+    public FixationTracker HandFixationTracker { get; private set; }
+    public bool IsHandStablized { get; private set; }
+
 
 
     // Gaze
@@ -80,6 +85,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     {
         GazeFixationTracker = new FixationTracker(GazeFixationDuration, GazeFixationAngle);
         HeadFixationTracker = new FixationTracker(HeadFixationDuration, HeadFixationAngle);
+        HandFixationTracker = new FixationTracker(HandStablizeDuration, HandStablizeThr);
     }
 
     public virtual void Update()
@@ -91,10 +97,15 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         HandTranslationSpeed = HandData.GetHandSpeed(usePinchTip: true);
         HandRotationSpeed = HandData.GetHandRotationSpeed(usePinchTip: true);
 
+        HandFixationTracker.UpdateThrshould(HandStablizeDuration, HandStablizeThr);
+        IsHandStablized = HandFixationTracker.GetIsFixating(HandPosition);
+
+
         GazeData = EyeGaze.GetInstance();
         GazeOrigin = GazeData.GetGazeRay().origin;
         GazeDirection = GazeData.GetGazeRay().direction.normalized;
         IsGazeSaccading = GazeData.IsSaccading();
+        GazeFixationTracker.UpdateThrshould(GazeFixationDuration, GazeFixationAngle);
         IsGazeFixating = GazeFixationTracker.GetIsFixating(GazeDirection);
         EyeInHeadYAngle = GazeData.EyeInHeadYAngle;
 
@@ -102,6 +113,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         HeadForward = Camera.main.transform.forward;
         HeadRight = Camera.main.transform.right;
         HeadPosition = Camera.main.transform.position;
+        HeadFixationTracker.UpdateThrshould(HeadFixationDuration, HeadFixationAngle);
         IsHeadFixating = HeadFixationTracker.GetIsFixating(HeadForward);
         HeadSpeed = HeadData.HeadSpeed;
         DeltaHeadY = HeadData.DeltaHeadY;
@@ -143,8 +155,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public void UpdateHeadDepthAnchor()
     {
         float maxEyeHeadAngle_Y_Up = 10f;
-        float maxEyeHeadAngle_Y_Down = -20f;
-        float maxHead_Y_up = 20f;
+        float maxEyeHeadAngle_Y_Down = -15f;
+        float maxHead_Y_up = 15f;
         float maxHead_Y_down = -15f;
 
         AvailableHeadY_Up = Math.Min(Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle_OnGazeFixation, 0) + HeadYAngle_OnGazeFixation, maxHead_Y_up);

@@ -73,4 +73,13 @@ public class FixationTracker
     {
         _fixationDirBuffer.Clear();
     }
+    public void UpdateThrshould(float duration, float angle)
+    {
+        if(duration == FixationDuration && angle == FixationAngle)
+            return;
+            
+        FixationDuration = duration;
+        FixationAngle = angle;
+        FixationWindowSize = (int)(FixationDuration / Time.deltaTime);
+    }
 }

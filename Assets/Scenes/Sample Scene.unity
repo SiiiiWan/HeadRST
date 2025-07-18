@@ -16153,10 +16153,13 @@ MonoBehaviour:
   GazeFixationAngle: 3
   HeadFixationDuration: 0.25
   HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.1
   text: {fileID: 28749755}
   HandTranslationSpeedThreshold: 0.3
   HandRotationSpeedThreshold: 20
   HeadSpeedThreshold: 0.1
+  HeadFixatedAfterGazeShift: 0
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
