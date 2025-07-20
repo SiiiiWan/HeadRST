@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum StaticState
 {
-    Gaze, Head, Hand
+    EyeHead, Hand
 }
 
 public class AnywhereHandContinuous : ManipulationTechnique
@@ -20,6 +20,14 @@ public class AnywhereHandContinuous : ManipulationTechnique
 
     public bool HeadFixatedAfterGazeShift;
     public float HeadDepth { get; private set; }
+
+    public override void OnSingleHandGrabbed(Transform obj)
+    {
+        base.OnSingleHandGrabbed(obj);
+
+        CurrentState = StaticState.Hand;
+    }
+
     public override void ApplySingleHandGrabbedBehaviour()
     {
 
@@ -33,66 +41,67 @@ public class AnywhereHandContinuous : ManipulationTechnique
         bool isHAndMoving = HandTranslationSpeed >= HandTranslationSpeedThreshold || HandRotationSpeed >= HandRotationSpeedThreshold;
         bool isHEadMoving = HeadSpeed >= HeadSpeedThreshold;
 
-        bool allowDetectHeadFixation = true;
-
-        // if (isHAndMoving)
-        // {
-        //         GrabbedObject.position += HandPosition_delta * GetVisualGain();
-        //         GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
-        //         text.text = "Hand";
-
-        //         HeadFixationTracker.ResetFixationBuffer();
-        //         // allowDetectHeadFixation = false;
-        // }
-        // else
-        // {
-
-        // }
-
-        if (IsGazeFixating == false)
+        if (CurrentState == StaticState.EyeHead)
         {
-            //  when head movement is involved in saccade, update the depth to the optimized position.
-            //  if is just gaze saccade without head movement, then the depth is not updated.
-            if (isHEadMoving)
-            {
-                UpdateHeadDepthAnchor();
-                HeadDepth = Mathf.Lerp(1f, 10f, (HeadYAngle - AvailableHeadY_Down) / (AvailableHeadY_Up - AvailableHeadY_Down));
-            }
-
-            // text.text = "Gaze";
-            GrabbedObject.position = GazeOrigin + GazeDirection * Mathf.Clamp(HeadDepth, 1f, 10f);
+            
         }
         else
         {
-            
-            Vector3 handOffset = HandPosition_delta * GetVisualGain();
-            Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
-
-            Vector3 handOffset_alongObjDirection = Vector3.Project(handOffset, objDirection);
-            Vector3 handOffset_perpendicular = handOffset - handOffset_alongObjDirection;
-
-
-            // when gaze is fixating, use head to adjust the depth
-            // text.text = "Head";
-            float depthGain = (10f - 1f) / (AvailableHeadY_Up - AvailableHeadY_Down);
-            Vector3 headDepthOffset = objDirection * depthGain * DeltaHeadY;
-
-            bool isHeadHandInSync = Vector3.Dot(handOffset, headDepthOffset) > 0;
-            
-            GrabbedObject.position += handOffset;
-
-            if (isHeadHandInSync)
-            {
-                GrabbedObject.position += headDepthOffset - handOffset_alongObjDirection;
-            }
-
-            float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
-            GrabbedObject.position = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);           
-
-
-            // GrabbedObject.position += HandPosition_delta * GetVisualGain();
-            GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
+            if(IsGazeFixating == false) CurrentState = StaticState.EyeHead;
         }
+
+        if (CurrentState == StaticState.EyeHead)
+        {
+            if (IsGazeFixating == false)
+            {
+                //  when head movement is involved in saccade, update the depth to the optimized position.
+                //  if is just gaze saccade without head movement, then the depth is not updated.
+                if (isHEadMoving)
+                {
+                    UpdateHeadDepthAnchor();
+                    HeadDepth = Mathf.Lerp(1f, 10f, (HeadYAngle - AvailableHeadY_Down) / (AvailableHeadY_Up - AvailableHeadY_Down));
+                }
+
+                // text.text = "Gaze";
+                GrabbedObject.position = GazeOrigin + GazeDirection * Mathf.Clamp(HeadDepth, 1f, 10f);
+            }
+            else
+            {
+
+                Vector3 handOffset = HandPosition_delta * GetVisualGain();
+                Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
+
+                Vector3 handOffset_alongObjDirection = Vector3.Project(handOffset, objDirection);
+                Vector3 handOffset_perpendicular = handOffset - handOffset_alongObjDirection;
+
+
+                // when gaze is fixating, use head to adjust the depth
+                // text.text = "Head";
+                float depthGain = (10f - 1f) / (AvailableHeadY_Up - AvailableHeadY_Down);
+                Vector3 headDepthOffset = objDirection * depthGain * DeltaHeadY;
+
+                bool isHeadHandInSync = Vector3.Angle(handOffset, headDepthOffset) < 30f;
+
+
+                if ((isHAndMoving && isHeadHandInSync) || isHAndMoving == false)
+                {
+                    GrabbedObject.position += headDepthOffset;
+                    float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
+                    GrabbedObject.position = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);
+
+                    GrabbedObject.position += handOffset_perpendicular;
+                }
+                else // hand moving in different direction
+                {
+                    GrabbedObject.position += handOffset;
+                }
+
+
+                // GrabbedObject.position += HandPosition_delta * GetVisualGain();
+                GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
+            }           
+        }
+
 
         // head hand moves together in the same direction for depth adjustment -> head > hand -> hand is moving but egnored
         // when head finishes depth adjustment at extreme angles, it will naturally moves back to the comfortable angle after the hand taks over the control -> hand > head -> head is movign but ignored
