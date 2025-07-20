@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum StaticState
 {
@@ -18,7 +19,7 @@ public class AnywhereHandContinuous : ManipulationTechnique
     public float HandRotationSpeedThreshold = 20f; // in degrees per second
     public float HeadSpeedThreshold = 0.1f; // in meters per second
 
-    public bool HeadFixatedAfterGazeShift;
+    public bool ReadyToSwitchToHand;
     public float HeadDepth { get; private set; }
 
     public override void OnSingleHandGrabbed(Transform obj)
@@ -41,13 +42,32 @@ public class AnywhereHandContinuous : ManipulationTechnique
         bool isHAndMoving = HandTranslationSpeed >= HandTranslationSpeedThreshold || HandRotationSpeed >= HandRotationSpeedThreshold;
         bool isHEadMoving = HeadSpeed >= HeadSpeedThreshold;
 
+        // print("Hand Rotation Speed: " + HandRotationSpeed.ToString("F2"));
+
         if (CurrentState == StaticState.EyeHead)
         {
-            
+
+            text.text = "EyeHead: " + ReadyToSwitchToHand.ToString();
+
+            if (ReadyToSwitchToHand && isHAndMoving)
+            {
+                // Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
+                
+                // print("Hand movement angle: " + Vector3.Angle(HandPosition_delta, objDirection));
+                // if (Vector3.Angle(HandFixationTracker.GetFixationDirCentroid(), objDirection) >= 45f)
+                // {
+                //     CurrentState = StaticState.Hand;
+                //     ReadyToSwitchToHand = false;
+                // }
+
+                    CurrentState = StaticState.Hand;
+                    ReadyToSwitchToHand = false;
+            }
         }
-        else
+        else if (CurrentState == StaticState.Hand)
         {
-            if(IsGazeFixating == false) CurrentState = StaticState.EyeHead;
+            text.text = "Hand";
+            if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.position - GazeOrigin) > 10f) CurrentState = StaticState.EyeHead;
         }
 
         if (CurrentState == StaticState.EyeHead)
@@ -64,42 +84,25 @@ public class AnywhereHandContinuous : ManipulationTechnique
 
                 // text.text = "Gaze";
                 GrabbedObject.position = GazeOrigin + GazeDirection * Mathf.Clamp(HeadDepth, 1f, 10f);
+                ReadyToSwitchToHand = false;
             }
-            else
+            else if (IsGazeFixating == true)
             {
-
-                Vector3 handOffset = HandPosition_delta * GetVisualGain();
                 Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
-
-                Vector3 handOffset_alongObjDirection = Vector3.Project(handOffset, objDirection);
-                Vector3 handOffset_perpendicular = handOffset - handOffset_alongObjDirection;
-
-
-                // when gaze is fixating, use head to adjust the depth
-                // text.text = "Head";
                 float depthGain = (10f - 1f) / (AvailableHeadY_Up - AvailableHeadY_Down);
                 Vector3 headDepthOffset = objDirection * depthGain * DeltaHeadY;
+                GrabbedObject.position += headDepthOffset;
 
-                bool isHeadHandInSync = Vector3.Angle(handOffset, headDepthOffset) < 30f;
+                float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
+                GrabbedObject.position = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);
 
-
-                if ((isHAndMoving && isHeadHandInSync) || isHAndMoving == false)
-                {
-                    GrabbedObject.position += headDepthOffset;
-                    float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
-                    GrabbedObject.position = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);
-
-                    GrabbedObject.position += handOffset_perpendicular;
-                }
-                else // hand moving in different direction
-                {
-                    GrabbedObject.position += handOffset;
-                }
-
-
-                // GrabbedObject.position += HandPosition_delta * GetVisualGain();
-                GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
-            }           
+                if (isHAndMoving == false && IsHandStablized) ReadyToSwitchToHand = true;
+            }
+        }
+        else if (CurrentState == StaticState.Hand)
+        {
+            GrabbedObject.position += HandPosition_delta * GetVisualGain();
+            GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
         }
 
 
