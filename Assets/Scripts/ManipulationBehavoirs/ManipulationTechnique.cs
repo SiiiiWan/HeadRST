@@ -9,6 +9,8 @@ public interface IManipulationBehavior
     void ApplyBothHandGrabbedBehaviour();
 }
 
+public enum StaticState { EyeHead, Hand }
+
 public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 {
     public Transform GrabbedObject { get; private set; }

@@ -1,14 +1,11 @@
-using System;
+
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
-
-public class AnywhereHandContinuous : ManipulationTechnique
-{
-    public TextMeshPro text;
+public class AnywhereHandDiscrete : ManipulationTechnique
+{    public TextMeshPro text;
     public StaticState CurrentState { get; private set; }
 
     [Header("Threshold Settings")]
@@ -19,11 +16,32 @@ public class AnywhereHandContinuous : ManipulationTechnique
     public bool ReadyToSwitchToHand;
     public float HeadDepth { get; private set; }
 
+    public float DirectionOffset = 10f; // in degrees
+    public float DepthOffset = 0.5f; // in meters
+    List<Vector3> Positions = new List<Vector3>();
+
     public override void OnSingleHandGrabbed(Transform obj)
     {
         base.OnSingleHandGrabbed(obj);
 
         CurrentState = StaticState.Hand;
+
+        Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
+        Positions.Clear();
+
+        for (int i = 0; i < 360 / DirectionOffset; i++)
+        {
+            for (int j = 0; j < 360 / DirectionOffset; j++)
+            {
+                for (float d = 1f; d <= 10f; d += DepthOffset)
+                {
+                    Vector3 position = GazeOrigin + Quaternion.Euler(0, i * DirectionOffset, 0) * Quaternion.Euler(j * DirectionOffset, 0, 0) * objDirection * d;
+                    Positions.Add(position);
+                }
+            }
+        }
+
+
     }
 
     public override void ApplySingleHandGrabbedBehaviour()
@@ -95,6 +113,16 @@ public class AnywhereHandContinuous : ManipulationTechnique
 
                 if (isHAndMoving == false && IsHandStablized) ReadyToSwitchToHand = true;
             }
+            
+            Vector3 closetPosition = Positions[0];
+            foreach (Vector3 position in Positions)
+            {
+                if (Vector3.Distance(position, GrabbedObject.position) < Vector3.Distance(closetPosition, GrabbedObject.position))
+                {
+                    closetPosition = position;
+                }
+            }
+            GrabbedObject.position = closetPosition;
         }
         else if (CurrentState == StaticState.Hand)
         {

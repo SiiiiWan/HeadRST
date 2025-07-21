@@ -159,7 +159,6 @@ public class HandData : Singleton<HandData>
     public float GetHandRotationSpeed(bool usePinchTip)
     {
         GetDeltaHandRotation(usePinchTip).ToAngleAxis(out float rotationAngle, out Vector3 axis);
-        if (rotationAngle > 180f) rotationAngle = 360f - rotationAngle;
         return rotationAngle / Time.deltaTime;
     }
 
