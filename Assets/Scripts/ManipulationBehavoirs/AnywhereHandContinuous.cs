@@ -49,7 +49,7 @@ public class AnywhereHandContinuous : ManipulationTechnique
             if (ReadyToSwitchToHand && isHAndMoving)
             {
                 // Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
-                
+
                 // print("Hand movement angle: " + Vector3.Angle(HandPosition_delta, objDirection));
                 // if (Vector3.Angle(HandFixationTracker.GetFixationDirCentroid(), objDirection) >= 45f)
                 // {
@@ -57,14 +57,21 @@ public class AnywhereHandContinuous : ManipulationTechnique
                 //     ReadyToSwitchToHand = false;
                 // }
 
-                    CurrentState = StaticState.Hand;
-                    ReadyToSwitchToHand = false;
+                CurrentState = StaticState.Hand;
+                ReadyToSwitchToHand = false;
             }
         }
         else if (CurrentState == StaticState.Hand)
         {
             text.text = "Hand";
             if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.position - GazeOrigin) > 10f) CurrentState = StaticState.EyeHead;
+            
+            if (IsHandStablized && IsHeadFixating == false)
+            {
+                // if hand is not moving and head is not fixating, switch to eye-head state
+                CurrentState = StaticState.EyeHead;
+                ReadyToSwitchToHand = false;
+            }
         }
 
         if (CurrentState == StaticState.EyeHead)
