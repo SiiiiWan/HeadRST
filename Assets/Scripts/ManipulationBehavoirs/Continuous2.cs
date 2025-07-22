@@ -1,11 +1,14 @@
-
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
-public class AnywhereHandDiscrete : ManipulationTechnique
-{    public TextMeshPro text;
+
+public class Continuous2 : ManipulationTechnique
+{
+    public TextMeshPro text;
     public StaticState CurrentState { get; private set; }
 
     [Header("Threshold Settings")]
@@ -16,51 +19,19 @@ public class AnywhereHandDiscrete : ManipulationTechnique
     public bool ReadyToSwitchToHand;
     public float HeadDepth { get; private set; }
 
-    public float DirectionOffset = 10f; // in degrees
-    public float DepthOffset = 0.5f; // in meters
-    List<Vector3> Positions = new List<Vector3>();
-
-    Vector3 EyeHeadPosition;
-
-
     public override void OnSingleHandGrabbed(Transform obj)
     {
         base.OnSingleHandGrabbed(obj);
 
         CurrentState = StaticState.Hand;
-
-        Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
-        Positions.Clear();
-
-        for (int i = 0; i < 360 / DirectionOffset; i++)
-        {
-            for (int j = 0; j < 360 / DirectionOffset; j++)
-            {
-                for (float d = 1f; d <= 10f; d += DepthOffset)
-                {
-                    Vector3 position = GazeOrigin + Quaternion.Euler(0, i * DirectionOffset, 0) * Quaternion.Euler(j * DirectionOffset, 0, 0) * objDirection * d;
-                    Positions.Add(position);
-                }
-            }
-        }
-
-        EyeHeadPosition = GrabbedObject.position;
     }
 
     public override void ApplySingleHandGrabbedBehaviour()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("EyeInHeadYAngle: " + EyeInHeadYAngle.ToString("F2") + ", HeadYAngle: " + HeadYAngle.ToString("F2"));
-        }
-
-
         bool isGazeMoving = IsGazeSaccading;
         bool isHAndMoving = HandTranslationSpeed >= HandTranslationSpeedThreshold || HandRotationSpeed >= HandRotationSpeedThreshold;
         bool isHEadMoving = HeadSpeed >= HeadSpeedThreshold;
-
-        // print("Hand Rotation Speed: " + HandRotationSpeed.ToString("F2"));
 
         if (CurrentState == StaticState.EyeHead)
         {
@@ -68,15 +39,6 @@ public class AnywhereHandDiscrete : ManipulationTechnique
 
             if (ReadyToSwitchToHand && isHAndMoving)
             {
-                // Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
-
-                // print("Hand movement angle: " + Vector3.Angle(HandPosition_delta, objDirection));
-                // if (Vector3.Angle(HandFixationTracker.GetFixationDirCentroid(), objDirection) >= 45f)
-                // {
-                //     CurrentState = StaticState.Hand;
-                //     ReadyToSwitchToHand = false;
-                // }
-
                 CurrentState = StaticState.Hand;
                 ReadyToSwitchToHand = false;
             }
@@ -96,42 +58,29 @@ public class AnywhereHandDiscrete : ManipulationTechnique
 
         if (CurrentState == StaticState.EyeHead)
         {
+            UpdateHeadDepthAnchor();
             if (IsGazeFixating == false)
             {
-                //  when head movement is involved in saccade, update the depth to the optimized position.
-                //  if is just gaze saccade without head movement, then the depth is not updated.
-                if (isHEadMoving)
-                {
-                    UpdateHeadDepthAnchor();
-                    HeadDepth = Mathf.Lerp(1f, 10f, (HeadYAngle - Limit_HeadY_Down) / (Limit_HeadY_Up - Limit_HeadY_Down));
-                }
-
-                // text.text = "Gaze";
-                EyeHeadPosition = GazeOrigin + GazeDirection * Mathf.Clamp(HeadDepth, 1f, 10f);
+                float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
+                GrabbedObject.position = GazeOrigin + GazeDirection * distance;
                 ReadyToSwitchToHand = false;
             }
             else if (IsGazeFixating == true)
             {
-                Vector3 objDirection = (EyeHeadPosition - GazeOrigin).normalized;
+                Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
                 float depthGain = (10f - 1f) / (Limit_HeadY_Up - Limit_HeadY_Down);
-                Vector3 headDepthOffset = objDirection * depthGain * DeltaHeadY;
-                EyeHeadPosition += headDepthOffset;
 
-                float distance = Vector3.Distance(EyeHeadPosition, GazeOrigin);
-                EyeHeadPosition = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);
+                Vector3 headDepthOffset = objDirection * depthGain * DeltaHeadY;
+                GrabbedObject.position += headDepthOffset;
+
+                float distance = Vector3.Distance(GrabbedObject.position, GazeOrigin);
+                GrabbedObject.position = GazeOrigin + objDirection * Mathf.Clamp(distance, 1f, 10f);
+
+                print(distance.ToString("F2"));
+
 
                 if (isHAndMoving == false && IsHandStablized) ReadyToSwitchToHand = true;
             }
-            
-            Vector3 closetPosition = Positions[0];
-            foreach (Vector3 position in Positions)
-            {
-                if (Vector3.Distance(position, EyeHeadPosition) < Vector3.Distance(closetPosition, EyeHeadPosition))
-                {
-                    closetPosition = position;
-                }
-            }
-            GrabbedObject.position = closetPosition;
         }
         else if (CurrentState == StaticState.Hand)
         {

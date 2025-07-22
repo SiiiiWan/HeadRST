@@ -1978,9 +1978,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Gaze+Pinch
-
-    EyeHead'
+  m_text: Gaze Hand
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5557,7 +5555,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: SwitchToHomerEyeHead
+        m_MethodName: SwitchToContinuous2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5569,7 +5567,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: StartTask
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10362,7 +10360,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: SwitchToGazeNPinchEyeHead
+        m_MethodName: SwitchToGazeHand
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10374,7 +10372,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: StartTask
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12382,7 +12380,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: SwitchToGazeNPinch
+        m_MethodName: SwitchToVisualGain
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12394,7 +12392,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: StartTask
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15678,9 +15676,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'HOMER
-
-    EyeHead'
+  m_text: AnywhereHand2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16088,6 +16084,11 @@ GameObject:
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584916}
   - component: {fileID: 1006584917}
+  - component: {fileID: 1006584919}
+  - component: {fileID: 1006584918}
+  - component: {fileID: 1006584921}
+  - component: {fileID: 1006584920}
+  - component: {fileID: 1006584922}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -16122,7 +16123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584916}
+  ManipulationBehavior: {fileID: 1006584922}
   GrabbedObject: {fileID: 0}
   TechniqueText: {fileID: 373964267}
   TargetPrefab: {fileID: 931380826127199637, guid: af46c940e16570c48937c47dedb5646f, type: 3}
@@ -16181,11 +16182,111 @@ MonoBehaviour:
   HandStablizeThr: 0.1
   text: {fileID: 28749755}
   HandTranslationSpeedThreshold: 0.3
-  HandRotationSpeedThreshold: 20
+  HandRotationSpeedThreshold: 30
   HeadSpeedThreshold: 0.1
   ReadyToSwitchToHand: 0
-  DirectionOffset: 5
-  DepthOffset: 0.5
+  DirectionOffset: 10
+  DepthOffset: 1
+--- !u!114 &1006584918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4edde6b4f4861346a003b7af090654c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GazeFixationDuration: 0.25
+  GazeFixationAngle: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.3
+  text: {fileID: 28749755}
+  HandTranslationSpeedThreshold: 0.3
+  HandRotationSpeedThreshold: 30
+  HeadSpeedThreshold: 0.1
+  HeadFixatedAfterGazeShift: 0
+--- !u!114 &1006584919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99c8cdde9d08db40ad6f0ff5a8e461e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GazeFixationDuration: 0.25
+  GazeFixationAngle: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.1
+--- !u!114 &1006584920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aee46f1c31699a4095603554d96ba6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GazeFixationDuration: 0.25
+  GazeFixationAngle: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.3
+  text: {fileID: 373964267}
+  HandTranslationSpeedThreshold: 0.3
+  HandRotationSpeedThreshold: 30
+  HeadSpeedThreshold: 0.1
+  ReadyToSwitchToHand: 0
+--- !u!114 &1006584921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cc67a3145a61e42b034168e18fd5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GazeFixationDuration: 0.25
+  GazeFixationAngle: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.1
+--- !u!114 &1006584922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc4a4fafea9c08d47a9de0b8cf0ffdda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GazeFixationDuration: 0.25
+  GazeFixationAngle: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStablizeDuration: 0.25
+  HandStablizeThr: 0.1
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
@@ -21357,7 +21458,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Gaze+Pinch
+  m_text: Visual Gain
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22523,7 +22624,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: SwitchToScaledHOMER
+        m_MethodName: SwitchToAnywhereHandContinuous
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22535,7 +22636,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: Reset
+        m_MethodName: StartTask
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -29349,7 +29450,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HOMER
+  m_text: AnywhereHand1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

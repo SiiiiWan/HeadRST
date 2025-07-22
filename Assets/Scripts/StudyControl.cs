@@ -32,7 +32,7 @@ public class StudyControl : Singleton<StudyControl>
 
     public List<(float depth, float amplitude)> DepthAmplitudeCombinations = new List<(float, float)>();
     public List<StartPositionLabels> StartPositionLabelsList = new List<StartPositionLabels>();
-    
+
     public float MinDepth = 2f; // in meters
     public float VerticalAmpDev = 20f;
 
@@ -49,7 +49,7 @@ public class StudyControl : Singleton<StudyControl>
 
     void Update()
     {
-        if(TargetIndicator == null || ObjectToBeManipulated == null)
+        if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
             return; // No target indicator to check
         }
@@ -208,6 +208,36 @@ public class StudyControl : Singleton<StudyControl>
         System.Random rng = new System.Random();
         positions = positions.OrderBy(x => rng.Next()).ToList();
         return positions;
+    }
+
+    public void SwitchToVisualGain()
+    {
+        ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
+        TechniqueText.text = "Current Technique: Visual Gain";
+    }
+
+    public void SwitchToAnywhereHandContinuous()
+    {
+        ManipulationBehavior = GetComponent<AnywhereHandContinuous>();
+        TechniqueText.text = "Current Technique: AnywhereHand 1";
+    }
+
+    public void SwitchToAnywhereHandDiscrete()
+    {
+        ManipulationBehavior = GetComponent<AnywhereHandDiscrete>();
+        TechniqueText.text = "Current Technique: Anywhere Hand Discrete";
+    }
+
+    public void SwitchToContinuous2()
+    {
+        ManipulationBehavior = GetComponent<Continuous2>();
+        TechniqueText.text = "Current Technique: AnywhereHand 2";
+    }
+
+    public void SwitchToGazeHand()
+    {
+        ManipulationBehavior = GetComponent<GazeHand>();
+        TechniqueText.text = "Current Technique: Gaze Hand";
     }
 
     // public void SwitchToGazeNPinch()

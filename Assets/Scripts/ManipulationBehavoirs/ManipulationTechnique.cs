@@ -79,8 +79,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float HeadSpeed { get; private set; }
     public float HeadYAngle { get; private set; }
     public float DeltaHeadY { get; private set; }
-    public float AvailableHeadY_Up { get; private set; }
-    public float AvailableHeadY_Down { get; private set; } // negtive value means down
+    public float Limit_HeadY_Up { get; private set; }
+    public float Limit_HeadY_Down { get; private set; } // negtive value means down
     public float HeadYAngle_OnGazeFixation { get; private set; }
 
     public virtual void Awake()
@@ -156,12 +156,13 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     public void UpdateHeadDepthAnchor()
     {
-        float maxEyeHeadAngle_Y_Up = 10f;
+        float maxEyeHeadAngle_Y_Up = 5f;
         float maxEyeHeadAngle_Y_Down = -15f;
-        float maxHead_Y_up = 15f;
-        float maxHead_Y_down = -15f;
+        float maxHead_Y_up = 10f;
+        float maxHead_Y_down = -10f;
 
-        AvailableHeadY_Up = Math.Min(Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle_OnGazeFixation, 0) + HeadYAngle_OnGazeFixation, maxHead_Y_up);
-        AvailableHeadY_Down = Math.Max(HeadYAngle_OnGazeFixation - Math.Max(EyeInHeadYAngle_OnGazeFixation - (maxEyeHeadAngle_Y_Down), 0), maxHead_Y_down);
+        Limit_HeadY_Up = Math.Min(Math.Max(EyeInHeadYAngle - maxEyeHeadAngle_Y_Down, 0) + HeadYAngle, maxHead_Y_up);
+        Limit_HeadY_Down = Math.Max(HeadYAngle - Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle, 0), maxHead_Y_down);
+        print(Limit_HeadY_Up + " " + Limit_HeadY_Down);
     }
 }
