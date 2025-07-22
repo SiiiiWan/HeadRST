@@ -11,14 +11,14 @@ public class GazeHand : ManipulationTechnique
         base.OnSingleHandGrabbed(target);
 
         _depth = Vector3.Distance(GrabbedObject.position, GazeOrigin);
-        _handInitPosition = HandPosition;
+        _handInitPosition = PinchPosition;
     }
 
     public override void ApplySingleHandGrabbedBehaviour()
     {
-        Vector3 gazeOriginToHandOffest = HandPosition - GazeOrigin;
+        Vector3 gazeOriginToHandOffest = PinchPosition - GazeOrigin;
 
-        Vector3 handOffsetVector = HandPosition - _handInitPosition;
+        Vector3 handOffsetVector = PinchPosition - _handInitPosition;
         float handOffsetDistance = Vector3.Project(handOffsetVector, GazeDirection).magnitude;
 
         if(handOffsetDistance >= 0.05f) _depth += (handOffsetDistance - 0.05f) * 0.144f * (Vector3.Dot(handOffsetVector, GazeDirection) > 0 ? 1 : -1);
@@ -26,7 +26,7 @@ public class GazeHand : ManipulationTechnique
         Vector3 gazePoint = GazeOrigin + GazeDirection * _depth;
 
         GrabbedObject.position = gazePoint + gazeOriginToHandOffest;
-        GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
+        GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
     }
 
 }

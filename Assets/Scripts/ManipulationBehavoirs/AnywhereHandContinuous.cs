@@ -109,8 +109,8 @@ public class AnywhereHandContinuous : ManipulationTechnique
         }
         else if (CurrentState == StaticState.Hand)
         {
-            GrabbedObject.position += HandPosition_delta * GetVisualGain();
-            GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
+            GrabbedObject.position += PinchPosition_delta * GetVisualGain();
+            GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
         }
 
 

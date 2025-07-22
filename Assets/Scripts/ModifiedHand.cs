@@ -119,23 +119,19 @@ namespace Oculus.Interaction.Input.Filter
         }
 
         private ShadowHand _shadowHand = new ShadowHand();
-        Vector3 preHandPosition;
-        Vector3 HandPosition;
+
         protected bool UpdateHandData(HandDataAsset handDataAsset)
         {
 #if ISDK_OPENXR_HAND
             var pose = handDataAsset.Root;
 
-            Vector3 deltaPosition = pose.position - preHandPosition;
 
-            HandPosition += deltaPosition * 2;
             _shadowHand.FromJoints(handDataAsset.JointPoses.ToList(), false);
 
-            handDataAsset.Root = new Pose(HandPosition, pose.rotation);
+            handDataAsset.Root = new Pose(StudyControl.GetInstance().ManipulationBehavior.GetVirtualHandPosition(), pose.rotation);
 
             handDataAsset.JointPoses = _shadowHand.GetWorldPoses();
 
-            preHandPosition = pose.position;
 
             // Legacy local rotations
             for (int i = 0; i < Constants.NUM_HAND_JOINTS; i++)

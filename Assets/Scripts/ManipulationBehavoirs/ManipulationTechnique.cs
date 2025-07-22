@@ -43,9 +43,11 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     // Hand
     public HandData HandData { get; private set; }
-    public Vector3 HandPosition { get; private set; }
-    public Vector3 HandPosition_delta { get; private set; }
-    public Quaternion HandRotation_delta { get; private set; }
+    public Vector3 PinchPosition { get; private set; }
+    public Vector3 PinchPosition_delta { get; private set; }
+    public Vector3 WristPosition { get; private set; }
+    public Vector3 WristPosition_delta { get; private set; }
+    public Quaternion PinchRotation_delta { get; private set; }
     public float HandTranslationSpeed { get; private set; }
     public float HandRotationSpeed { get; private set; }
     public FixationTracker HandFixationTracker { get; private set; }
@@ -93,14 +95,16 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public virtual void Update()
     {
         HandData = HandData.GetInstance();
-        HandPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: true);
-        HandRotation_delta = HandData.GetDeltaHandRotation(usePinchTip: true);
-        HandPosition = HandData.GetHandPosition(usePinchTip: true);
+        PinchPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: true);
+        PinchRotation_delta = HandData.GetDeltaHandRotation(usePinchTip: true);
+        PinchPosition = HandData.GetHandPosition(usePinchTip: true);
+        WristPosition = HandData.GetHandPosition(usePinchTip: false);
+        WristPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: false);
         HandTranslationSpeed = HandData.GetHandSpeed(usePinchTip: true);
         HandRotationSpeed = HandData.GetHandRotationSpeed(usePinchTip: true);
 
         HandFixationTracker.UpdateThrshould(HandStablizeDuration, HandStablizeThr);
-        IsHandStablized = HandFixationTracker.GetIsFixating(HandPosition);
+        IsHandStablized = HandFixationTracker.GetIsFixating(PinchPosition);
 
 
         GazeData = EyeGaze.GetInstance();
@@ -130,8 +134,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     public float GetVisualGain()
     {
-        return Vector3.Distance(GrabbedObject.position, GazeOrigin) / Vector3.Distance(HandPosition, GazeOrigin);
+        return Vector3.Distance(GrabbedObject.position, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
     }
+
 
     public float VitLerp(float x, float k1 = 0.8f / 3f, float k2 = 0.8f, float v1 = 0.2f, float v2 = 0.6f)
     {
@@ -164,5 +169,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         Limit_HeadY_Up = Math.Min(Math.Max(EyeInHeadYAngle - maxEyeHeadAngle_Y_Down, 0) + HeadYAngle, maxHead_Y_up);
         Limit_HeadY_Down = Math.Max(HeadYAngle - Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle, 0), maxHead_Y_down);
         print(Limit_HeadY_Up + " " + Limit_HeadY_Down);
+    }
+    public virtual Vector3 GetVirtualHandPosition()
+    {
+        return PinchPosition;
     }
 }

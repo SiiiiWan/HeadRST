@@ -57,7 +57,7 @@ public class AnywhereHandSeparate : ManipulationTechnique
             else
             {
 
-                Vector3 handOffset = HandPosition_delta * GetVisualGain();
+                Vector3 handOffset = PinchPosition_delta * GetVisualGain();
                 Vector3 objDirection = (GrabbedObject.position - GazeOrigin).normalized;
 
                 Vector3 handOffset_alongObjDirection = Vector3.Project(handOffset, objDirection);
@@ -82,7 +82,7 @@ public class AnywhereHandSeparate : ManipulationTechnique
 
                 GrabbedObject.position += handOffset_perpendicular;
 
-                GrabbedObject.rotation = HandRotation_delta * GrabbedObject.rotation;
+                GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
             }
 
         // head hand moves together in the same direction for depth adjustment -> head > hand -> hand is moving but egnored
