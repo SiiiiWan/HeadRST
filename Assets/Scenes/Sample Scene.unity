@@ -27809,7 +27809,7 @@ MonoBehaviour:
   _updateMode: 8
   _updateAfter: {fileID: 1450984774}
   _iModifyDataFromSourceMono: {fileID: 1450984774}
-  _applyModifier: 0
+  _applyModifier: 1
 --- !u!114 &1887473120
 MonoBehaviour:
   m_ObjectHideFlags: 0
