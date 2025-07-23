@@ -128,7 +128,7 @@ namespace Oculus.Interaction.Input.Filter
 
             _shadowHand.FromJoints(handDataAsset.JointPoses.ToList(), false);
 
-            handDataAsset.Root = new Pose(StudyControl.GetInstance().ManipulationBehavior.GetVirtualHandPosition(), pose.rotation);
+            handDataAsset.Root = new Pose(StudyControl.GetInstance().ManipulationBehavior.VirtualHandPosition, pose.rotation);
 
             handDataAsset.JointPoses = _shadowHand.GetWorldPoses();
 

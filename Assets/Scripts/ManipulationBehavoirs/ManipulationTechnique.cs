@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public interface IManipulationBehavior
 {
@@ -9,7 +11,7 @@ public interface IManipulationBehavior
     void ApplyBothHandGrabbedBehaviour();
 }
 
-public enum StaticState { EyeHead, Hand }
+public enum StaticState { Gaze, Head, Hand }
 
 public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 {
@@ -39,9 +41,11 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float HeadFixationAngle = 1.5f; // in degrees
 
     public float HandStablizeDuration = 0.25f; // in seconds
-    public float HandStablizeThr = 0.1f; // in meters
+    public float HandStablizeThr = 0.3f; // in meters
 
     // Hand
+    public Vector3 VirtualHandPosition { get; private set; }
+    public Vector3 VirtualAnchorPosition { get; private set; }
     public HandData HandData { get; private set; }
     public Vector3 PinchPosition { get; private set; }
     public Vector3 PinchPosition_delta { get; private set; }
@@ -52,6 +56,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float HandRotationSpeed { get; private set; }
     public FixationTracker HandFixationTracker { get; private set; }
     public bool IsHandStablized { get; private set; }
+    public Vector3 AccumulatedHandOffset { get; private set; } = Vector3.zero;
 
 
 
@@ -62,11 +67,13 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public FixationTracker GazeFixationTracker { get; private set; }
     public bool IsGazeFixating { get; private set; }
     public bool IsGazeFixating_pre { get; private set; }
+    public Vector3 GazeFixationCentroid { get; private set; }
     public bool IsGazeSaccading { get; private set; }
     public Vector3 GazeDirection_OnGazeFixation { get; private set; }
     public Vector3 HeadDirection_OnGazeFixation { get; private set; }
     public float EyeInHeadYAngle { get; private set; }
     public float EyeInHeadYAngle_OnGazeFixation { get; private set; }
+    public List<Anchor> ObjectsInGazeCone_OnGazeFixation { get; private set; } = new List<Anchor>();
 
 
     // Head
@@ -77,7 +84,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public FixationTracker HeadFixationTracker { get; private set; }
     public bool IsHeadFixating { get; private set; }
     public bool IsHeadFixating_pre { get; private set; }
-
+    public Vector3 HeadFixationCentroid { get; private set; }
     public float HeadSpeed { get; private set; }
     public float HeadYAngle { get; private set; }
     public float DeltaHeadY { get; private set; }
@@ -90,6 +97,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         GazeFixationTracker = new FixationTracker(GazeFixationDuration, GazeFixationAngle);
         HeadFixationTracker = new FixationTracker(HeadFixationDuration, HeadFixationAngle);
         HandFixationTracker = new FixationTracker(HandStablizeDuration, HandStablizeThr);
+
+        VirtualHandPosition = HandData.GetInstance().GetHandPosition(usePinchTip: false);
     }
 
     public virtual void Update()
@@ -102,10 +111,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         WristPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: false);
         HandTranslationSpeed = HandData.GetHandSpeed(usePinchTip: true);
         HandRotationSpeed = HandData.GetHandRotationSpeed(usePinchTip: true);
-
         HandFixationTracker.UpdateThrshould(HandStablizeDuration, HandStablizeThr);
         IsHandStablized = HandFixationTracker.GetIsFixating(PinchPosition);
-
 
         GazeData = EyeGaze.GetInstance();
         GazeOrigin = GazeData.GetGazeRay().origin;
@@ -113,6 +120,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         IsGazeSaccading = GazeData.IsSaccading();
         GazeFixationTracker.UpdateThrshould(GazeFixationDuration, GazeFixationAngle);
         IsGazeFixating = GazeFixationTracker.GetIsFixating(GazeDirection);
+        GazeFixationCentroid = GazeFixationTracker.FixationCentroid;
         EyeInHeadYAngle = GazeData.EyeInHeadYAngle;
 
         HeadData = HeadMovement.GetInstance();
@@ -121,6 +129,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         HeadPosition = Camera.main.transform.position;
         HeadFixationTracker.UpdateThrshould(HeadFixationDuration, HeadFixationAngle);
         IsHeadFixating = HeadFixationTracker.GetIsFixating(HeadForward);
+        HeadFixationCentroid = HeadFixationTracker.FixationCentroid;
         HeadSpeed = HeadData.HeadSpeed;
         DeltaHeadY = HeadData.DeltaHeadY;
         HeadYAngle = HeadData.HeadAngle_WorldY;
@@ -128,14 +137,39 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
         if (IsGazeFixating_pre == false && IsGazeFixating == true) OnGazeFixation();
 
+        UpdateAndSortAnchorList();
+        if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
+        {
+            Anchor closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
+
+            if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
+            else
+            {
+                VirtualAnchorPosition = closestAnchor.transform.position + (WristPosition - PinchPosition);
+
+                AccumulatedHandOffset += WristPosition_delta;
+                VirtualHandPosition = VirtualAnchorPosition + AccumulatedHandOffset;
+            }    
+
+            // ResetAccumulatedHandOffset();
+            // ObjectsInGazeCone_OnGazeFixation.Clear();
+        }
+        else
+        {
+            AccumulatedHandOffset = Vector3.zero;
+            VirtualHandPosition = GetNewVirtualHandPosition();
+        }
+
         IsGazeFixating_pre = IsGazeFixating;
         IsHeadFixating_pre = IsHeadFixating;
     }
 
-    public float GetVisualGain()
-    {
-        return Vector3.Distance(GrabbedObject.position, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
-    }
+    public virtual Vector3 GetNewVirtualHandPosition() { return VirtualHandPosition; }
+
+    // public float GetVisualGain()
+    // {
+    //     return Vector3.Distance(VirtualHandPosition, GazeOrigin) / Vector3.Distance(WristPosition, GazeOrigin);
+    // }
 
 
     public float VitLerp(float x, float k1 = 0.8f / 3f, float k2 = 0.8f, float v1 = 0.2f, float v2 = 0.6f)
@@ -159,6 +193,22 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         EyeInHeadYAngle_OnGazeFixation = EyeInHeadYAngle;
     }
 
+    public void UpdateAndSortAnchorList()
+    {
+        Anchor[] anchors = FindObjectsByType<Anchor>(FindObjectsSortMode.None);
+
+        if (anchors.Length != 0)
+        {
+            var sortedAnchors = anchors
+                .Where(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin) < 10f && anchor.GrabbedState == GrabbedState.NotGrabbed)
+                .OrderBy(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin))
+                .ToList();
+
+            ObjectsInGazeCone_OnGazeFixation.Clear();
+            ObjectsInGazeCone_OnGazeFixation.AddRange(sortedAnchors);
+        }
+    }
+
     public void UpdateHeadDepthAnchor()
     {
         float maxEyeHeadAngle_Y_Up = 5f;
@@ -168,10 +218,6 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
         Limit_HeadY_Up = Math.Min(Math.Max(EyeInHeadYAngle - maxEyeHeadAngle_Y_Down, 0) + HeadYAngle, maxHead_Y_up);
         Limit_HeadY_Down = Math.Max(HeadYAngle - Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle, 0), maxHead_Y_down);
-        print(Limit_HeadY_Up + " " + Limit_HeadY_Down);
-    }
-    public virtual Vector3 GetVirtualHandPosition()
-    {
-        return PinchPosition;
+        // print(Limit_HeadY_Up + " " + Limit_HeadY_Down);
     }
 }

@@ -216,29 +216,29 @@ public class StudyControl : Singleton<StudyControl>
         TechniqueText.text = "Current Technique: Visual Gain";
     }
 
-    public void SwitchToAnywhereHandContinuous()
-    {
-        ManipulationBehavior = GetComponent<AnywhereHandContinuous>();
-        TechniqueText.text = "Current Technique: AnywhereHand 1";
-    }
+    // public void SwitchToAnywhereHandContinuous()
+    // {
+    //     ManipulationBehavior = GetComponent<AnywhereHandContinuous>();
+    //     TechniqueText.text = "Current Technique: AnywhereHand 1";
+    // }
 
-    public void SwitchToAnywhereHandDiscrete()
-    {
-        ManipulationBehavior = GetComponent<AnywhereHandDiscrete>();
-        TechniqueText.text = "Current Technique: Anywhere Hand Discrete";
-    }
+    // public void SwitchToAnywhereHandDiscrete()
+    // {
+    //     ManipulationBehavior = GetComponent<AnywhereHandDiscrete>();
+    //     TechniqueText.text = "Current Technique: Anywhere Hand Discrete";
+    // }
 
-    public void SwitchToContinuous2()
-    {
-        ManipulationBehavior = GetComponent<Continuous2>();
-        TechniqueText.text = "Current Technique: AnywhereHand 2";
-    }
+    // public void SwitchToContinuous2()
+    // {
+    //     ManipulationBehavior = GetComponent<Continuous2>();
+    //     TechniqueText.text = "Current Technique: AnywhereHand 2";
+    // }
 
-    public void SwitchToGazeHand()
-    {
-        ManipulationBehavior = GetComponent<GazeHand>();
-        TechniqueText.text = "Current Technique: Gaze Hand";
-    }
+    // public void SwitchToGazeHand()
+    // {
+    //     ManipulationBehavior = GetComponent<GazeHand>();
+    //     TechniqueText.text = "Current Technique: Gaze Hand";
+    // }
 
     // public void SwitchToGazeNPinch()
     // {

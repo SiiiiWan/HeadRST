@@ -2,11 +2,6 @@ using UnityEngine;
 
 public class GazeNPinchOrigin : ManipulationTechnique
 {
-    public override void ApplySingleHandGrabbedBehaviour()
-    {
-        GrabbedObject.position += PinchPosition_delta * GetVisualGain();
-        GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
-    }
 
     // float GetVisualGain_Plus(Transform target)
     // {

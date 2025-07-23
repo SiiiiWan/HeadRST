@@ -36,7 +36,7 @@ public class FixationTracker
             _fixationDirBuffer.Dequeue();
         }
 
-        Vector3 tmpCentroid = GetFixationDirCentroid();
+        Vector3 tmpCentroid = GetCentroidInBuffer();
         float dispersion = 0f;
         foreach (Vector3 dir in _fixationDirBuffer)
         {
@@ -55,7 +55,7 @@ public class FixationTracker
         return true;
     }
 
-    public Vector3 GetFixationDirCentroid()
+    public Vector3 GetCentroidInBuffer()
     {
         if (_fixationDirBuffer == null || _fixationDirBuffer.Count == 0)
             return Vector3.zero;

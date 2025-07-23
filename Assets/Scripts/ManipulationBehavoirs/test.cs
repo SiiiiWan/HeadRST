@@ -59,10 +59,4 @@ public class test : ManipulationTechnique
 
         // GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
     }
-
-    public override Vector3 GetVirtualHandPosition()
-    {
-        
-        return VirtualHandPosition;
-    }
 }
