@@ -16,10 +16,23 @@ public class test : ManipulationTechnique
     {
         base.Update();
 
-        if(IsGazeSaccading) accumulatedOffset = Vector3.zero;
+        if (IsGazeFixating == false)
+        {
+            VirtualHandPosition = GazeOrigin + GazeDirection * Mathf.Clamp(Vector3.Distance(GazeOrigin, VirtualHandPosition), 1f, 10f);
 
-        VirtualHandPosition = GazeOrigin + GazeDirection * 2 + accumulatedOffset;
-        accumulatedOffset += WristPosition_delta * Vector3.Distance(VirtualHandPosition, GazeOrigin);
+        }
+        else
+        {
+            Vector3 objDirection = (VirtualHandPosition - GazeOrigin).normalized;
+
+            if (IsHeadFixating == false)
+            {
+                VirtualHandPosition += objDirection * DeltaHeadY * VitLerp(HeadSpeed);
+                VirtualHandPosition = GazeOrigin + objDirection *  Mathf.Clamp(Vector3.Distance(GazeOrigin, VirtualHandPosition), 1f, 10f);
+            }    
+
+            VirtualHandPosition += WristPosition_delta * Vector3.Distance(VirtualHandPosition, GazeOrigin) / Vector3.Distance(WristPosition, GazeOrigin);
+        }
 
 
     }
