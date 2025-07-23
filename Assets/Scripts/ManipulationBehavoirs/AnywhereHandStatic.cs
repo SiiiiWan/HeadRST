@@ -15,13 +15,13 @@ public class AnywhereHandStatic : ManipulationTechnique
         }
         else
         {
-            if (HandTranslationSpeed > HandSpeedThreshold)
+            if (IsHeadFixating == false)
             {
-                CurrentState = StaticState.Hand;
+                CurrentState = StaticState.Head;
             }
             else
             {
-                CurrentState = StaticState.Head;
+                CurrentState = StaticState.Hand;
             }
         }
 

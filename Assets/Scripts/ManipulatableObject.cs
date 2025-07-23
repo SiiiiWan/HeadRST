@@ -3,13 +3,12 @@ using UnityEngine;
 public enum GrabbedState
 {
     NotGrabbed,
-    OneHandGrabbed,
-    BothHandsGrabbed
+    Grabbed_Indirect,
+    Grabbed_Direct
 }
 
 public class ManipulatableObject : MonoBehaviour
 {
-    // public bool UseGlobalManipulationBehavior;
     private bool _isHitbyGaze;
     private GrabbedState _grabbedState = GrabbedState.NotGrabbed;
 
@@ -28,7 +27,7 @@ public class ManipulatableObject : MonoBehaviour
             StudyControl.GetInstance().GrabbedObject = this;
 
             _manipulationBehavior?.OnSingleHandGrabbed(transform);
-            _grabbedState = GrabbedState.OneHandGrabbed;
+            _grabbedState = GrabbedState.Grabbed_Indirect;
         }
 
 
@@ -39,14 +38,14 @@ public class ManipulatableObject : MonoBehaviour
 
         if (PinchDetector.GetInstance().IsNoHandPinching)
         {
-            if (_grabbedState == GrabbedState.OneHandGrabbed)
+            if (_grabbedState == GrabbedState.Grabbed_Indirect)
             {
                 _grabbedState = GrabbedState.NotGrabbed;
                 _manipulationBehavior?.ApplyHandReleasedBehaviour();
             }
         }
 
-        if(_grabbedState == GrabbedState.OneHandGrabbed) _manipulationBehavior?.ApplySingleHandGrabbedBehaviour();
+        if(_grabbedState == GrabbedState.Grabbed_Indirect) _manipulationBehavior?.ApplySingleHandGrabbedBehaviour();
         // switch (_grabbedState) 
         // {
         //     case GrabbedState.OneHandGrabbed:

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 253224a1-9c0d-4199-a10f-3f3c6aa40ff8
+  instanceId: a4e152c5-52fa-4e65-b175-6d7f1fe42697
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: 7358e191-33b7-43ca-b066-b2f00531ac66
-  instanceId: 3cafced3-1abe-4f5c-9005-11344b606578
+  instanceId: 7e2872f0-035b-4a86-b178-6e9bc257c0ed
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 
@@ -748,6 +748,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b811399be1952704892fb7aa1702f08f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GrabbedState: 0
+  Grabbable: {fileID: 4681531026137562050}
+  IsRealHand: 0
 --- !u!1 &3332950046991503976
 GameObject:
   m_ObjectHideFlags: 0

@@ -137,6 +137,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
         if (IsGazeFixating_pre == false && IsGazeFixating == true) OnGazeFixation();
 
+
+
+
         UpdateAndSortAnchorList();
         if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
         {
@@ -145,14 +148,13 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
             if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
             else
             {
+                // TODO: can be optimized when hit a shelf or plane, in this case should take the gaze hit point and aling the depth only. should be able to free with gaze pointnig.
                 VirtualAnchorPosition = closestAnchor.transform.position + (WristPosition - PinchPosition);
 
                 AccumulatedHandOffset += WristPosition_delta;
                 VirtualHandPosition = VirtualAnchorPosition + AccumulatedHandOffset;
-            }    
-
-            // ResetAccumulatedHandOffset();
-            // ObjectsInGazeCone_OnGazeFixation.Clear();
+                VirtualHandPosition =  closestAnchor.transform.position + (PinchPosition - GazeOrigin);
+            }
         }
         else
         {
@@ -166,10 +168,10 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     public virtual Vector3 GetNewVirtualHandPosition() { return VirtualHandPosition; }
 
-    // public float GetVisualGain()
-    // {
-    //     return Vector3.Distance(VirtualHandPosition, GazeOrigin) / Vector3.Distance(WristPosition, GazeOrigin);
-    // }
+    public float GetVisualGain()
+    {
+        return Vector3.Distance(VirtualAnchorPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
+    }
 
 
     public float VitLerp(float x, float k1 = 0.8f / 3f, float k2 = 0.8f, float v1 = 0.2f, float v2 = 0.6f)
