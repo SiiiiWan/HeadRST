@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AnywhereHandStatic : ManipulationTechnique
 {
     public StaticState CurrentState = StaticState.Hand;
+    public TextMeshPro text;
 
     public override void ApplyIndirectGrabbedBehaviour()
     {
-        if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GazeDirection_OnGazeFixation) > 10f)
+        if (IsGazeFixating == false)
         {
 
             CurrentState = StaticState.Gaze;
         }
-
-        if(IsGazeFixating) CurrentState = StaticState.Hand;
+        else CurrentState = StaticState.Hand;
 
         if (CurrentState == StaticState.Gaze)
         {
@@ -36,10 +38,14 @@ public class AnywhereHandStatic : ManipulationTechnique
 
     public List<ManipulatableObject> ObjectsInGazeCone_OnGazeFixation { get; private set; } = new List<ManipulatableObject>();
     private Vector3 _accumulatedHandOffset = Vector3.zero;
-    
+    private ManipulatableObject _closestAnchor;   
+    private Vector3 _anchorPosition; 
 
     public override Vector3 GetNewVirtualHandPosition()
     {
+        text.transform.LookAt(Camera.main.transform);
+        text.transform.Rotate(0, 180f, 0);
+
         if (GrabbedObject)
         {
             if (GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState == GrabbedState.Grabbed_Indirect)
@@ -53,13 +59,21 @@ public class AnywhereHandStatic : ManipulationTechnique
         UpdateAndSortAnchorList();
         if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
         {
-            ManipulatableObject closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
+            if (_closestAnchor != ObjectsInGazeCone_OnGazeFixation[0])
+            {
+                _accumulatedHandOffset = Vector3.zero;
 
-            // TODO: can be optimized when hit a shelf or plane, in this case should take the gaze hit point and aling the depth only. should be able to free with gaze pointnig.
-            Vector3 anchorPosition = closestAnchor.transform.position + (WristPosition - PinchPosition);
+                _closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
 
-            _accumulatedHandOffset += WristPosition_delta;
-            nextVirtualHandPosition = anchorPosition + _accumulatedHandOffset;
+                // TODO: can be optimized when hit a shelf or plane, in this case should take the gaze hit point and aling the depth only. should be able to free with gaze pointnig.
+                _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
+            }
+
+
+
+
+            _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
+            nextVirtualHandPosition = _anchorPosition + _accumulatedHandOffset;
 
             //TODO: keep the relative position of the virtual hand to object when start and end the indirect grab
             // if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
@@ -79,26 +93,34 @@ public class AnywhereHandStatic : ManipulationTechnique
 
     public Vector3 GetNewAnywhereHandPosition(Vector3 currentObjectPosition)
     {
-        Vector3 nextObjectPosition;
+        Vector3 nextObjectPosition = currentObjectPosition;
 
-        if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GazeDirection_OnGazeFixation) > 10f)
+        text.text = IsGazeFixating.ToString();
+
+        if (IsGazeFixating == false)
         {
             CurrentState = StaticState.Gaze;
         }
+        else CurrentState = StaticState.Hand;
 
-        if(IsGazeFixating) CurrentState = StaticState.Hand;
+        // CurrentState = StaticState.Gaze;
 
         if (CurrentState == StaticState.Gaze)
         {
             float distance = Vector3.Distance(GazeOrigin, currentObjectPosition);
-            return GazeOrigin + GazeDirection * distance;
+            nextObjectPosition = GazeOrigin + GazeDirection * distance;
         }
+        else
+        {
+            Vector3 objectDirection = (currentObjectPosition - GazeOrigin).normalized;
+            nextObjectPosition = currentObjectPosition + objectDirection * GetHeadDepthOffset();
+            nextObjectPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(nextObjectPosition, GazeOrigin), 1, 10);
 
-        Vector3 objectDirection = (currentObjectPosition - GazeOrigin).normalized;
-        Vector3 headDepthOffset = objectDirection * GetHeadDepthOffset();
-        nextObjectPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(currentObjectPosition + headDepthOffset, GazeOrigin), 1, 10);
+            nextObjectPosition += WristPosition_delta;
+        }
+        
 
-        return nextObjectPosition + PinchPosition_delta;
+        return nextObjectPosition;
     }
 
     public void UpdateAndSortAnchorList()

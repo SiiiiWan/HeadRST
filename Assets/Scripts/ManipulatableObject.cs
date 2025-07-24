@@ -23,14 +23,14 @@ public class ManipulatableObject : MonoBehaviour
         //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
         // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
         IsHitbyGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin) <= 10f;
-        
+
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
         IsPinchTipWithinCube = IsPointWithinBoxCollider(GetComponent<BoxCollider>(), ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
 
         if (Grabbable.SelectingPointsCount > 0)
         {
             StudyControl.GetInstance().GrabbedObject = this;
-            
+
             ManipulationBehavior?.OnSingleHandGrabbed(transform);
             GrabbedState = GrabbedState.Grabbed_Direct;
             return;
@@ -58,6 +58,7 @@ public class ManipulatableObject : MonoBehaviour
         if (GrabbedState == GrabbedState.Grabbed_Indirect) ManipulationBehavior?.ApplyIndirectGrabbedBehaviour();
 
         transform.GetComponent<Outline>().enabled = IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed && IsPinchTipWithinCube == false;
+        //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
     }
     
 public static bool IsPointWithinBoxCollider(BoxCollider box, Vector3 point)
