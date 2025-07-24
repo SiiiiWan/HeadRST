@@ -7,7 +7,7 @@ public interface IManipulationBehavior
 {
     void OnSingleHandGrabbed(Transform target);
     void ApplyHandReleasedBehaviour();
-    void ApplySingleHandGrabbedBehaviour();
+    void ApplyIndirectGrabbedBehaviour();
     void ApplyBothHandGrabbedBehaviour();
 }
 
@@ -23,7 +23,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         OnGazeFixation();
     }
 
-    public virtual void ApplySingleHandGrabbedBehaviour()
+    public virtual void ApplyIndirectGrabbedBehaviour()
     {
         Debug.LogWarning("Apply method not implemented in " + this.GetType().Name);
     }
@@ -45,7 +45,6 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     // Hand
     public Vector3 VirtualHandPosition { get; private set; }
-    public Vector3 VirtualAnchorPosition { get; private set; }
     public HandData HandData { get; private set; }
     public Vector3 PinchPosition { get; private set; }
     public Vector3 PinchPosition_delta { get; private set; }
@@ -72,8 +71,10 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public Vector3 GazeDirection_OnGazeFixation { get; private set; }
     public Vector3 HeadDirection_OnGazeFixation { get; private set; }
     public float EyeInHeadYAngle { get; private set; }
+    public float Filtered_EyeInHeadAngle { get; private set; }
+    public float Filtered_EyeInHeadAngle_Pre { get; private set; }
+    public float EyeInHeadXAngle { get; private set; }
     public float EyeInHeadYAngle_OnGazeFixation { get; private set; }
-    public List<Anchor> ObjectsInGazeCone_OnGazeFixation { get; private set; } = new List<Anchor>();
 
 
     // Head
@@ -122,6 +123,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         IsGazeFixating = GazeFixationTracker.GetIsFixating(GazeDirection);
         GazeFixationCentroid = GazeFixationTracker.FixationCentroid;
         EyeInHeadYAngle = GazeData.EyeInHeadYAngle;
+        EyeInHeadXAngle = GazeData.EyeInHeadXAngle;
+        Filtered_EyeInHeadAngle = GazeData.FilteredEyeInHeadAngle;
+        Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
 
         HeadData = HeadMovement.GetInstance();
         HeadForward = Camera.main.transform.forward;
@@ -137,30 +141,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
         if (IsGazeFixating_pre == false && IsGazeFixating == true) OnGazeFixation();
 
-
-
-
-        UpdateAndSortAnchorList();
-        if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
-        {
-            Anchor closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
-
-            if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
-            else
-            {
-                // TODO: can be optimized when hit a shelf or plane, in this case should take the gaze hit point and aling the depth only. should be able to free with gaze pointnig.
-                VirtualAnchorPosition = closestAnchor.transform.position + (WristPosition - PinchPosition);
-
-                AccumulatedHandOffset += WristPosition_delta;
-                VirtualHandPosition = VirtualAnchorPosition + AccumulatedHandOffset;
-                VirtualHandPosition =  closestAnchor.transform.position + (PinchPosition - GazeOrigin);
-            }
-        }
-        else
-        {
-            AccumulatedHandOffset = Vector3.zero;
-            VirtualHandPosition = GetNewVirtualHandPosition();
-        }
+        VirtualHandPosition = GetNewVirtualHandPosition();
 
         IsGazeFixating_pre = IsGazeFixating;
         IsHeadFixating_pre = IsHeadFixating;
@@ -168,9 +149,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     public virtual Vector3 GetNewVirtualHandPosition() { return VirtualHandPosition; }
 
-    public float GetVisualGain()
+    public float GetVisualGain(Vector3 objectPosition)
     {
-        return Vector3.Distance(VirtualAnchorPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
+        return Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
     }
 
 
@@ -195,23 +176,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         EyeInHeadYAngle_OnGazeFixation = EyeInHeadYAngle;
     }
 
-    public void UpdateAndSortAnchorList()
-    {
-        Anchor[] anchors = FindObjectsByType<Anchor>(FindObjectsSortMode.None);
-
-        if (anchors.Length != 0)
-        {
-            var sortedAnchors = anchors
-                .Where(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin) < 10f && anchor.GrabbedState == GrabbedState.NotGrabbed)
-                .OrderBy(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin))
-                .ToList();
-
-            ObjectsInGazeCone_OnGazeFixation.Clear();
-            ObjectsInGazeCone_OnGazeFixation.AddRange(sortedAnchors);
-        }
-    }
-
-    public void UpdateHeadDepthAnchor()
+    public void UpdateHeadInputRange()
     {
         float maxEyeHeadAngle_Y_Up = 5f;
         float maxEyeHeadAngle_Y_Down = -15f;
@@ -220,6 +185,5 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
         Limit_HeadY_Up = Math.Min(Math.Max(EyeInHeadYAngle - maxEyeHeadAngle_Y_Down, 0) + HeadYAngle, maxHead_Y_up);
         Limit_HeadY_Down = Math.Max(HeadYAngle - Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle, 0), maxHead_Y_down);
-        // print(Limit_HeadY_Up + " " + Limit_HeadY_Down);
     }
 }

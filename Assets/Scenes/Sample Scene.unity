@@ -8406,6 +8406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Grabbable: {fileID: 0}
 --- !u!65 &346163902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12293,6 +12294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Grabbable: {fileID: 0}
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24529,7 +24531,6 @@ MonoBehaviour:
   HandStablizeDuration: 0.25
   HandStablizeThr: 0.3
   CurrentState: 0
-  HandSpeedThreshold: 0.1
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
@@ -35238,6 +35239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GrabbedState: 0
+  Grabbable: {fileID: 0}
   IsRealHand: 1
 --- !u!1 &1499969052
 GameObject:
@@ -36579,6 +36581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GrabbedState: 0
+  Grabbable: {fileID: 0}
   IsRealHand: 0
 --- !u!1 &1558281222
 GameObject:
@@ -50104,6 +50107,10 @@ PrefabInstance:
     - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_Name
       value: '[BuildingBlock] Cube (1)'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2761191542974234977, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.x

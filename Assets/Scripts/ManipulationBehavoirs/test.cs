@@ -37,7 +37,7 @@ public class test : ManipulationTechnique
 
     }
 
-    public override void ApplySingleHandGrabbedBehaviour()
+    public override void ApplyIndirectGrabbedBehaviour()
     {
 
         // Vector3 gazeToObjDirection = (GrabbedObject.position - GazeOrigin).normalized;

@@ -18,6 +18,8 @@ public class EyeGaze : Singleton<EyeGaze>
     private float _gazeSpeed;
 
     private List<Quaternion> _headRotationBuffer;
+    public float FilteredEyeInHeadAngle { get; private set; }
+    public float FilteredEyeInHeadAngle_Pre { get; private set; }
 
     public float SaccadeThr = 120f;
     
@@ -37,6 +39,7 @@ public class EyeGaze : Singleton<EyeGaze>
 
     private OneEuroFilter<Vector3> _gazeDirFilter;
     private OneEuroFilter<Vector3> _gazePosFilter;
+    private OneEuroFilter _eyeInHeadAngleFilter;
 
     enum Eye { Left = 0, Right = 1 };
     protected override void Awake()
@@ -45,6 +48,7 @@ public class EyeGaze : Singleton<EyeGaze>
 
         _gazeDirFilter = new OneEuroFilter<Vector3>(FilterFrequency);
         _gazePosFilter = new OneEuroFilter<Vector3>(FilterFrequency);
+        _eyeInHeadAngleFilter = new OneEuroFilter(FilterFrequency);
 
         _headRotationBuffer = new List<Quaternion>();
     }
@@ -103,6 +107,8 @@ public class EyeGaze : Singleton<EyeGaze>
         GazeCursor.gameObject.SetActive(ShowGazeCursor);
 
         _gazeSpeed = Vector3.Angle(_combinedGazeDir, _combinedGazeDir_pre) / Time.deltaTime;
+        FilteredEyeInHeadAngle_Pre = FilteredEyeInHeadAngle;
+        FilteredEyeInHeadAngle = _eyeInHeadAngleFilter.Filter(Vector3.Angle(Camera.main.transform.forward, _combinedGazeDir));
 
         _combinedGazeDir_pre = _combinedGazeDir;
         UpdateHeadRotationBuffer();
