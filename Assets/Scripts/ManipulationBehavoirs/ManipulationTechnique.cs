@@ -18,7 +18,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 {
     public Transform GrabbedObject { get; private set; }
     public virtual void OnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
-    {
+    {        
         GrabbedObject = obj;
 
         OnGazeFixation();

@@ -13,16 +13,26 @@ public enum GrabbedState
 public class ManipulatableObject : MonoBehaviour
 {
     public bool IsHitbyGaze { get; private set; }
+    public float AngleToGaze { get; private set; }
     public GrabbedState GrabbedState { get; private set; } = GrabbedState.NotGrabbed;
     public Grabbable Grabbable;
     public ManipulationTechnique ManipulationBehavior { get; private set; }
     public bool IsPinchTipWithinCube { get; private set; }
+    public bool IsHand = false;
 
     void Update()
     {
         //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
         // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-        IsHitbyGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin) <= 10f;
+        AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
+        IsHitbyGaze = AngleToGaze <= 10f;
+
+        if (IsHand)
+        {
+            AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
+            IsHitbyGaze = AngleToGaze <= 20f;
+            return;
+        } 
 
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
         IsPinchTipWithinCube = IsPointWithinBoxCollider(GetComponent<BoxCollider>(), ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));

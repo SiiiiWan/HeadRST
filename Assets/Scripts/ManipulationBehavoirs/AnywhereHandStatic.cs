@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class AnywhereHandStatic : ManipulationTechnique
 {
+    public bool HeadAttenuation;
+    public float k; // k > 0
     public StaticState CurrentState = StaticState.Hand;
     public TextMeshPro text;
 
@@ -34,7 +36,10 @@ public class AnywhereHandStatic : ManipulationTechnique
 
             CurrentState = StaticState.Gaze;
         }
-        else CurrentState = StaticState.Hand;
+        else CurrentState = StaticState.Head;
+
+        GrabbedObject.position += PinchPosition_delta * Vector3.Distance(GrabbedObject.position, GazeOrigin);
+        GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
 
         if (CurrentState == StaticState.Gaze)
         {
@@ -46,9 +51,6 @@ public class AnywhereHandStatic : ManipulationTechnique
             Vector3 objectDirection = (GrabbedObject.position - GazeOrigin).normalized;
             GrabbedObject.position += objectDirection * GetHeadDepthOffset();
             GrabbedObject.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.position, GazeOrigin), 1, 10);
-
-            GrabbedObject.position += PinchPosition_delta * Vector3.Distance(GrabbedObject.position, GazeOrigin);
-            GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
         }
     }
     
@@ -81,26 +83,35 @@ public class AnywhereHandStatic : ManipulationTechnique
         UpdateAndSortAnchorList();
         if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
         {
-            if (_closestAnchor != ObjectsInGazeCone_OnGazeFixation[0])
+            if (ObjectsInGazeCone_OnGazeFixation[0].IsHand)
             {
-                _accumulatedHandOffset = Vector3.zero;
+                print("Set Hand To Wrist Position");
+                return WristPosition;
+            }
+            else
+            {
+                if (_closestAnchor != ObjectsInGazeCone_OnGazeFixation[0])
+                {
+                    _accumulatedHandOffset = Vector3.zero;
 
-                _closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
+                    _closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
 
-                _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
+                    _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
+                }
+
+
+                _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
+                nextVirtualHandPosition = _anchorPosition + _accumulatedHandOffset;
+
+                //TODO: keep the relative position of the virtual hand to object when start and end the indirect grab
+                // if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
+                // else
+                // {
+
+                // }
+                // print("Update VirtualHandPosition 1");                
             }
 
-
-            _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
-            nextVirtualHandPosition = _anchorPosition + _accumulatedHandOffset;
-
-            //TODO: keep the relative position of the virtual hand to object when start and end the indirect grab
-            // if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
-            // else
-            // {
-
-            // }
-            // print("Update VirtualHandPosition 1");
         }
         else
         {
@@ -123,22 +134,22 @@ public class AnywhereHandStatic : ManipulationTechnique
         {
             CurrentState = StaticState.Gaze;
         }
-        else CurrentState = StaticState.Hand;
+        else CurrentState = StaticState.Head;
 
         // CurrentState = StaticState.Gaze;
 
+        nextObjectPosition += WristPosition_delta;
+        
         if (CurrentState == StaticState.Gaze)
         {
-            float distance = Vector3.Distance(GazeOrigin, currentObjectPosition);
+            float distance = Vector3.Distance(GazeOrigin, nextObjectPosition);
             nextObjectPosition = GazeOrigin + GazeDirection * distance;
         }
         else
         {
-            Vector3 objectDirection = (currentObjectPosition - GazeOrigin).normalized;
-            nextObjectPosition = currentObjectPosition + objectDirection * GetHeadDepthOffset();
+            Vector3 objectDirection = (nextObjectPosition - GazeOrigin).normalized;
+            nextObjectPosition = nextObjectPosition + objectDirection * GetHeadDepthOffset();
             nextObjectPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(nextObjectPosition, GazeOrigin), 1, 10);
-
-            nextObjectPosition += WristPosition_delta;
         }
         
 
@@ -152,7 +163,7 @@ public class AnywhereHandStatic : ManipulationTechnique
         if (anchors.Length != 0)
         {
             var sortedAnchors = anchors
-                .Where(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin) < 10f && anchor.GrabbedState == GrabbedState.NotGrabbed)
+                .Where(anchor => anchor.IsHitbyGaze && anchor.GrabbedState == GrabbedState.NotGrabbed)
                 .OrderBy(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin))
                 .ToList();
 

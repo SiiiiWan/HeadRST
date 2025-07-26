@@ -8407,6 +8407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
+  IsHand: 0
 --- !u!65 &346163902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12295,6 +12296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
+  IsHand: 0
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24530,6 +24532,8 @@ MonoBehaviour:
   HeadFixationAngle: 1.5
   HandStablizeDuration: 0.25
   HandStablizeThr: 0.3
+  HeadAttenuation: 1
+  k: 2
   CurrentState: 0
   text: {fileID: 1658596787}
   minHeadSpd: 0.2
@@ -35245,9 +35249,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1496611819}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b811399be1952704892fb7aa1702f08f, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Grabbable: {fileID: 0}
+  IsHand: 1
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0
