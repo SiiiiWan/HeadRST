@@ -10,8 +10,25 @@ public class AnywhereHandStatic : ManipulationTechnique
     public StaticState CurrentState = StaticState.Hand;
     public TextMeshPro text;
 
+    public override void OnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
+    {
+        base.OnSingleHandGrabbed(obj, grabbedState);
+
+        CurrentState = StaticState.Hand;
+        text.text = "grabbed";
+    }
+
+    public override void OnHandReleased(GrabbedState grabbedState)
+    {
+        base.OnHandReleased(grabbedState);
+
+        text.text = "Released";
+    }
+
     public override void ApplyIndirectGrabbedBehaviour()
     {
+        base.ApplyIndirectGrabbedBehaviour();
+
         if (IsGazeFixating == false)
         {
 
@@ -50,6 +67,11 @@ public class AnywhereHandStatic : ManipulationTechnique
         {
             if (GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState == GrabbedState.Grabbed_Indirect)
             {
+
+                _anchorPosition = GrabbedObject.position + (WristPosition - PinchPosition);
+
+                _accumulatedHandOffset = VirtualHandPosition - _anchorPosition;
+
                 return Vector3.zero;
             }
         }
@@ -65,11 +87,8 @@ public class AnywhereHandStatic : ManipulationTechnique
 
                 _closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
 
-                // TODO: can be optimized when hit a shelf or plane, in this case should take the gaze hit point and aling the depth only. should be able to free with gaze pointnig.
                 _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
             }
-
-
 
 
             _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
@@ -81,11 +100,14 @@ public class AnywhereHandStatic : ManipulationTechnique
             // {
 
             // }
+            // print("Update VirtualHandPosition 1");
         }
         else
         {
             // _accumulatedHandOffset = Vector3.zero;
+            _closestAnchor = null;
             nextVirtualHandPosition = GetNewAnywhereHandPosition(VirtualHandPosition);
+            // print("Update VirtualHandPosition 2");
         }
 
         return nextVirtualHandPosition;
@@ -95,7 +117,7 @@ public class AnywhereHandStatic : ManipulationTechnique
     {
         Vector3 nextObjectPosition = currentObjectPosition;
 
-        text.text = IsGazeFixating.ToString();
+        // text.text = IsGazeFixating.ToString();
 
         if (IsGazeFixating == false)
         {

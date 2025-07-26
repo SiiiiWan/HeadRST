@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public interface IManipulationBehavior
 {
-    void OnSingleHandGrabbed(Transform target);
-    void ApplyHandReleasedBehaviour();
+    void OnSingleHandGrabbed(Transform target, GrabbedState grabbedState);
+    void OnHandReleased(GrabbedState grabbedState);
     void ApplyIndirectGrabbedBehaviour();
     void ApplyBothHandGrabbedBehaviour();
 }
@@ -16,19 +17,33 @@ public enum StaticState { Gaze, Head, Hand }
 public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 {
     public Transform GrabbedObject { get; private set; }
-    public virtual void OnSingleHandGrabbed(Transform obj)
+    public virtual void OnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
     {
         GrabbedObject = obj;
 
         OnGazeFixation();
+
+        VirtualHandPosition_OnGrab = VirtualHandPosition;
+        ObjectPosition_OnGrab = obj.position;
+        print("Grabbed: " + grabbedState);
     }
 
     public virtual void ApplyIndirectGrabbedBehaviour()
     {
-        Debug.LogWarning("Apply method not implemented in " + this.GetType().Name);
+        VirtualHandPosition = GrabbedObject.position + VirtualHandPosition_OnGrab - ObjectPosition_OnGrab;
     }
 
-    public virtual void ApplyHandReleasedBehaviour() { GrabbedObject = null; }
+    public virtual void OnHandReleased(GrabbedState grabbedState)
+    {
+        if (grabbedState == GrabbedState.Grabbed_Indirect)
+        {
+            VirtualHandPosition = VirtualHandPosition_Indirect_Update;
+            print("Update VirtualHandPosition to Relative Position");
+        }
+        print("Released. Current State: " + GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState + ", was: " + grabbedState);
+
+        GrabbedObject = null;
+    }
     public virtual void ApplyBothHandGrabbedBehaviour() { }
 
 
@@ -45,6 +60,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
 
     // Hand
     public Vector3 VirtualHandPosition { get; private set; }
+    public Vector3 VirtualHandPosition_Indirect_Update { get; private set; }
     public HandData HandData { get; private set; }
     public Vector3 PinchPosition { get; private set; }
     public Vector3 PinchPosition_delta { get; private set; }
@@ -56,6 +72,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public FixationTracker HandFixationTracker { get; private set; }
     public bool IsHandStablized { get; private set; }
     public Vector3 AccumulatedHandOffset { get; private set; } = Vector3.zero;
+    public Vector3 VirtualHandPosition_OnGrab { get; private set; }
+    public Vector3 ObjectPosition_OnGrab { get; private set; }
 
 
 

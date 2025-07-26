@@ -27,32 +27,21 @@ public class ManipulatableObject : MonoBehaviour
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
         IsPinchTipWithinCube = IsPointWithinBoxCollider(GetComponent<BoxCollider>(), ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
 
-        if (Grabbable.SelectingPointsCount > 0)
+        if (IsHitbyGaze && (PinchDetector.GetInstance().IsOneHandPinching || Grabbable.SelectingPointsCount > 0) && GrabbedState == GrabbedState.NotGrabbed)
         {
             StudyControl.GetInstance().GrabbedObject = this;
+            GrabbedState = Grabbable.SelectingPointsCount > 0 ? GrabbedState.Grabbed_Direct : GrabbedState.Grabbed_Indirect;
 
-            ManipulationBehavior?.OnSingleHandGrabbed(transform);
-            GrabbedState = GrabbedState.Grabbed_Direct;
-            return;
+            ManipulationBehavior?.OnSingleHandGrabbed(transform, GrabbedState);
         }
 
 
-        if (IsHitbyGaze && PinchDetector.GetInstance().IsOneHandPinching && GrabbedState == GrabbedState.NotGrabbed)
+        if (PinchDetector.GetInstance().IsNoHandPinching && Grabbable.SelectingPointsCount == 0 && GrabbedState != GrabbedState.NotGrabbed)
         {
-            StudyControl.GetInstance().GrabbedObject = this;
+            GrabbedState tempState = GrabbedState;
+            GrabbedState = GrabbedState.NotGrabbed;
 
-            ManipulationBehavior?.OnSingleHandGrabbed(transform);
-            GrabbedState = GrabbedState.Grabbed_Indirect;
-        }
-
-
-        if (PinchDetector.GetInstance().IsNoHandPinching)
-        {
-            if (GrabbedState == GrabbedState.Grabbed_Indirect || GrabbedState == GrabbedState.Grabbed_Direct)
-            {
-                GrabbedState = GrabbedState.NotGrabbed;
-                ManipulationBehavior?.ApplyHandReleasedBehaviour();
-            }
+            ManipulationBehavior?.OnHandReleased(tempState);
         }
 
         if (GrabbedState == GrabbedState.Grabbed_Indirect) ManipulationBehavior?.ApplyIndirectGrabbedBehaviour();

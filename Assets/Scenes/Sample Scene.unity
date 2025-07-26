@@ -50290,17 +50290,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[BuildingBlock] Cube (1)'
       objectReference: {fileID: 0}
+    - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2761191542974234977, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_IsKinematic
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.241
+      value: 0.776
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.825
+      value: 1.482
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.z
