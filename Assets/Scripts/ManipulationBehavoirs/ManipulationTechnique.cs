@@ -94,6 +94,8 @@ public class ManipulationTechnique : MonoBehaviour
     public float EyeInHeadYAngle_OnGazeFixation { get; private set; }
     public List<ManipulatableObject> ObjectsInGazeCone { get; private set; } = new List<ManipulatableObject>();
     public bool NewGazeObject { get; private set; } = false;
+    public OneEuroFilter<Vector3> DeltaHandMovementFilter { get; private set; } = new OneEuroFilter<Vector3>(90f);
+    public Vector3 Filtered_HandMovementVector { get; private set; }
 
 
     // Head
@@ -134,6 +136,7 @@ public class ManipulationTechnique : MonoBehaviour
         WristPosition = HandData.GetHandPosition(usePinchTip: false);
         WristPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: false);
         HandTranslationSpeed = HandData.GetHandSpeed(usePinchTip: true);
+        Filtered_HandMovementVector = DeltaHandMovementFilter.Filter(PinchPosition_delta);
         HandRotationSpeed = HandData.GetHandRotationSpeed(usePinchTip: true);
         HandFixationTracker.UpdateThrshould(HandStablizeDuration, HandStablizeThr);
         IsHandStablized = HandFixationTracker.GetIsFixating(PinchPosition);

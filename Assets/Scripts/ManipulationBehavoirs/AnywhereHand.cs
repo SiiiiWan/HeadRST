@@ -26,7 +26,7 @@ public class AnywhereHand : ManipulationTechnique
         else
         {
             Vector3 objectDirection = (VirtualHandPosition - GazeOrigin).normalized;
-            VirtualHandPosition += objectDirection * GetHeadDepthOffset();
+            VirtualHandPosition += GetHeadDepthOffset(objectDirection);
             VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinHeadDepth, MaxHeadDepth);
         }
     }
@@ -34,7 +34,7 @@ public class AnywhereHand : ManipulationTechnique
     public override void TriggerOnLookAtNewObjectBehavior()
     {
         VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);
-        // AccumulatedHandOffsetAroundObject = Vector3.zero;
+        AccumulatedHandOffsetAroundObject = Vector3.zero;
     }
 
     public override void ApplyGazingButNotGrabbingBehaviour()
@@ -62,7 +62,7 @@ public class AnywhereHand : ManipulationTechnique
         else
         {
             Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
-            GrabbedObject.transform.position += objectDirection * GetHeadDepthOffset();
+            GrabbedObject.transform.position += GetHeadDepthOffset(objectDirection);
             GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), MinHeadDepth, MaxHeadDepth);
         }
 
@@ -94,29 +94,28 @@ public class AnywhereHand : ManipulationTechnique
 
 
 
-    float GetHeadDepthOffset()
+    Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
-        float depthOffset;
-
         float max_gain = (MaxHeadDepth - MinHeadDepth) / MaxGainDeg;
         float min_gain = (MaxHeadDepth - MinHeadDepth) / MinGainDeg;
 
         BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
         EdgeGain = EyeHeadGain();
-        Attenuation = HeadAttenuation();
+        Vector3 headDepthOffset = objectDirection * DeltaHeadY * BaseGain * EdgeGain;
 
-        depthOffset = DeltaHeadY * BaseGain * EdgeGain * Attenuation;
+        Attenuation = HeadAttenuation(headDepthOffset);
 
-        return depthOffset;
+        // return headDepthOffset * Attenuation;
+        return headDepthOffset;
     }
 
-    float HeadAttenuation()
+    float HeadAttenuation(Vector3 headDepthOffset)
     {
         float attenuation = 1;
 
-        if (Filtered_EyeInHeadAngle < Filtered_EyeInHeadAngle_Pre) // eye in head angle is decreasing
+        if (Filtered_EyeInHeadAngle < Filtered_EyeInHeadAngle_Pre && Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0) // eye in head angle is decreasing
         {
-            
+            attenuation = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / headDepthOffset.magnitude;
         }
 
         return Mathf.Clamp(attenuation, 0, 1);
