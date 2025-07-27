@@ -9,7 +9,7 @@ public class ManipulationTechnique : MonoBehaviour
     public bool Log;
     #region Manipulation Behaviors
 
-    public ManipulatableObject GrabbedObject { get; private set; }
+    public ManipulatableObject GrabbedObject;
     public ManipulatableObject GazingObject { get; private set; }
 
     public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)

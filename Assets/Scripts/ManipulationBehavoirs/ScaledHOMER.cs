@@ -54,7 +54,7 @@ public class ScaledHOMER : ManipulationTechnique
 
     public override void ApplyObjectFreeBehaviour()
     {
-        VirtualHandPosition += Vector3.zero;
+        VirtualHandPosition = Vector3.zero;
     }
 
     public override void TriggerOnLookAtNewObjectBehavior()
