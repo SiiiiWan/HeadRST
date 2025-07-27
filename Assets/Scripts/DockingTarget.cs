@@ -12,7 +12,7 @@ public class DockingTarget : MonoBehaviour
     {
         StudyControl studyControl = StudyControl.GetInstance();
 
-        ManipulatableObject grabbedObject = studyControl.GrabbedObject;
+        ManipulatableObject grabbedObject = studyControl.ManipulationBehavior.GrabbedObject;
 
         if (grabbedObject != null)
         {

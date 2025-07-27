@@ -2,66 +2,65 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.UI;
 
-public interface IManipulationBehavior
+
+public class ManipulationTechnique : MonoBehaviour
 {
-    void OnSingleHandGrabbed(Transform target, GrabbedState grabbedState);
-    void OnHandReleased(GrabbedState grabbedState);
-    void ApplyIndirectGrabbedBehaviour();
-    void ApplyBothHandGrabbedBehaviour();
-}
+    public bool Log;
+    #region Manipulation Behaviors
 
-public enum StaticState { Gaze, Head, Hand }
+    public ManipulatableObject GrabbedObject { get; private set; }
+    public ManipulatableObject GazingObject { get; private set; }
 
-public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
-{
-    public Transform GrabbedObject { get; private set; }
-    public virtual void OnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
-    {        
+    public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    {
         GrabbedObject = obj;
+        GrabbedObject.SetGrabbedState(grabbedState);
+        if (Log) print("ah: Grabbed: " + obj.GrabbedState);
 
-        OnGazeFixation();
+        TriggerOnGazeFixation();
 
         VirtualHandPosition_OnGrab = VirtualHandPosition;
-        ObjectPosition_OnGrab = obj.position;
-        print("Grabbed: " + grabbedState);
+        ObjectPosition_OnGrab = GrabbedObject.transform.position;
     }
 
-    public virtual void ApplyIndirectGrabbedBehaviour()
-    {
-        VirtualHandPosition = GrabbedObject.position + VirtualHandPosition_OnGrab - ObjectPosition_OnGrab;
-    }
+    public virtual void ApplyIndirectGrabbedBehaviour() { }
+    public virtual void ApplyDirectGrabbedBehaviour() { }
+    public virtual void ApplyGazingButNotGrabbingBehaviour() { }
+    public virtual void ApplyObjectFreeBehaviour() { }
 
-    public virtual void OnHandReleased(GrabbedState grabbedState)
+    public virtual void TriggerOnHandReleased()
     {
-        if (grabbedState == GrabbedState.Grabbed_Indirect)
-        {
-            VirtualHandPosition = VirtualHandPosition_Indirect_Update;
-            print("Update VirtualHandPosition to Relative Position");
-        }
-        print("Released. Current State: " + GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState + ", was: " + grabbedState);
+        if (Log) print("ah: Released. Current State: " + GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState + ", was: " + GrabbedObject.GrabbedState);
 
+        GrabbedObject.SetGrabbedState(GrabbedState.NotGrabbed);
         GrabbedObject = null;
     }
-    public virtual void ApplyBothHandGrabbedBehaviour() { }
 
+    public virtual void TriggerOnLookAtHandBehavior () { }
+    public virtual void TriggerOnLookAtNewObjectBehavior()
+    { 
+        // ObjectHighlight(true, GazingObject);
+    }
 
+    #endregion
 
-    [Header("Fixation Settings")] // not allowed adjustment in runtime
-    public float GazeFixationDuration = 0.25f; // in seconds
-    public float GazeFixationAngle = 3f; // in degrees
+    #region Tracking Data
 
-    public float HeadFixationDuration = 0.25f; // in seconds
-    public float HeadFixationAngle = 1.5f; // in degrees
+    [Header("Fixation Settings")]
+    public float GazeFixationDuration { get; protected set; } = 0.25f; // in seconds
+    public float GazeFixationAngle { get; protected set; } = 3f; // in degrees
 
-    public float HandStablizeDuration = 0.25f; // in seconds
-    public float HandStablizeThr = 0.3f; // in meters
+    public float HeadFixationDuration { get; protected set; } = 0.25f; // in seconds
+    public float HeadFixationAngle { get; protected set; } = 1.5f; // in degrees
+
+    public float HandStablizeDuration { get; protected set; } = 0.25f; // in seconds
+    public float HandStablizeThr { get; protected set; } = 0.3f; // in meters
 
     // Hand
-    public Vector3 VirtualHandPosition { get; private set; }
-    public Vector3 VirtualHandPosition_Indirect_Update { get; private set; }
+    public Vector3 VirtualHandPosition { get; protected set; }
     public HandData HandData { get; private set; }
+    public PinchDetector PinchDetector { get; private set; }
     public Vector3 PinchPosition { get; private set; }
     public Vector3 PinchPosition_delta { get; private set; }
     public Vector3 WristPosition { get; private set; }
@@ -93,6 +92,8 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float Filtered_EyeInHeadAngle_Pre { get; private set; }
     public float EyeInHeadXAngle { get; private set; }
     public float EyeInHeadYAngle_OnGazeFixation { get; private set; }
+    public List<ManipulatableObject> ObjectsInGazeCone { get; private set; } = new List<ManipulatableObject>();
+    public bool NewGazeObject { get; private set; } = false;
 
 
     // Head
@@ -111,6 +112,9 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public float Limit_HeadY_Down { get; private set; } // negtive value means down
     public float HeadYAngle_OnGazeFixation { get; private set; }
 
+    #endregion
+
+    #region MonoBehaviour Methods
     public virtual void Awake()
     {
         GazeFixationTracker = new FixationTracker(GazeFixationDuration, GazeFixationAngle);
@@ -123,6 +127,7 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     public virtual void Update()
     {
         HandData = HandData.GetInstance();
+        PinchDetector = PinchDetector.GetInstance();
         PinchPosition_delta = HandData.GetDeltaHandPosition(usePinchTip: true);
         PinchRotation_delta = HandData.GetDeltaHandRotation(usePinchTip: true);
         PinchPosition = HandData.GetHandPosition(usePinchTip: true);
@@ -139,11 +144,11 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         IsGazeSaccading = GazeData.IsSaccading();
         GazeFixationTracker.UpdateThrshould(GazeFixationDuration, GazeFixationAngle);
         IsGazeFixating = GazeFixationTracker.GetIsFixating(GazeDirection);
+        if (IsGazeFixating_pre == false && IsGazeFixating == true) TriggerOnGazeFixation();
         GazeFixationCentroid = GazeFixationTracker.FixationCentroid;
         EyeInHeadYAngle = GazeData.EyeInHeadYAngle;
         EyeInHeadXAngle = GazeData.EyeInHeadXAngle;
         Filtered_EyeInHeadAngle = GazeData.FilteredEyeInHeadAngle;
-        Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
 
         HeadData = HeadMovement.GetInstance();
         HeadForward = Camera.main.transform.forward;
@@ -156,16 +161,108 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         DeltaHeadY = HeadData.DeltaHeadY;
         HeadYAngle = HeadData.HeadAngle_WorldY;
 
+        UpdateAndSortObjectInGazeConeList();
 
-        if (IsGazeFixating_pre == false && IsGazeFixating == true) OnGazeFixation();
+        if (ObjectsInGazeCone.Count > 0) // has object in gaze cone
+        {
+            if (ObjectsInGazeCone[0] != GazingObject) // trigger on gazing different object
+            {
+                // if (Log) print("ah: NewGazeObject: True");
 
-        VirtualHandPosition = GetNewVirtualHandPosition();
+                GazingObject = ObjectsInGazeCone[0];
+                NewGazeObject = true;
+            }
+            else// gazing the same object
+            {
+                // if (Log && NewGazeObject) print("ah: NewGazeObject: False");
+                NewGazeObject = false;
+            }
+        }
+        else // no object in gaze cone
+        {
+            GazingObject = null;
+        }
+
+
+
+        if (GrabbedObject == null) // not grabbed
+        {
+            if (GazingObject != null)
+            {
+                if (NewGazeObject)
+                {
+                    if (GazingObject.IsHand) // is gazing the real hand
+                    {
+                        TriggerOnLookAtHandBehavior();
+                        if (Log) print("ah: TriggerOnLookAtHandBehavior");
+                    }
+                    else
+                    {
+                        TriggerOnLookAtNewObjectBehavior();
+                        if (Log) print("ah: TriggerOnLookAtNewObjectBehavior");
+                    }
+                }
+
+                if (GazingObject.IsHand == false)
+                {
+                    if (GazingObject.Grabbable.SelectingPointsCount > 0)
+                    {
+                        TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
+                        // if (Log) print("ah: TriggerOnSingleHandGrabbed: " + GrabbedState.Grabbed_Direct);
+                    }
+                    else if (PinchDetector.IsOneHandPinching)
+                    {
+                        TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
+                        // if (Log) print("ah: TriggerOnSingleHandGrabbed: " + GrabbedState.Grabbed_Indirect);
+                    }
+                    else // gaze hover but not grabbed yet
+                    {
+                        ApplyGazingButNotGrabbingBehaviour();
+                    }                    
+                }
+
+            }
+            else
+            {
+                ApplyObjectFreeBehaviour();
+            }
+        }
+        else // grabbed
+        {
+            if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Direct)
+            {
+                if (GrabbedObject.Grabbable.SelectingPointsCount > 0)
+                {
+                    ApplyDirectGrabbedBehaviour(); // check if (NewGazeObject) and IsHand within the method
+                }
+                else
+                {
+                    TriggerOnHandReleased();
+                    // if (Log) print("ah: TriggerOnHandReleased");
+                }
+
+            }
+            else if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Indirect)
+            {
+                if (PinchDetector.IsOneHandPinching)
+                {
+                    ApplyIndirectGrabbedBehaviour(); // check if (NewGazeObject) and IsHand within the method
+                }
+                else
+                {
+                    TriggerOnHandReleased();
+                    // if (Log) print("ah: TriggerOnHandReleased");
+                }
+            }
+        }
 
         IsGazeFixating_pre = IsGazeFixating;
         IsHeadFixating_pre = IsHeadFixating;
+        Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
     }
+    # endregion
 
-    public virtual Vector3 GetNewVirtualHandPosition() { return VirtualHandPosition; }
+    #region Accessory Functions
 
     public float GetVisualGain(Vector3 objectPosition)
     {
@@ -185,13 +282,22 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
     }
 
 
-    public void OnGazeFixation()
+    public void TriggerOnGazeFixation()
     {
         GazeDirection_OnGazeFixation = GazeDirection;
         HeadDirection_OnGazeFixation = HeadForward;
 
         HeadYAngle_OnGazeFixation = HeadYAngle;
         EyeInHeadYAngle_OnGazeFixation = EyeInHeadYAngle;
+    }
+
+    public void ObjectHighlight(bool highlight, ManipulatableObject obj)
+    {
+        Outline outline;
+        if (outline = obj.GetComponent<Outline>())
+        {
+            outline.enabled = highlight;
+        }
     }
 
     public void UpdateHeadInputRange()
@@ -204,4 +310,22 @@ public class ManipulationTechnique : MonoBehaviour, IManipulationBehavior
         Limit_HeadY_Up = Math.Min(Math.Max(EyeInHeadYAngle - maxEyeHeadAngle_Y_Down, 0) + HeadYAngle, maxHead_Y_up);
         Limit_HeadY_Down = Math.Max(HeadYAngle - Math.Max(maxEyeHeadAngle_Y_Up - EyeInHeadYAngle, 0), maxHead_Y_down);
     }
+
+    public void UpdateAndSortObjectInGazeConeList()
+    {
+        // Get all objects currently in gaze cone, sort by angle to gaze
+        ManipulatableObject[] anchors = FindObjectsByType<ManipulatableObject>(FindObjectsSortMode.None);
+
+        if (anchors.Length != 0)
+        {
+            var sortedAnchors = anchors
+                .Where(anchor => anchor.IsHitbyGaze && anchor.GrabbedState == GrabbedState.NotGrabbed)
+                .OrderBy(anchor => anchor.AngleToGaze)
+                .ToList();
+
+            ObjectsInGazeCone.Clear();
+            ObjectsInGazeCone.AddRange(sortedAnchors);
+        }
+    }
+# endregion
 }

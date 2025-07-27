@@ -20,7 +20,6 @@ public enum StartPositionLabels
 public class StudyControl : Singleton<StudyControl>
 {
     public ManipulationTechnique ManipulationBehavior;
-    public ManipulatableObject GrabbedObject;
 
     public TextMeshPro TechniqueText;
 
@@ -54,7 +53,7 @@ public class StudyControl : Singleton<StudyControl>
             return; // No target indicator to check
         }
 
-        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && GrabbedObject != null)
+        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
             if (TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
             {
@@ -64,8 +63,6 @@ public class StudyControl : Singleton<StudyControl>
                 ObjectToBeManipulated = null;
                 TargetIndicator = null;
             }
-
-            GrabbedObject = null;
         }
 
     }

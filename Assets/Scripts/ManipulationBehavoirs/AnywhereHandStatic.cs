@@ -5,222 +5,156 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AnywhereHandStatic : ManipulationTechnique
+public class AnywhereHandStatic : AnywhereHand
 {
-    public bool HeadAttenuation;
-    public float k; // k > 0
-    public StaticState CurrentState = StaticState.Hand;
-    public TextMeshPro text;
+    // public bool HeadAttenuation;
+    // public float k; // k > 0
+    // public StaticState CurrentState = StaticState.Hand;
+    // public TextMeshPro text;
 
-    public override void OnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
-    {
-        base.OnSingleHandGrabbed(obj, grabbedState);
+    // public override void TriggerOnSingleHandGrabbed(Transform obj, GrabbedState grabbedState)
+    // {
+    //     base.TriggerOnSingleHandGrabbed(obj, grabbedState);
 
-        CurrentState = StaticState.Hand;
-        text.text = "grabbed";
-    }
+    //     CurrentState = StaticState.Hand;
+    //     text.text = "grabbed";
+    // }
 
-    public override void OnHandReleased(GrabbedState grabbedState)
-    {
-        base.OnHandReleased(grabbedState);
+    // public override void TriggerOnHandReleased(GrabbedState grabbedState)
+    // {
+    //     base.TriggerOnHandReleased(grabbedState);
 
-        text.text = "Released";
-    }
+    //     text.text = "Released";
+    // }
 
-    public override void ApplyIndirectGrabbedBehaviour()
-    {
-        base.ApplyIndirectGrabbedBehaviour();
+    // public override void ApplyIndirectGrabbedBehaviour()
+    // {
+    //     base.ApplyIndirectGrabbedBehaviour();
 
-        if (IsGazeFixating == false)
-        {
+    //     if (IsGazeFixating == false)
+    //     {
 
-            CurrentState = StaticState.Gaze;
-        }
-        else CurrentState = StaticState.Head;
+    //         CurrentState = StaticState.Gaze;
+    //     }
+    //     else CurrentState = StaticState.Head;
 
-        GrabbedObject.position += PinchPosition_delta * Vector3.Distance(GrabbedObject.position, GazeOrigin);
-        GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
+    //     GrabbedObject.position += PinchPosition_delta * Vector3.Distance(GrabbedObject.position, GazeOrigin);
+    //     GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
 
-        if (CurrentState == StaticState.Gaze)
-        {
-            float distance = Vector3.Distance(GazeOrigin, GrabbedObject.position);
-            GrabbedObject.position = GazeOrigin + GazeDirection * distance;
-        }
-        else
-        {
-            Vector3 objectDirection = (GrabbedObject.position - GazeOrigin).normalized;
-            GrabbedObject.position += objectDirection * GetHeadDepthOffset();
-            GrabbedObject.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.position, GazeOrigin), 1, 10);
-        }
-    }
+    //     if (CurrentState == StaticState.Gaze)
+    //     {
+    //         float distance = Vector3.Distance(GazeOrigin, GrabbedObject.position);
+    //         GrabbedObject.position = GazeOrigin + GazeDirection * distance;
+    //     }
+    //     else
+    //     {
+    //         Vector3 objectDirection = (GrabbedObject.position - GazeOrigin).normalized;
+    //         GrabbedObject.position += objectDirection * GetHeadDepthOffset();
+    //         GrabbedObject.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.position, GazeOrigin), 1, 10);
+    //     }
+    // }
     
 
-    public List<ManipulatableObject> ObjectsInGazeCone_OnGazeFixation { get; private set; } = new List<ManipulatableObject>();
-    private Vector3 _accumulatedHandOffset = Vector3.zero;
-    private ManipulatableObject _closestAnchor;   
-    private Vector3 _anchorPosition; 
+    // private Vector3 _accumulatedHandOffset = Vector3.zero;
+    // private ManipulatableObject _closestAnchor;   
+    // private Vector3 _anchorPosition; 
 
-    public override Vector3 GetNewVirtualHandPosition()
-    {
-        text.transform.LookAt(Camera.main.transform);
-        text.transform.Rotate(0, 180f, 0);
+    // public override Vector3 UpdateVirtualHandPosition()
+    // {
+    //     text.transform.LookAt(Camera.main.transform);
+    //     text.transform.Rotate(0, 180f, 0);
 
-        if (GrabbedObject)
-        {
-            if (GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState == GrabbedState.Grabbed_Indirect)
-            {
+    //     if (GrabbedObject)
+    //     {
+    //         if (GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState == GrabbedState.Grabbed_Indirect)
+    //         {
 
-                _anchorPosition = GrabbedObject.position + (WristPosition - PinchPosition);
+    //             _anchorPosition = GrabbedObject.position + (WristPosition - PinchPosition);
 
-                _accumulatedHandOffset = VirtualHandPosition - _anchorPosition;
+    //             _accumulatedHandOffset = VirtualHandPosition - _anchorPosition;
 
-                return Vector3.zero;
-            }
-        }
+    //             return Vector3.zero;
+    //         }
+    //     }
 
-        Vector3 nextVirtualHandPosition = VirtualHandPosition;
+    //     Vector3 nextVirtualHandPosition = VirtualHandPosition;
 
-        UpdateAndSortAnchorList();
-        if (ObjectsInGazeCone_OnGazeFixation.Count > 0)
-        {
-            if (ObjectsInGazeCone_OnGazeFixation[0].IsHand)
-            {
-                print("Set Hand To Wrist Position");
-                return WristPosition;
-            }
-            else
-            {
-                if (_closestAnchor != ObjectsInGazeCone_OnGazeFixation[0])
-                {
-                    _accumulatedHandOffset = Vector3.zero;
+    //     UpdateAndSortObjectInGazeConeList();
+    //     if (ObjectsInGazeCone.Count > 0)
+    //     {
+    //         if (ObjectsInGazeCone[0].IsHand)
+    //         {
+    //             print("Set Hand To Wrist Position");
+    //             return WristPosition;
+    //         }
+    //         else
+    //         {
+    //             if (_closestAnchor != ObjectsInGazeCone[0])
+    //             {
+    //                 _accumulatedHandOffset = Vector3.zero;
 
-                    _closestAnchor = ObjectsInGazeCone_OnGazeFixation[0];
+    //                 _closestAnchor = ObjectsInGazeCone[0];
 
-                    _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
-                }
+    //                 _anchorPosition = _closestAnchor.transform.position + (WristPosition - PinchPosition);
+    //             }
 
 
-                _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
-                nextVirtualHandPosition = _anchorPosition + _accumulatedHandOffset;
+    //             _accumulatedHandOffset += WristPosition_delta * Vector3.Distance(_closestAnchor.transform.position, GazeOrigin);
+    //             nextVirtualHandPosition = _anchorPosition + _accumulatedHandOffset;
 
-                //TODO: keep the relative position of the virtual hand to object when start and end the indirect grab
-                // if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
-                // else
-                // {
+    //             //TODO: keep the relative position of the virtual hand to object when start and end the indirect grab
+    //             // if (closestAnchor.IsRealHand) VirtualHandPosition = WristPosition;
+    //             // else
+    //             // {
 
-                // }
-                // print("Update VirtualHandPosition 1");                
-            }
+    //             // }
+    //             // print("Update VirtualHandPosition 1");                
+    //         }
 
-        }
-        else
-        {
-            // _accumulatedHandOffset = Vector3.zero;
-            _closestAnchor = null;
-            nextVirtualHandPosition = GetNewAnywhereHandPosition(VirtualHandPosition);
-            // print("Update VirtualHandPosition 2");
-        }
+    //     }
+    //     else
+    //     {
+    //         // _accumulatedHandOffset = Vector3.zero;
+    //         _closestAnchor = null;
+    //         nextVirtualHandPosition = GetNewAnywhereHandPosition(VirtualHandPosition);
+    //         // print("Update VirtualHandPosition 2");
+    //     }
 
-        return nextVirtualHandPosition;
-    }
+    //     return nextVirtualHandPosition;
+    // }
 
-    public Vector3 GetNewAnywhereHandPosition(Vector3 currentObjectPosition)
-    {
-        Vector3 nextObjectPosition = currentObjectPosition;
+    // public Vector3 GetNewAnywhereHandPosition(Vector3 currentObjectPosition)
+    // {
+    //     Vector3 nextObjectPosition = currentObjectPosition;
 
-        // text.text = IsGazeFixating.ToString();
+    //     // text.text = IsGazeFixating.ToString();
 
-        if (IsGazeFixating == false)
-        {
-            CurrentState = StaticState.Gaze;
-        }
-        else CurrentState = StaticState.Head;
+    //     if (IsGazeFixating == false)
+    //     {
+    //         CurrentState = StaticState.Gaze;
+    //     }
+    //     else CurrentState = StaticState.Head;
 
-        // CurrentState = StaticState.Gaze;
+    //     // CurrentState = StaticState.Gaze;
 
-        nextObjectPosition += WristPosition_delta;
+    //     nextObjectPosition += WristPosition_delta;
         
-        if (CurrentState == StaticState.Gaze)
-        {
-            float distance = Vector3.Distance(GazeOrigin, nextObjectPosition);
-            nextObjectPosition = GazeOrigin + GazeDirection * distance;
-        }
-        else
-        {
-            Vector3 objectDirection = (nextObjectPosition - GazeOrigin).normalized;
-            nextObjectPosition = nextObjectPosition + objectDirection * GetHeadDepthOffset();
-            nextObjectPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(nextObjectPosition, GazeOrigin), 1, 10);
-        }
+    //     if (CurrentState == StaticState.Gaze)
+    //     {
+    //         float distance = Vector3.Distance(GazeOrigin, nextObjectPosition);
+    //         nextObjectPosition = GazeOrigin + GazeDirection * distance;
+    //     }
+    //     else
+    //     {
+    //         Vector3 objectDirection = (nextObjectPosition - GazeOrigin).normalized;
+    //         nextObjectPosition = nextObjectPosition + objectDirection * GetHeadDepthOffset();
+    //         nextObjectPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(nextObjectPosition, GazeOrigin), 1, 10);
+    //     }
         
 
-        return nextObjectPosition;
-    }
-
-    public void UpdateAndSortAnchorList()
-    {
-        ManipulatableObject[] anchors = FindObjectsByType<ManipulatableObject>(FindObjectsSortMode.None);
-
-        if (anchors.Length != 0)
-        {
-            var sortedAnchors = anchors
-                .Where(anchor => anchor.IsHitbyGaze && anchor.GrabbedState == GrabbedState.NotGrabbed)
-                .OrderBy(anchor => Vector3.Angle(GazeDirection, anchor.transform.position - GazeOrigin))
-                .ToList();
-
-            ObjectsInGazeCone_OnGazeFixation.Clear();
-            ObjectsInGazeCone_OnGazeFixation.AddRange(sortedAnchors);
-        }
-    }
+    //     return nextObjectPosition;
+    // }
 
 
-    public float minHeadSpd = 0.2f;
-    public float maxHeadSpd = 0.6f;
 
-    public float minGainDeg = 30;
-    public float maxGainDeg = 10;
-
-    float GetHeadDepthOffset()
-    {
-        float depthOffset;
-
-        float max_gain = (10f - 1f) / maxGainDeg;
-        float min_gain = (10f - 1f) / minGainDeg;
-
-        depthOffset = DeltaHeadY * VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, minHeadSpd, maxHeadSpd);
-
-        depthOffset = depthOffset * EyeHeadGain();
-
-        return depthOffset;
-    }
-
-    float EyeHeadGain()
-    {
-        float eyeRange = GetEyeRange(EyeInHeadXAngle, EyeInHeadYAngle);
-        float k = 3;
-        float boostStartDeg = eyeRange / k;
-
-        float gain = 1;
-
-        float gazeAngleFromHead = Vector3.Angle(GazeDirection, HeadForward);
-
-        if(gazeAngleFromHead >= boostStartDeg & Filtered_EyeInHeadAngle > Filtered_EyeInHeadAngle_Pre) gain = linearDepthFunction_TwoPoints(gazeAngleFromHead, new Vector2(boostStartDeg, 1), new Vector2(eyeRange, k));
-
-        return gain;       
-    }
-
-    float GetEyeRange(float x, float y, float up_lim = 15, float down_lim = 30, float side_lim = 30)
-    {
-        if(y >= 0) return (1 - (1-(up_lim/side_lim)) * Mathf.Sin(Mathf.Atan2(y, x))) * side_lim;
-        else return (1 + (1-(down_lim/side_lim)) * Mathf.Sin(Mathf.Atan2(y, x))) * side_lim;
-    }
-
-
-    protected float linearDepthFunction_TwoPoints(float x, Vector2 left, Vector2 right)
-    {
-        float k = (right.y - left.y) / (right.x - left.x);
-
-        float b = right.y - k*right.x;
-
-        return k * x + b;
-    }
 }

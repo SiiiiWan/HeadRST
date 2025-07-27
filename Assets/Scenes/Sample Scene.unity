@@ -24471,12 +24471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99c8cdde9d08db40ad6f0ff5a8e461e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GazeFixationDuration: 0.25
-  GazeFixationAngle: 3
-  HeadFixationDuration: 0.25
-  HeadFixationAngle: 1.5
-  HandStablizeDuration: 0.25
-  HandStablizeThr: 0.1
+  Log: 0
 --- !u!114 &1006584921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24489,12 +24484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64cc67a3145a61e42b034168e18fd5da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GazeFixationDuration: 0.25
-  GazeFixationAngle: 3
-  HeadFixationDuration: 0.25
-  HeadFixationAngle: 1.5
-  HandStablizeDuration: 0.25
-  HandStablizeThr: 0.1
+  Log: 0
 --- !u!114 &1006584922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24507,12 +24497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc4a4fafea9c08d47a9de0b8cf0ffdda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GazeFixationDuration: 0.25
-  GazeFixationAngle: 3
-  HeadFixationDuration: 0.25
-  HeadFixationAngle: 1.5
-  HandStablizeDuration: 0.25
-  HandStablizeThr: 0.1
+  Log: 0
   VirtualHandPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1006584923
 MonoBehaviour:
@@ -24526,20 +24511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20f1379cf72cdd4480714d22bb0be07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GazeFixationDuration: 0.25
-  GazeFixationAngle: 3
-  HeadFixationDuration: 0.25
-  HeadFixationAngle: 1.5
-  HandStablizeDuration: 0.25
-  HandStablizeThr: 0.3
-  HeadAttenuation: 1
-  k: 2
-  CurrentState: 0
-  text: {fileID: 1658596787}
-  minHeadSpd: 0.2
-  maxHeadSpd: 0.6
-  minGainDeg: 30
-  maxGainDeg: 10
+  Log: 1
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
@@ -50298,7 +50270,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2761191542974234977, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_IsKinematic
