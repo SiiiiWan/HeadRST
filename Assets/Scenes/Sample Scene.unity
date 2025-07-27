@@ -24406,6 +24406,7 @@ GameObject:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584923}
+  - component: {fileID: 1006584924}
   - component: {fileID: 1006584919}
   - component: {fileID: 1006584921}
   - component: {fileID: 1006584922}
@@ -24443,8 +24444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ManipulationBehavior: {fileID: 1006584923}
-  GrabbedObject: {fileID: 0}
+  ManipulationBehavior: {fileID: 1006584924}
   TechniqueText: {fileID: 373964267}
   TargetPrefab: {fileID: 2676514430063476796, guid: acf565eedf6b18e47a5e2dcfde534009, type: 3}
   ObjectPrefab: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -24512,6 +24512,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Log: 1
+--- !u!114 &1006584924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9054698cf06815344b954f006d3f86d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Log: 0
+  TorsoOffset: 0.35
+  scalingConstant: 0.15
+  MinVelocityThreshold: 0.01
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
