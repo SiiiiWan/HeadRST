@@ -51,23 +51,4 @@ public class GazeHand : ManipulationTechnique
         VirtualHandPosition = GazeOrigin + GazeDirection * _depth +  WristPosition - GazeOrigin;
     }
 
-    // public override Vector3 UpdateVirtualHandPosition()
-    // {
-    //     Vector3 nextVirtualHandPosition = VirtualHandPosition;
-
-    //     Vector3 gazeOriginToHandOffest = WristPosition - GazeOrigin;
-
-    //     Vector3 handOffsetVector = PinchPosition - _handInitPosition;
-    //     float handOffsetDistance = Vector3.Project(handOffsetVector, GazeDirection).magnitude;
-
-    //     if (handOffsetDistance >= 0.05f) _depth += (handOffsetDistance - 0.05f) * 0.144f * (Vector3.Dot(handOffsetVector, GazeDirection) > 0 ? 1 : -1);
-
-    //     Vector3 gazePoint = GazeOrigin + GazeDirection * _depth;
-
-    //     GrabbedObject.position = gazePoint + gazeOriginToHandOffest;
-    //     GrabbedObject.rotation = PinchRotation_delta * GrabbedObject.rotation;
-
-    //     return nextVirtualHandPosition;
-    // }    
-
 }

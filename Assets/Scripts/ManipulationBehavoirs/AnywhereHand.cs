@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -91,6 +92,7 @@ public class AnywhereHand : ManipulationTechnique
     public float BaseGain { get; protected set; }
     public float EdgeGain { get; protected set; }
     public float Attenuation { get; protected set; } = 1;
+    public float MaxHandSpeed = 1f;
 
 
 
@@ -105,17 +107,35 @@ public class AnywhereHand : ManipulationTechnique
 
         Attenuation = HeadAttenuation(headDepthOffset);
 
-        // return headDepthOffset * Attenuation;
-        return headDepthOffset;
+        return headDepthOffset * Attenuation;
+        // return headDepthOffset;
     }
 
     float HeadAttenuation(Vector3 headDepthOffset)
     {
         float attenuation = 1;
 
-        if (Filtered_EyeInHeadAngle < Filtered_EyeInHeadAngle_Pre && Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0) // eye in head angle is decreasing
+        // if (Filtered_EyeInHeadAngle < Filtered_EyeInHeadAngle_Pre && Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0 && Filtered_EyeInHeadAngle > EyeInHeadYAngle_OnGazeFixation) // eye in head angle is decreasing
+        if (Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0)
         {
-            attenuation = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / headDepthOffset.magnitude;
+            float maxSpd = MaxHandSpeed;
+            Vector3 gazeOriginToHand = PinchPosition - GazeOrigin;
+            float handToGazeOriginDistance = (Vector3.Dot(GazeDirection, gazeOriginToHand) > 0) ? Vector3.Project(PinchPosition - GazeOrigin, headDepthOffset).magnitude : 0;
+
+            float minRatio = 0.1f;
+            if (handToGazeOriginDistance < 0.3f)
+            {
+                float k = 1 - handToGazeOriginDistance / 0.3f;
+                maxSpd = maxSpd * (minRatio + k * handToGazeOriginDistance);
+            }
+
+            float projectedSpeed = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / Time.deltaTime;
+            attenuation = 1 - projectedSpeed / maxSpd;
+
+
+
+            // attenuation = 0;
+            // attenuation = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / headDepthOffset.magnitude;
         }
 
         return Mathf.Clamp(attenuation, 0, 1);
