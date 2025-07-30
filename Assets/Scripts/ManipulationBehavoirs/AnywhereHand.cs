@@ -15,7 +15,7 @@ public enum StaticState
 public class AnywhereHand : ManipulationTechnique
 {
     public float MaxHeadDepth { get; protected set; } = 10f;
-    public float MinHeadDepth { get; protected set; } = 1f;
+    public float MinHeadDepth { get; protected set; } = 0.5f;
     public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
 
     public Vector3 AccumulatedHandOffsetAroundObject { get; private set; }
