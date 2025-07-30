@@ -37,7 +37,7 @@ public class ScaledHOMER : ManipulationTechnique
 
     public override void ApplyIndirectGrabbedBehaviour()
     {
-
+        
     }
 
 
@@ -59,7 +59,9 @@ public class ScaledHOMER : ManipulationTechnique
 
     public override void TriggerOnLookAtNewObjectBehavior()
     {
-        VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);
+        // VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);
+        VirtualHandPosition = GazingObject.transform.position;
+
     }
     
     public override void ApplyDirectGrabbedBehaviour()

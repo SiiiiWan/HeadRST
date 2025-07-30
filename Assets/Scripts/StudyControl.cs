@@ -7,7 +7,7 @@ using System.Collections;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
 
-public enum PositionLabels
+public enum CubePositionLabels
 {
     FrontUpperLeft,
     FrontUpperRight,
@@ -18,6 +18,8 @@ public enum PositionLabels
     BackLowerLeft,
     BackLowerRight
 }
+
+public enum DockingDirections {forward, backward}
 
 public class StudyControl : Singleton<StudyControl>
 {
@@ -32,11 +34,13 @@ public class StudyControl : Singleton<StudyControl>
     public GameObject TargetIndicator;
 
     public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
-    public List<PositionLabels> StartPositionLabelsList = new List<PositionLabels>();
+    public List<(float depth, DockingDirections direction)> DepthDirectionCombinations = new List<(float, DockingDirections)>();
+
+    public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
     public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (5f, 9f) };
-    public List<(float min, float max)> DepthPairs_between = new List<(float, float)> { (-1f, 2f), (-1f, 4f), (-1f, 8f) };
+    public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
     public List<float> Amplitudes_within = new List<float> { 15f, 30f };
     public float MaxAmplitude_between = 20f;
 
@@ -99,17 +103,16 @@ public class StudyControl : Singleton<StudyControl>
             TargetIndicator = null;
         }
 
-        DepthAmplitudeCombinations = GetShuffledDepthAmplitudeCombinations(DepthPairs_within, Amplitudes_within);
-        // DepthAmplitudeCombinations = GetShuffledDepth_Random_AmplitudeCombinations(DepthPairs_between, MaxAmplitude_between);
-
-        StartCoroutine(RunTrials());
+        StartCoroutine(RunTrials_between());
     }
 
-    public Vector3 TrialStartPosition {get; private set;} = Vector3.zero;
-    public Vector3 TrialEndPosition {get; private set;} = Vector3.zero;
+    public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
+    public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
 
-    private IEnumerator RunTrials()
+    private IEnumerator RunTrials_within()
     {
+        DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
         {
             var depthPair = depthAmpCondition.Item1;
@@ -117,7 +120,7 @@ public class StudyControl : Singleton<StudyControl>
 
             CubePositions = GetCubePositions_Visual(
                 viewPoint: Camera.main.transform.position,
-                forwardDir: new Vector3(0, 0, 1),
+                forwardDir: Vector3.forward,
                 minDepth: depthPair.depth_min,
                 maxDepth: depthPair.depth_max,
                 angularDeviation_horizontal: amplitude,
@@ -125,7 +128,7 @@ public class StudyControl : Singleton<StudyControl>
 
             StartPositionLabelsList = GetShuffledStartPositionLabels();
 
-            foreach (PositionLabels startPosition in StartPositionLabelsList)
+            foreach (CubePositionLabels startPosition in StartPositionLabelsList)
             {
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
@@ -138,6 +141,36 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
+    private IEnumerator RunTrials_between()
+    {
+        DepthDirectionCombinations = GetShuffledDepth_Direction_Combinations(Depths_between);
+
+        foreach ((float depth, DockingDirections direction) depthDirCondition in DepthDirectionCombinations)
+        {
+            Vector3 closePosition =  GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
+            Vector3 farPosition = Camera.main.transform.position +
+                    Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.right) *
+                    Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.up) *
+                    Vector3.forward.normalized * depthDirCondition.depth;
+
+            if (depthDirCondition.direction == DockingDirections.forward)
+            {
+                TrialStartPosition = closePosition;
+                TrialEndPosition = farPosition;
+            }
+            else
+            {
+                TrialStartPosition = farPosition;
+                TrialEndPosition = closePosition;
+            }
+
+                StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
+
+                // Wait until TargetIndicator is null before continuing to the next trial
+                yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
+        }
+    }
+
     IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
     {
         while (TargetIndicator != null)
@@ -147,60 +180,60 @@ public class StudyControl : Singleton<StudyControl>
         onComplete?.Invoke();
     }
 
-    public Dictionary<PositionLabels, Vector3> CubePositions { get; private set; } = new Dictionary<PositionLabels, Vector3>();
+    public Dictionary<CubePositionLabels, Vector3> CubePositions { get; private set; } = new Dictionary<CubePositionLabels, Vector3>();
 
-    Dictionary<PositionLabels, Vector3> GetCubePositions_Visual(
+    Dictionary<CubePositionLabels, Vector3> GetCubePositions_Visual(
         Vector3 viewPoint, Vector3 forwardDir, float minDepth, float maxDepth, float angularDeviation_horizontal, float angularDeviation_vertical)
     {
-        Dictionary<PositionLabels, Vector3> positions = new Dictionary<PositionLabels, Vector3>
+        Dictionary<CubePositionLabels, Vector3> positions = new Dictionary<CubePositionLabels, Vector3>
         {
-            {PositionLabels.FrontUpperLeft,
+            {CubePositionLabels.FrontUpperLeft,
             viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
 
-            {PositionLabels.FrontUpperRight,
+            {CubePositionLabels.FrontUpperRight,
             viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
 
-            {PositionLabels.FrontLowerLeft,
+            {CubePositionLabels.FrontLowerLeft,
             viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
 
-            {PositionLabels.FrontLowerRight,
+            {CubePositionLabels.FrontLowerRight,
             viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
 
-            {PositionLabels.BackUpperLeft,
+            {CubePositionLabels.BackUpperLeft,
             viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
 
-            {PositionLabels.BackUpperRight,
+            {CubePositionLabels.BackUpperRight,
             viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
 
-            {PositionLabels.BackLowerLeft,
+            {CubePositionLabels.BackLowerLeft,
             viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
 
-            {PositionLabels.BackLowerRight,
+            {CubePositionLabels.BackLowerRight,
             viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth}
         };
-        
+
 
         return positions;
     }
 
-    PositionLabels GetDiagonalPositionLabel(PositionLabels label)
+    CubePositionLabels GetDiagonalPositionLabel(CubePositionLabels label)
     {
         switch (label)
         {
-            case PositionLabels.FrontUpperLeft: return PositionLabels.BackLowerRight;
-            case PositionLabels.FrontUpperRight: return PositionLabels.BackLowerLeft;
-            case PositionLabels.FrontLowerLeft: return PositionLabels.BackUpperRight;
-            case PositionLabels.FrontLowerRight: return PositionLabels.BackUpperLeft;
-            case PositionLabels.BackUpperLeft: return PositionLabels.FrontLowerRight;
-            case PositionLabels.BackUpperRight: return PositionLabels.FrontLowerLeft;
-            case PositionLabels.BackLowerLeft: return PositionLabels.FrontUpperRight;
-            case PositionLabels.BackLowerRight: return PositionLabels.FrontUpperLeft;
+            case CubePositionLabels.FrontUpperLeft: return CubePositionLabels.BackLowerRight;
+            case CubePositionLabels.FrontUpperRight: return CubePositionLabels.BackLowerLeft;
+            case CubePositionLabels.FrontLowerLeft: return CubePositionLabels.BackUpperRight;
+            case CubePositionLabels.FrontLowerRight: return CubePositionLabels.BackUpperLeft;
+            case CubePositionLabels.BackUpperLeft: return CubePositionLabels.FrontLowerRight;
+            case CubePositionLabels.BackUpperRight: return CubePositionLabels.FrontLowerLeft;
+            case CubePositionLabels.BackLowerLeft: return CubePositionLabels.FrontUpperRight;
+            case CubePositionLabels.BackLowerRight: return CubePositionLabels.FrontUpperLeft;
             default: throw new System.ArgumentException("Invalid position label");
         }
     }
 
 
-    public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepthAmplitudeCombinations(List<(float min, float max)> depthPairs, List<float> amplitudes)
+    public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepth_Amplitude_Combinations(List<(float min, float max)> depthPairs, List<float> amplitudes)
     {
         // Create all unique combinations
         var combinations = new List<((float, float), float)>();
@@ -218,14 +251,16 @@ public class StudyControl : Singleton<StudyControl>
         return combinations;
     }
 
-    public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepth_Random_AmplitudeCombinations(List<(float min, float max)> depthPairs, float maxAmplitude)
+    public List<(float depth, DockingDirections direction)> GetShuffledDepth_Direction_Combinations(List<float> depths)
     {
         // Create all unique combinations
-        var combinations = new List<((float, float), float)>();
-        foreach (var depth in depthPairs)
-        {   
-            float randomAmplitude = Random.Range(0f, maxAmplitude);
-            combinations.Add((depth, randomAmplitude));
+        var combinations = new List<(float, DockingDirections)>();
+        foreach (var depth in depths)
+        {
+            foreach (DockingDirections direction in System.Enum.GetValues(typeof(DockingDirections)))
+            {
+                combinations.Add((depth, direction));
+            }
         }
 
         // Shuffle the list
@@ -234,10 +269,16 @@ public class StudyControl : Singleton<StudyControl>
         return combinations;
     }
 
-
-    public List<PositionLabels> GetShuffledStartPositionLabels()
+    public Vector3 GetRandomFrontPosition(float height, float depth, float width)
     {
-        var positions = System.Enum.GetValues(typeof(PositionLabels)).Cast<PositionLabels>().ToList();
+        Vector3 camPos = Camera.main.transform.position;
+
+        return new Vector3(camPos.x + Random.Range(-width / 2f, width / 2f), height, camPos.z + depth);
+    }
+
+    public List<CubePositionLabels> GetShuffledStartPositionLabels()
+    {
+        var positions = System.Enum.GetValues(typeof(CubePositionLabels)).Cast<CubePositionLabels>().ToList();
         System.Random rng = new System.Random();
         positions = positions.OrderBy(x => rng.Next()).ToList();
         return positions;
