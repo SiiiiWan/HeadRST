@@ -8407,7 +8407,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
-  IsHand: 0
 --- !u!65 &346163902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12296,7 +12295,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
-  IsHand: 0
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24517,6 +24515,7 @@ MonoBehaviour:
   Log: 1
   GrabbedObject: {fileID: 0}
   MaxHandSpeed: 0.1
+  ActivateAttenuation: 1
 --- !u!114 &1006584924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35241,13 +35240,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496611819}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
-  IsHand: 1
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0

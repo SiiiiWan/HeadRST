@@ -93,7 +93,6 @@ public class ManipulationTechnique : MonoBehaviour
     public float EyeInHeadXAngle { get; private set; }
     public float EyeInHeadYAngle_OnGazeFixation { get; private set; }
     public List<ManipulatableObject> ObjectsInGazeCone { get; private set; } = new List<ManipulatableObject>();
-    public bool NewGazeObject { get; private set; } = false;
     public OneEuroFilter<Vector3> DeltaHandMovementFilter { get; private set; } = new OneEuroFilter<Vector3>(90f);
     public Vector3 Filtered_HandMovementVector { get; private set; }
 
@@ -166,64 +165,42 @@ public class ManipulationTechnique : MonoBehaviour
 
         UpdateAndSortObjectInGazeConeList();
 
-        if (ObjectsInGazeCone.Count > 0) // has object in gaze cone
-        {
-            if (ObjectsInGazeCone[0] != GazingObject) // trigger on gazing different object
-            {
-                // if (Log) print("ah: NewGazeObject: True");
 
-                GazingObject = ObjectsInGazeCone[0];
-                NewGazeObject = true;
-            }
-            else// gazing the same object
-            {
-                // if (Log && NewGazeObject) print("ah: NewGazeObject: False");
-                NewGazeObject = false;
-            }
-        }
-        else // no object in gaze cone
-        {
-            GazingObject = null;
-        }
 
 
 
         if (GrabbedObject == null) // not grabbed
         {
+            // check if gaze is fixating on an object
+            if (ObjectsInGazeCone.Count > 0) // has object in gaze cone
+            {
+                if (ObjectsInGazeCone[0] != GazingObject) // trigger on gazing different object
+                {
+                    GazingObject = ObjectsInGazeCone[0];
+                    TriggerOnLookAtNewObjectBehavior();
+                    if (Log) print("ah: TriggerOnLookAtNewObjectBehavior");
+                }
+            }
+            else // no object in gaze cone
+            {
+                GazingObject = null;
+            }
+
+            // take action based on gaze state
             if (GazingObject != null)
             {
-                if (NewGazeObject)
+                if (GazingObject.Grabbable.SelectingPointsCount > 0)
                 {
-                    if (GazingObject.IsHand) // is gazing the real hand
-                    {
-                        TriggerOnLookAtHandBehavior();
-                        if (Log) print("ah: TriggerOnLookAtHandBehavior");
-                    }
-                    else
-                    {
-                        TriggerOnLookAtNewObjectBehavior();
-                        if (Log) print("ah: TriggerOnLookAtNewObjectBehavior");
-                    }
+                    TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
                 }
-
-                if (GazingObject.IsHand == false)
+                else if (PinchDetector.IsOneHandPinching)
                 {
-                    if (GazingObject.Grabbable.SelectingPointsCount > 0)
-                    {
-                        TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
-                        // if (Log) print("ah: TriggerOnSingleHandGrabbed: " + GrabbedState.Grabbed_Direct);
-                    }
-                    else if (PinchDetector.IsOneHandPinching)
-                    {
-                        TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
-                        // if (Log) print("ah: TriggerOnSingleHandGrabbed: " + GrabbedState.Grabbed_Indirect);
-                    }
-                    else // gaze hover but not grabbed yet
-                    {
-                        ApplyGazingButNotGrabbingBehaviour();
-                    }                    
+                    TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
-
+                else // gaze hover but not grabbed yet
+                {
+                    ApplyGazingButNotGrabbingBehaviour();
+                }
             }
             else
             {
@@ -236,12 +213,11 @@ public class ManipulationTechnique : MonoBehaviour
             {
                 if (GrabbedObject.Grabbable.SelectingPointsCount > 0)
                 {
-                    ApplyDirectGrabbedBehaviour(); // check if (NewGazeObject) and IsHand within the method
+                    ApplyDirectGrabbedBehaviour();
                 }
                 else
                 {
                     TriggerOnHandReleased();
-                    // if (Log) print("ah: TriggerOnHandReleased");
                 }
 
             }
@@ -249,12 +225,11 @@ public class ManipulationTechnique : MonoBehaviour
             {
                 if (PinchDetector.IsOneHandPinching)
                 {
-                    ApplyIndirectGrabbedBehaviour(); // check if (NewGazeObject) and IsHand within the method
+                    ApplyIndirectGrabbedBehaviour();
                 }
                 else
                 {
                     TriggerOnHandReleased();
-                    // if (Log) print("ah: TriggerOnHandReleased");
                 }
             }
         }
@@ -322,7 +297,7 @@ public class ManipulationTechnique : MonoBehaviour
         if (anchors.Length != 0)
         {
             var sortedAnchors = anchors
-                .Where(anchor => anchor.IsHitbyGaze && anchor.GrabbedState == GrabbedState.NotGrabbed)
+                .Where(anchor => anchor.IsHitbyGaze)
                 .OrderBy(anchor => anchor.AngleToGaze)
                 .ToList();
 

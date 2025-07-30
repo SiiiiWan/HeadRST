@@ -18,7 +18,7 @@ public class ManipulatableObject : MonoBehaviour
     public Grabbable Grabbable;
     public ManipulationTechnique ManipulationBehavior { get; private set; }
     public bool IsPinchTipWithinCube { get; private set; }
-    public bool IsHand = false;
+    // public bool IsHand = false;
 
     void Update()
     {
@@ -32,11 +32,11 @@ public class ManipulatableObject : MonoBehaviour
         // transform.GetComponent<Outline>().enabled = IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed && IsPinchTipWithinCube == false;
         //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
 
-        if (IsHand)
-        {
-            AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
-            IsHitbyGaze = AngleToGaze <= 20f;
-        } 
+        // if (IsHand)
+        // {
+        //     AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
+        //     IsHitbyGaze = AngleToGaze <= 20f;
+        // } 
     }
 
     public void SetGrabbedState(GrabbedState state)
