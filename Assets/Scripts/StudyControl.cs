@@ -4,8 +4,10 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UI;
 
-public enum StartPositionLabels
+public enum PositionLabels
 {
     FrontUpperLeft,
     FrontUpperRight,
@@ -29,17 +31,14 @@ public class StudyControl : Singleton<StudyControl>
     public GameObject ObjectToBeManipulated;
     public GameObject TargetIndicator;
 
-    public List<(float depth, float amplitude)> DepthAmplitudeCombinations = new List<(float, float)>();
-    public List<StartPositionLabels> StartPositionLabelsList = new List<StartPositionLabels>();
+    public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
+    public List<PositionLabels> StartPositionLabelsList = new List<PositionLabels>();
 
-    public float MinDepth = 2f; // in meters
-    public float VerticalAmpDev = 20f;
 
-    public List<float> Depths = new List<float>();
-
-    public List<float> Amplitudes = new List<float>();
-
-    public
+    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (5f, 9f) };
+    public List<(float min, float max)> DepthPairs_between = new List<(float, float)> { (-1f, 2f), (-1f, 4f), (-1f, 8f) };
+    public List<float> Amplitudes_within = new List<float> { 15f, 30f };
+    public float MaxAmplitude_between = 20f;
 
     void Start()
     {
@@ -100,26 +99,38 @@ public class StudyControl : Singleton<StudyControl>
             TargetIndicator = null;
         }
 
-        DepthAmplitudeCombinations = GetShuffledDepthAmplitudeCombinations();
+        DepthAmplitudeCombinations = GetShuffledDepthAmplitudeCombinations(DepthPairs_within, Amplitudes_within);
+        // DepthAmplitudeCombinations = GetShuffledDepth_Random_AmplitudeCombinations(DepthPairs_between, MaxAmplitude_between);
 
         StartCoroutine(RunTrials());
     }
 
+    public Vector3 TrialStartPosition {get; private set;} = Vector3.zero;
+    public Vector3 TrialEndPosition {get; private set;} = Vector3.zero;
+
     private IEnumerator RunTrials()
     {
-        foreach ((float depth, float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
+        foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
         {
+            var depthPair = depthAmpCondition.Item1;
+            float amplitude = depthAmpCondition.Item2;
+
+            CubePositions = GetCubePositions_Visual(
+                viewPoint: Camera.main.transform.position,
+                forwardDir: new Vector3(0, 0, 1),
+                minDepth: depthPair.depth_min,
+                maxDepth: depthPair.depth_max,
+                angularDeviation_horizontal: amplitude,
+                angularDeviation_vertical: amplitude);
+
             StartPositionLabelsList = GetShuffledStartPositionLabels();
 
-            foreach (StartPositionLabels startPosition in StartPositionLabelsList)
+            foreach (PositionLabels startPosition in StartPositionLabelsList)
             {
-                Vector3 forwardDir = new Vector3(0, 0, 1); // Forward direction in world space
+                TrialStartPosition = CubePositions[startPosition];
+                TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
 
-                Vector3 origin = Camera.main.transform.position;
-
-                GetStartEndPosition(startPosition, out Vector3 startPos, out Vector3 endPos, depthAmpCondition.amplitude, depthAmpCondition.depth, forwardDir, origin);
-
-                StartTrial(startPos, endPos, out ObjectToBeManipulated, out TargetIndicator);
+                StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
 
                 // Wait until TargetIndicator is null before continuing to the next trial
                 yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
@@ -136,72 +147,97 @@ public class StudyControl : Singleton<StudyControl>
         onComplete?.Invoke();
     }
 
-    public void GetStartEndPosition(StartPositionLabels start, out Vector3 startPos, out Vector3 endPos, float amp, float depth, Vector3 forwardDir, Vector3 origin)
+    public Dictionary<PositionLabels, Vector3> CubePositions { get; private set; } = new Dictionary<PositionLabels, Vector3>();
+
+    Dictionary<PositionLabels, Vector3> GetCubePositions_Visual(
+        Vector3 viewPoint, Vector3 forwardDir, float minDepth, float maxDepth, float angularDeviation_horizontal, float angularDeviation_vertical)
     {
-        switch (start)
+        Dictionary<PositionLabels, Vector3> positions = new Dictionary<PositionLabels, Vector3>
         {
-            case StartPositionLabels.FrontUpperLeft:
-                startPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                endPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * depth;
-                break;
-            case StartPositionLabels.FrontUpperRight:
-                startPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                endPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * depth;
-                break;
-            case StartPositionLabels.FrontLowerLeft:
-                startPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                endPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * depth;
-                break;
-            case StartPositionLabels.FrontLowerRight:
-                startPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                endPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * depth;
-                break;
-            case StartPositionLabels.BackUpperLeft:
-                startPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * depth;
-                endPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                break;
-            case StartPositionLabels.BackUpperRight:
-                startPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * depth;
-                endPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                break;
-            case StartPositionLabels.BackLowerLeft:
-                startPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * depth;
-                endPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                break;
-            case StartPositionLabels.BackLowerRight:
-                startPos = origin + Quaternion.AngleAxis(-VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(amp, Vector3.up) * forwardDir.normalized * depth;
-                endPos = origin + Quaternion.AngleAxis(VerticalAmpDev, Vector3.right) * Quaternion.AngleAxis(-amp, Vector3.up) * forwardDir.normalized * MinDepth;
-                break;
-            default:
-                startPos = Vector3.zero;
-                endPos = Vector3.zero;
-                Debug.LogError("Invalid Start Position");
-                break;
+            {PositionLabels.FrontUpperLeft,
+            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
+
+            {PositionLabels.FrontUpperRight,
+            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
+
+            {PositionLabels.FrontLowerLeft,
+            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
+
+            {PositionLabels.FrontLowerRight,
+            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
+
+            {PositionLabels.BackUpperLeft,
+            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
+
+            {PositionLabels.BackUpperRight,
+            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
+
+            {PositionLabels.BackLowerLeft,
+            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
+
+            {PositionLabels.BackLowerRight,
+            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth}
+        };
+        
+
+        return positions;
+    }
+
+    PositionLabels GetDiagonalPositionLabel(PositionLabels label)
+    {
+        switch (label)
+        {
+            case PositionLabels.FrontUpperLeft: return PositionLabels.BackLowerRight;
+            case PositionLabels.FrontUpperRight: return PositionLabels.BackLowerLeft;
+            case PositionLabels.FrontLowerLeft: return PositionLabels.BackUpperRight;
+            case PositionLabels.FrontLowerRight: return PositionLabels.BackUpperLeft;
+            case PositionLabels.BackUpperLeft: return PositionLabels.FrontLowerRight;
+            case PositionLabels.BackUpperRight: return PositionLabels.FrontLowerLeft;
+            case PositionLabels.BackLowerLeft: return PositionLabels.FrontUpperRight;
+            case PositionLabels.BackLowerRight: return PositionLabels.FrontUpperLeft;
+            default: throw new System.ArgumentException("Invalid position label");
         }
     }
 
-    public List<(float depth, float amplitude)> GetShuffledDepthAmplitudeCombinations()
+
+    public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepthAmplitudeCombinations(List<(float min, float max)> depthPairs, List<float> amplitudes)
     {
         // Create all unique combinations
-        var combinations = new List<(float, float)>();
-        foreach (float depth in Depths)
+        var combinations = new List<((float, float), float)>();
+        foreach (var depth in depthPairs)
         {
-            foreach (float amplitude in Amplitudes)
+            foreach (float amplitude in amplitudes)
             {
                 combinations.Add((depth, amplitude));
             }
         }
 
         // Shuffle the list
-        System.Random rng = new System.Random();
-        combinations = combinations.OrderBy(x => rng.Next()).ToList();
+        combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
 
         return combinations;
     }
 
-    public List<StartPositionLabels> GetShuffledStartPositionLabels()
+    public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepth_Random_AmplitudeCombinations(List<(float min, float max)> depthPairs, float maxAmplitude)
     {
-        var positions = System.Enum.GetValues(typeof(StartPositionLabels)).Cast<StartPositionLabels>().ToList();
+        // Create all unique combinations
+        var combinations = new List<((float, float), float)>();
+        foreach (var depth in depthPairs)
+        {   
+            float randomAmplitude = Random.Range(0f, maxAmplitude);
+            combinations.Add((depth, randomAmplitude));
+        }
+
+        // Shuffle the list
+        combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
+
+        return combinations;
+    }
+
+
+    public List<PositionLabels> GetShuffledStartPositionLabels()
+    {
+        var positions = System.Enum.GetValues(typeof(PositionLabels)).Cast<PositionLabels>().ToList();
         System.Random rng = new System.Random();
         positions = positions.OrderBy(x => rng.Next()).ToList();
         return positions;
