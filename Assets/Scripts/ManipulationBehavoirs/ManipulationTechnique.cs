@@ -9,6 +9,9 @@ public class ManipulationTechnique : MonoBehaviour
     public bool Log;
     #region Manipulation Behaviors
 
+    public float MaxDepth { get; set; } = 10f;
+    public float MinDepth { get; set; } = 0.5f;
+
     public ManipulatableObject GrabbedObject;
     public ManipulatableObject GazingObject { get; private set; }
 

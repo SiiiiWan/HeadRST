@@ -2,30 +2,29 @@ using UnityEngine;
 
 public class GazeHand : ManipulationTechnique
 {
-    float _armLength = 0.75f;
+    public float TorsoOffset = 0.35f; // Offset from the camera to the torso
+    float _offset = 0.5f;
     float _depth = 2f;
     Vector3 _handInitPosition;
+    Vector3 _pivotPoint;
 
     public override void ApplyObjectFreeBehaviour()
     {
-        // VirtualHandPosition = Vector3.zero;
+        VirtualHandPosition = Vector3.zero;
     }
 
     public override void TriggerOnLookAtNewObjectBehavior()
     {
-        float distanceOffset = 0.1f;
-        BoxCollider box = GazingObject.GetComponent<BoxCollider>();
-
-        if (box != null)
-        {
-            distanceOffset = box.size.x * 0.5f;
-        }
-
         Vector3 gazeToObjectVector = GazingObject.transform.position - GazeOrigin;
-        Vector3 gazeOriginToHandOffset = WristPosition - GazeOrigin;
+        Vector3 manubriumPoint = HeadPosition + Vector3.down * TorsoOffset;
+        Vector3 manubriumToHandOffset = WristPosition - manubriumPoint;
 
-        _depth = gazeToObjectVector.magnitude - distanceOffset;
-        VirtualHandPosition = GazeOrigin + gazeToObjectVector.normalized * _depth + gazeOriginToHandOffset;
+        _depth = gazeToObjectVector.magnitude - _offset;
+        _depth = Mathf.Clamp(_depth, MinDepth, MaxDepth);
+
+        _pivotPoint = GazeOrigin + gazeToObjectVector.normalized * _depth;
+
+        VirtualHandPosition = _pivotPoint + manubriumToHandOffset;
     }
 
     public override void ApplyGazingButNotGrabbingBehaviour()
@@ -35,7 +34,6 @@ public class GazeHand : ManipulationTechnique
 
     public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
     {
-        //TODO: can not trigger direct grab here, because if (GazingObject.IsHand == false) conditon in l.209, it always first hit the hand.
         base.TriggerOnSingleHandGrabbed(obj, grabbedState);
 
         _handInitPosition = WristPosition;
@@ -43,12 +41,24 @@ public class GazeHand : ManipulationTechnique
 
     public override void ApplyDirectGrabbedBehaviour()
     {
-        Vector3 handOffsetVector = WristPosition - _handInitPosition;
-        float handOffsetDistance = Vector3.Project(handOffsetVector, GazeDirection).magnitude;
+        Vector3 handOffsetFromGrabInit = WristPosition - _handInitPosition;
+        float handOffsetDistanceOnDepthAxis = Vector3.Project(handOffsetFromGrabInit, GazeDirection).magnitude;
 
-        if (handOffsetDistance >= 0.05f) _depth += (handOffsetDistance - 0.05f) * 0.144f * (Vector3.Dot(handOffsetVector, GazeDirection) > 0 ? 1 : -1);
+        if (handOffsetDistanceOnDepthAxis >= 0.05f) _depth += (handOffsetDistanceOnDepthAxis - 0.05f) * 100f * 0.144f * 100f * (Vector3.Dot(handOffsetFromGrabInit, GazeDirection) > 0 ? 1 : -1) * Time.deltaTime / 100f;
 
-        VirtualHandPosition = GazeOrigin + GazeDirection * _depth +  WristPosition - GazeOrigin;
+        _depth = Mathf.Clamp(_depth, MinDepth, MaxDepth);
+
+        Vector3 manubriumPoint = HeadPosition + Vector3.down * TorsoOffset;
+        Vector3 manubriumToHandOffset = WristPosition - manubriumPoint;
+
+        _pivotPoint = GazeOrigin + GazeDirection * _depth;
+
+        VirtualHandPosition = _pivotPoint + manubriumToHandOffset;
+    }
+
+    public override void ApplyIndirectGrabbedBehaviour()
+    {
+        VirtualHandPosition += WristPosition_delta;
     }
 
 }

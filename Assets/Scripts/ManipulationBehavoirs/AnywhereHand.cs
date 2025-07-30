@@ -14,8 +14,6 @@ public enum StaticState
 
 public class AnywhereHand : ManipulationTechnique
 {
-    public float MaxHeadDepth { get; protected set; } = 10f;
-    public float MinHeadDepth { get; protected set; } = 0.5f;
     public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
 
     public Vector3 AccumulatedHandOffsetAroundObject { get; private set; }
@@ -34,7 +32,7 @@ public class AnywhereHand : ManipulationTechnique
         {
             Vector3 objectDirection = (VirtualHandPosition - GazeOrigin).normalized;
             VirtualHandPosition += GetHeadDepthOffset(objectDirection);
-            VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinHeadDepth, MaxHeadDepth);
+            VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinDepth, MaxDepth);
         }
     }
 
@@ -79,7 +77,7 @@ public class AnywhereHand : ManipulationTechnique
         {
             Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
             GrabbedObject.transform.position += GetHeadDepthOffset(objectDirection);
-            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), MinHeadDepth, MaxHeadDepth);
+            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), MinDepth, MaxDepth);
 
             if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin) > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
@@ -116,8 +114,8 @@ public class AnywhereHand : ManipulationTechnique
 
     Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
-        float max_gain = (MaxHeadDepth - MinHeadDepth) / MaxGainDeg;
-        float min_gain = (MaxHeadDepth - MinHeadDepth) / MinGainDeg;
+        float max_gain = (MaxDepth - MinDepth) / MaxGainDeg;
+        float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
 
         BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
         EdgeGain = EyeHeadGain();
