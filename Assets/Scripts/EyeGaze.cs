@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Metaface.Utilities;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class EyeGaze : Singleton<EyeGaze>
 {
     public OVREyeGaze LeftEye, RightEye;
+    public bool FilterBlink = true;
+    public bool EyesOpen { get; private set; } = false;
 
     public bool ShowGazeCursor;
     public Transform GazeCursor;
@@ -62,10 +65,9 @@ public class EyeGaze : Singleton<EyeGaze>
     {
         get {return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.up);}
     }
-    
+
     void Update()
     {
-        // TODO: blink filtering
 
         // OVRPlugin.EyeGazesState _eyeGazesState = new OVRPlugin.EyeGazesState();
         // if (!OVRPlugin.GetEyeGazesState(OVRPlugin.Step.Render, -1, ref _eyeGazesState))
@@ -82,8 +84,16 @@ public class EyeGaze : Singleton<EyeGaze>
         // _combinedGazeOrigin = Vector3.Lerp(_leftEyePose.position, _rightEyePose.position, 0.5f);
         // _combinedGazeDir = Vector3.Scale(Quaternion.Slerp(_leftEyePose.orientation, _rightEyePose.orientation, 0.5f).normalized * Vector3.forward, new Vector3(-1,1,-1));
 
-        _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
-        _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;
+        if (FilterBlink)
+        {
+            if (EyesOpen) _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
+            if (EyesOpen) _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;
+        }
+        else
+        {
+            _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
+            _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;            
+        }
 
         _rawGazeOrigin = _combinedGazeOrigin;
         _rawGazeDir = _combinedGazeDir;
@@ -97,7 +107,7 @@ public class EyeGaze : Singleton<EyeGaze>
             _combinedGazeOrigin = _gazePosFilter.Filter(_combinedGazeOrigin);
         }
 
-        if (CorrectGaze  && _headRotationBuffer.Count == FramOffset)
+        if (CorrectGaze && _headRotationBuffer.Count == FramOffset)
         {
             Quaternion headRotOffset = _headRotationBuffer[0] * Quaternion.Inverse(_headRotationBuffer[_headRotationBuffer.Count - 1]);
             _combinedGazeDir = headRotOffset * _combinedGazeDir;
@@ -123,7 +133,23 @@ public class EyeGaze : Singleton<EyeGaze>
             _headRotationBuffer.RemoveAt(0); // Remove oldest
         }
     }
-    
+
+    // public void OnBlink()
+    // {
+    //     print("Blink detected");
+    // }
+
+    public void OnEyesClosed()
+    {
+        EyesOpen = false;
+        print("Eyes closed");
+    }
+
+    public void OnEyesOpened()
+    {
+        EyesOpen = true;
+        print("Eyes opened");
+    }
 
     public Ray GetGazeRay()
     {

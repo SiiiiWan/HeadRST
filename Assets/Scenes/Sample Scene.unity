@@ -46362,6 +46362,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1992211211}
   - component: {fileID: 1992211210}
+  - component: {fileID: 1992211213}
+  - component: {fileID: 1992211212}
   m_Layer: 0
   m_Name: Eye Gaze
   m_TagString: Untagged
@@ -46383,7 +46385,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
-  ShowGazeCursor: 0
+  FilterBlink: 1
+  ShowGazeCursor: 1
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 150
   CorrectGaze: 1
@@ -46409,6 +46412,72 @@ Transform:
   - {fileID: 36583383}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1992211212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992211209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b28fedd15893244d936b41668dc63de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faceExpressions: {fileID: 1992211213}
+  useFixedUpdate: 1
+  maxEyesClosedTime: 1
+  blinkParameters:
+  - faceExpression: 13
+    threshold: 0.5
+  - faceExpression: 12
+    threshold: 0.5
+  verbose: 0
+  onEyeClose:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1992211210}
+        m_TargetAssemblyTypeName: EyeGaze, Assembly-CSharp
+        m_MethodName: OnEyesClosed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onEyeOpen:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1992211210}
+        m_TargetAssemblyTypeName: EyeGaze, Assembly-CSharp
+        m_MethodName: OnEyesOpened
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onBlink:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1992211213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992211209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95044baf65b10c4e89b246d2f881ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1993195094
 GameObject:
   m_ObjectHideFlags: 0
