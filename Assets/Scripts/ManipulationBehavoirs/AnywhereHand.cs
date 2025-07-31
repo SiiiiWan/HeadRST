@@ -61,18 +61,23 @@ public class AnywhereHand : ManipulationTechnique
         VirtualHandPosition += WristPosition_delta;
 
         if (CloseDirectGrabbed) return;
-        
-        if (IsGazeFixating == false)
+
+        if (CurrentState == StaticState.Gaze)
         {
             float distance = Vector3.Distance(GazeOrigin, VirtualHandPosition);
             VirtualHandPosition = GazeOrigin + GazeDirection * distance;
+
+            if (IsGazeFixating) CurrentState = StaticState.Head; // switch to Head state if gaze is fixating
         }
         else
         {
             Vector3 objectDirection = (VirtualHandPosition - GazeOrigin).normalized;
             VirtualHandPosition += GetHeadDepthOffset(objectDirection);
             VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinDepth, MaxDepth);
+
+            if (IsGazeFixating == false && Vector3.Angle(GazeDirection, VirtualHandPosition - GazeOrigin) > 5f) CurrentState = StaticState.Gaze; // 5 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
+
     }
 
     public override void ApplyIndirectGrabbedBehaviour()
