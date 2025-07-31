@@ -47,6 +47,7 @@ namespace Oculus.Interaction.Input.Filter
         [Tooltip("Applies a One Euro Filter when filter parameters are provided")]
         [SerializeField, Optional]
         private HandFilterParameterBlock _filterParameters = null;
+        public bool isRightHand = true;
         #endregion Tuneable Values
 
 #if ISDK_OPENXR_HAND
@@ -128,7 +129,7 @@ namespace Oculus.Interaction.Input.Filter
 
             _shadowHand.FromJoints(handDataAsset.JointPoses.ToList(), false);
 
-            handDataAsset.Root = new Pose(StudyControl.GetInstance().ManipulationBehavior.VirtualHandPosition, pose.rotation);
+            handDataAsset.Root = new Pose(StudyControl.GetInstance().GetVirtualHandPosition(isRightHand), pose.rotation);
 
             handDataAsset.JointPoses = _shadowHand.GetWorldPoses();
 

@@ -122,7 +122,7 @@ public class AnywhereHand : ManipulationTechnique
     public float BaseGain { get; protected set; }
     public float EdgeGain { get; protected set; }
     public float Attenuation { get; protected set; } = 1;
-    public float MaxHandSpeed = 0.1f;
+    public float MaxHandSpeed { get; protected set; } = 0.1f;
     public bool ActivateAttenuation = true;
 
 

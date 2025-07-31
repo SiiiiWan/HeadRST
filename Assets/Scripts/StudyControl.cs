@@ -4,8 +4,6 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
-using UnityEngine.Experimental.GlobalIllumination;
-using UnityEngine.UI;
 
 public enum CubePositionLabels
 {
@@ -19,30 +17,36 @@ public enum CubePositionLabels
     BackLowerRight
 }
 
-public enum DockingDirections {forward, backward}
+public enum DockingDirections { forward, backward }
+public enum Handedness { left, right }
 
 public class StudyControl : Singleton<StudyControl>
 {
+    public string ParticipantID;
+    public Handedness DominantHand = Handedness.right;
+    public bool IsPractice;
+    public int TotalTrialCount;
     public ManipulationTechnique ManipulationBehavior;
 
+    [Header("Bindings")]
     public TextMeshPro TechniqueText;
-
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
+    public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
 
-    public GameObject ObjectToBeManipulated;
-    public GameObject TargetIndicator;
+    [HideInInspector] public GameObject ObjectToBeManipulated;
+    [HideInInspector] public GameObject TargetIndicator;
 
     public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
     public List<(float depth, DockingDirections direction)> DepthDirectionCombinations = new List<(float, DockingDirections)>();
 
-    public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
+    [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
     public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (5f, 9f) };
-    public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
-    public List<float> Amplitudes_within = new List<float> { 15f, 30f };
-    public float MaxAmplitude_between = 20f;
+    [HideInInspector] public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
+    [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f };
+    [HideInInspector] public float MaxAmplitude_between = 20f;
 
     void Start()
     {
@@ -68,6 +72,21 @@ public class StudyControl : Singleton<StudyControl>
             }
         }
 
+        if (DominantHand == Handedness.right)
+        {
+            RightHand_Virtual.SetActive(true);
+            LeftHand_Virtual.SetActive(false);
+            RightHandSynth_Virtual.SetActive(true);
+            LeftHandSynth_Virtual.SetActive(false);
+        }
+        else
+        {
+            RightHand_Virtual.SetActive(false);
+            LeftHand_Virtual.SetActive(true);
+            RightHandSynth_Virtual.SetActive(false);
+            LeftHandSynth_Virtual.SetActive(true);
+        }
+
     }
 
 
@@ -87,6 +106,8 @@ public class StudyControl : Singleton<StudyControl>
 
         Quaternion randomRotationOffset = Quaternion.AngleAxis(Random.Range(-30f, 30f), Random.onUnitSphere);
         target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation);
+
+        TotalTrialCount++;
     }
 
     public void StartTask()
@@ -103,8 +124,10 @@ public class StudyControl : Singleton<StudyControl>
             TargetIndicator = null;
         }
 
-        StartCoroutine(RunTrials_between());
-        // StartCoroutine(RunTrials_within());
+        TotalTrialCount = 0;
+
+        // StartCoroutine(RunTrials_between());
+        StartCoroutine(RunTrials_within());
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
@@ -148,7 +171,7 @@ public class StudyControl : Singleton<StudyControl>
 
         foreach ((float depth, DockingDirections direction) depthDirCondition in DepthDirectionCombinations)
         {
-            Vector3 closePosition =  GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
+            Vector3 closePosition = GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
             Vector3 farPosition = Camera.main.transform.position +
                     Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.right) *
                     Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.up) *
@@ -165,12 +188,13 @@ public class StudyControl : Singleton<StudyControl>
                 TrialEndPosition = closePosition;
             }
 
-                StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
+            StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
 
-                // Wait until TargetIndicator is null before continuing to the next trial
-                yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
+            // Wait until TargetIndicator is null before continuing to the next trial
+            yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
         }
     }
+
 
     IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
     {
@@ -289,6 +313,32 @@ public class StudyControl : Singleton<StudyControl>
     {
         ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
         TechniqueText.text = "Current Technique: Visual Gain";
+    }
+
+    public Vector3 GetVirtualHandPosition(bool isRightHand)
+    {
+        if (isRightHand)
+        {
+            if (DominantHand == Handedness.right)
+            {
+                return ManipulationBehavior.VirtualHandPosition;
+            }
+            else
+            {
+                return HandData.GetInstance().RightHandPosition;
+            }
+        }
+        else
+        {
+            if (DominantHand == Handedness.left)
+            {
+                return ManipulationBehavior.VirtualHandPosition;
+            }
+            else
+            {
+                return HandData.GetInstance().LeftHandPosition;
+            }
+        }
     }
 
     // public void SwitchToAnywhereHandContinuous()

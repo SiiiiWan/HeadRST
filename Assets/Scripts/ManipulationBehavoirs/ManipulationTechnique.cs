@@ -6,7 +6,6 @@ using System.Linq;
 
 public class ManipulationTechnique : MonoBehaviour
 {
-    public bool Log;
     #region Manipulation Behaviors
 
     public float MaxDepth { get; set; } = 10f;
@@ -22,7 +21,6 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = obj;
         LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
-        if (Log) print("ah: Grabbed: " + obj.GrabbedState);
 
         TriggerOnGazeFixation();
 
@@ -37,8 +35,6 @@ public class ManipulationTechnique : MonoBehaviour
 
     public virtual void TriggerOnHandReleased()
     {
-        if (Log) print("ah: Released. Current State: " + GrabbedObject.GetComponent<ManipulatableObject>().GrabbedState + ", was: " + GrabbedObject.GrabbedState);
-
         GrabbedObject.SetGrabbedState(GrabbedState.NotGrabbed);
         GrabbedObject = null;
     }
@@ -76,7 +72,6 @@ public class ManipulationTechnique : MonoBehaviour
     public float HandRotationSpeed { get; private set; }
     public FixationTracker HandFixationTracker { get; private set; }
     public bool IsHandStablized { get; private set; }
-    public Vector3 AccumulatedHandOffset { get; private set; } = Vector3.zero;
     public Vector3 VirtualHandPosition_OnGrab { get; private set; }
     public Vector3 ObjectPosition_OnGrab { get; private set; }
 
@@ -192,7 +187,6 @@ public class ManipulationTechnique : MonoBehaviour
                 {
                     GazingObject = ObjectsInGazeCone[0];
                     TriggerOnLookAtNewObjectBehavior();
-                    if (Log) print("ah: TriggerOnLookAtNewObjectBehavior");
                 }
             }
             else // no object in gaze cone
