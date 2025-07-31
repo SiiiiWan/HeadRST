@@ -104,6 +104,7 @@ public class StudyControl : Singleton<StudyControl>
         }
 
         StartCoroutine(RunTrials_between());
+        // StartCoroutine(RunTrials_within());
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;

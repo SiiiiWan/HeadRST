@@ -29,7 +29,7 @@ public class ManipulatableObject : MonoBehaviour
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
 
         // IsPinchTipWithinCube = IsPointWithinBoxCollider(GetComponent<BoxCollider>(), ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
-        // transform.GetComponent<Outline>().enabled = IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed && IsPinchTipWithinCube == false;
+        transform.GetComponent<Outline>().enabled = IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed;
         //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
 
         // if (IsHand)

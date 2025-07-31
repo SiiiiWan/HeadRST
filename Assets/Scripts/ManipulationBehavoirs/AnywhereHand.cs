@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Constraints;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -16,13 +17,51 @@ public class AnywhereHand : ManipulationTechnique
 {
     public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
 
-    public Vector3 AccumulatedHandOffsetAroundObject { get; private set; }
-    public Vector3 VirtualHandPosition_Indirect_Update { get; private set; }
+    public Vector3 HandOffsetAroundObject { get; private set; }
+    public bool CloseDirectGrabbed { get; private set; }
+
 
     public override void ApplyObjectFreeBehaviour()
     {
+        VirtualHandPosition = WristPosition;
+    }
+
+    public override void TriggerOnLookAtNewObjectBehavior()
+    {
+        float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
+
+        if (distance > 1f)
+        {
+            VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);      
+        }
+
+    }
+
+    public override void ApplyGazingButNotGrabbingBehaviour()
+    {
+        float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
+
+        if (distance > 1f) VirtualHandPosition += WristPosition_delta * Vector3.Distance(GazingObject.transform.position, GazeOrigin);
+        else VirtualHandPosition = WristPosition;
+    }
+
+    public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    {
+        base.TriggerOnSingleHandGrabbed(obj, grabbedState);
+
+        CurrentState = StaticState.Head;
+        HandOffsetAroundObject = VirtualHandPosition - obj.transform.position;
+
+        if(grabbedState == GrabbedState.Grabbed_Direct) CloseDirectGrabbed = Vector3.Distance(GazeOrigin, GazingObject.transform.position) < 1f;
+        
+    }
+
+    public override void ApplyDirectGrabbedBehaviour()
+    {
         VirtualHandPosition += WristPosition_delta;
 
+        if (CloseDirectGrabbed) return;
+        
         if (IsGazeFixating == false)
         {
             float distance = Vector3.Distance(GazeOrigin, VirtualHandPosition);
@@ -36,34 +75,10 @@ public class AnywhereHand : ManipulationTechnique
         }
     }
 
-    public override void TriggerOnLookAtNewObjectBehavior()
-    {
-        VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);
-        AccumulatedHandOffsetAroundObject = Vector3.zero;
-    }
-
-    public override void ApplyGazingButNotGrabbingBehaviour()
-    {
-        AccumulatedHandOffsetAroundObject += WristPosition_delta * Vector3.Distance(GazingObject.transform.position, GazeOrigin);
-        VirtualHandPosition = GazingObject.transform.position + AccumulatedHandOffsetAroundObject + (WristPosition - PinchPosition);
-    }
-
-    public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
-    {
-        base.TriggerOnSingleHandGrabbed(obj, grabbedState);
-
-        CurrentState = StaticState.Head;
-    }
-
-    public override void ApplyDirectGrabbedBehaviour()
-    {
-        ApplyObjectFreeBehaviour();
-    }
-
     public override void ApplyIndirectGrabbedBehaviour()
     {
 
-        GrabbedObject.transform.position += PinchPosition_delta * Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+        GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin));
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
 
         if (CurrentState == StaticState.Gaze)
@@ -82,18 +97,13 @@ public class AnywhereHand : ManipulationTechnique
             if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin) > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
 
-        VirtualHandPosition = Vector3.zero;
-        VirtualHandPosition_Indirect_Update = GrabbedObject.transform.position + AccumulatedHandOffsetAroundObject + (WristPosition - PinchPosition);
+        VirtualHandPosition = WristPosition;
     }
 
     public override void TriggerOnHandReleased()
     {
-        if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Indirect)
-        {
-            VirtualHandPosition = VirtualHandPosition_Indirect_Update;
-            if (Log) print("ah: Update VirtualHandPosition to Relative Position");
-        }
 
+        VirtualHandPosition = HandOffsetAroundObject + GrabbedObject.transform.position;
         base.TriggerOnHandReleased();
     }
 
@@ -107,7 +117,7 @@ public class AnywhereHand : ManipulationTechnique
     public float BaseGain { get; protected set; }
     public float EdgeGain { get; protected set; }
     public float Attenuation { get; protected set; } = 1;
-    public float MaxHandSpeed = 1f;
+    public float MaxHandSpeed = 0.1f;
     public bool ActivateAttenuation = true;
 
 
@@ -138,13 +148,13 @@ public class AnywhereHand : ManipulationTechnique
         {
             float maxSpd = MaxHandSpeed;
             Vector3 gazeOriginToHand = PinchPosition - GazeOrigin;
-            float handToGazeOriginDistance = (Vector3.Dot(GazeDirection, gazeOriginToHand) > 0) ? Vector3.Project(PinchPosition - GazeOrigin, headDepthOffset).magnitude : 0;
+            float handToGazeOriginDistance = (Vector3.Dot(GazeDirection, gazeOriginToHand) > 0) ? Vector3.Project(gazeOriginToHand, headDepthOffset).magnitude : 0;
 
             float minRatio = 0.1f;
             if (handToGazeOriginDistance < 0.3f)
             {
-                float k = 1 - handToGazeOriginDistance / 0.3f;
-                maxSpd = maxSpd * (minRatio + k * handToGazeOriginDistance);
+                float k = Mathf.Clamp(minRatio + (1 - minRatio) / 0.3f * handToGazeOriginDistance, minRatio, 1);
+                maxSpd = maxSpd * k;
             }
 
             float projectedSpeed = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / Time.deltaTime;

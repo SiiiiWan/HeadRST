@@ -12,12 +12,15 @@ public class ManipulationTechnique : MonoBehaviour
     public float MaxDepth { get; set; } = 10f;
     public float MinDepth { get; set; } = 0.5f;
 
-    public ManipulatableObject GrabbedObject;
+    public ManipulatableObject GrabbedObject { get; private set; }
+    public ManipulatableObject LastGrabbedObject { get; private set; }
+
     public ManipulatableObject GazingObject { get; private set; }
 
     public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
     {
         GrabbedObject = obj;
+        LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
         if (Log) print("ah: Grabbed: " + obj.GrabbedState);
 
@@ -177,7 +180,7 @@ public class ManipulationTechnique : MonoBehaviour
             // check if gaze is fixating on an object
             if (ObjectsInGazeCone.Count > 0) // has object in gaze cone
             {
-                if (ObjectsInGazeCone[0] != GazingObject) // trigger on gazing different object
+                if (GazingObject != ObjectsInGazeCone[0]) // trigger on gazing different object
                 {
                     GazingObject = ObjectsInGazeCone[0];
                     TriggerOnLookAtNewObjectBehavior();
