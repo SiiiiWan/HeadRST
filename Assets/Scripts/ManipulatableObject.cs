@@ -2,6 +2,7 @@ using UnityEngine;
 using Oculus.Interaction;
 using Unity.VisualScripting;
 using NUnit.Framework;
+using Oculus.Interaction.HandGrab;
 
 public enum GrabbedState
 {
@@ -16,6 +17,7 @@ public class ManipulatableObject : MonoBehaviour
     public float AngleToGaze { get; private set; }
     public GrabbedState GrabbedState { get; private set; } = GrabbedState.NotGrabbed;
     public Grabbable Grabbable;
+    public HandGrabInteractable HandGrabInteractable;
     public ManipulationTechnique ManipulationBehavior { get; private set; }
     public bool IsPinchTipWithinCube { get; private set; }
     // public bool IsHand = false;
@@ -57,5 +59,16 @@ public class ManipulatableObject : MonoBehaviour
             (localPoint.z >= center.z - halfSize.z && localPoint.z <= center.z + halfSize.z);
     }
 
+    public void DisableDirectGrab()
+    {
+        if (Grabbable != null)
+        {
+            Grabbable.enabled = false;
+        }
+        if (HandGrabInteractable != null)
+        {
+            HandGrabInteractable.enabled = false;
+        }
+    }
 
 }

@@ -119,19 +119,7 @@ public class ManipulationTechnique : MonoBehaviour
     public float Limit_HeadY_Down { get; private set; } // negtive value means down
     public float HeadYAngle_OnGazeFixation { get; private set; }
 
-    #endregion
-
-    #region MonoBehaviour Methods
-    public virtual void Awake()
-    {
-        GazeFixationTracker = new FixationTracker(GazeFixationDuration, GazeFixationAngle);
-        HeadFixationTracker = new FixationTracker(HeadFixationDuration, HeadFixationAngle);
-        HandFixationTracker = new FixationTracker(HandStablizeDuration, HandStablizeThr);
-
-        VirtualHandPosition = HandData.GetInstance().GetHandPosition(usePinchTip: false);
-    }
-
-    public virtual void Update()
+    public void UpdateTrackingData()
     {
         HandData = HandData.GetInstance();
         PinchDetector = PinchDetector.GetInstance();
@@ -168,12 +156,32 @@ public class ManipulationTechnique : MonoBehaviour
         HeadSpeed = HeadData.HeadSpeed;
         DeltaHeadY = HeadData.DeltaHeadY;
         HeadYAngle = HeadData.HeadAngle_WorldY;
+    }
+
+    public void UpdatePreData()
+    {
+        IsGazeFixating_pre = IsGazeFixating;
+        IsHeadFixating_pre = IsHeadFixating;
+        Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
+    }
+
+    #endregion
+
+    #region MonoBehaviour Methods
+    public virtual void Awake()
+    {
+        GazeFixationTracker = new FixationTracker(GazeFixationDuration, GazeFixationAngle);
+        HeadFixationTracker = new FixationTracker(HeadFixationDuration, HeadFixationAngle);
+        HandFixationTracker = new FixationTracker(HandStablizeDuration, HandStablizeThr);
+
+        VirtualHandPosition = HandData.GetInstance().GetHandPosition(usePinchTip: false);
+    }
+
+    public virtual void Update()
+    {
+        UpdateTrackingData();
 
         UpdateAndSortObjectInGazeConeList();
-
-
-
-
 
         if (GrabbedObject == null) // not grabbed
         {
@@ -199,7 +207,7 @@ public class ManipulationTechnique : MonoBehaviour
                 {
                     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
                 }
-                else if (PinchDetector.IsOneHandPinching & PinchDetector.IsNoHandPinching_LastFrame)
+                else if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinching_LastFrame)
                 {
                     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
@@ -240,9 +248,7 @@ public class ManipulationTechnique : MonoBehaviour
             }
         }
 
-        IsGazeFixating_pre = IsGazeFixating;
-        IsHeadFixating_pre = IsHeadFixating;
-        Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
+        UpdatePreData();
     }
     # endregion
 

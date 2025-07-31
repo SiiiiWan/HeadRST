@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ScaledHOMER : ManipulationTechnique
@@ -9,6 +10,17 @@ public class ScaledHOMER : ManipulationTechnique
     public float scalingConstant = 0.15f; // at what hand speed m/s do you want to achive a 1:1 mapping //TODO: fine parameters from papers
     public float MinVelocityThreshold = 0.01f;
 
+    public override void ApplyObjectFreeBehaviour()
+    {
+        VirtualHandPosition = WristPosition;
+    }
+
+     public override void TriggerOnLookAtNewObjectBehavior()
+    {
+        GazingObject.DisableDirectGrab();
+
+        VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);   
+    }   
 
     private Vector3 _torsoPosition_init;
     private Vector3 _handPosition_init;
@@ -34,10 +46,20 @@ public class ScaledHOMER : ManipulationTechnique
         lastHandPosition = WristPosition;
     }
 
-
     public override void ApplyIndirectGrabbedBehaviour()
     {
-        
+        float scaleFactor = Mathf.Min(1.2f, HandTranslationSpeed / scalingConstant);
+        if (HandTranslationSpeed < MinVelocityThreshold) scaleFactor = 0f;
+
+        Vector3 scaledHandMovement = WristPosition_delta * scaleFactor;
+        Vector3 scaledHandPosition = lastHandPosition + scaledHandMovement;
+
+        lastHandPosition = scaledHandPosition;
+
+        GrabbedObject.transform.position = UpdateObjectPosition_HOMER(scaledHandPosition);
+        VirtualHandPosition = GrabbedObject.transform.position + (WristPosition - PinchPosition);
+
+        GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
     }
 
 
@@ -52,28 +74,5 @@ public class ScaledHOMER : ManipulationTechnique
         return objectPosition;
     }
 
-    public override void ApplyObjectFreeBehaviour()
-    {
-        VirtualHandPosition = Vector3.zero;
-    }
 
-    public override void TriggerOnLookAtNewObjectBehavior()
-    {
-        // VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);
-        VirtualHandPosition = GazingObject.transform.position;
-
-    }
-    
-    public override void ApplyDirectGrabbedBehaviour()
-    {
-        float scaleFactor = Mathf.Min(1.2f, HandTranslationSpeed / scalingConstant);
-        if (HandTranslationSpeed < MinVelocityThreshold) scaleFactor = 0f;
-
-        Vector3 scaledHandMovement = WristPosition_delta * scaleFactor;
-        Vector3 scaledHandPosition = lastHandPosition + scaledHandMovement;
-
-        lastHandPosition = scaledHandPosition;
-
-        VirtualHandPosition = UpdateObjectPosition_HOMER(scaledHandPosition);
-    }
 }

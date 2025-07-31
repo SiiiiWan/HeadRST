@@ -750,6 +750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 4681531026137562050}
+  HandGrabInteractable: {fileID: 7236193745487029502}
 --- !u!114 &5127447467895476149
 MonoBehaviour:
   m_ObjectHideFlags: 0
