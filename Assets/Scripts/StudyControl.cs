@@ -126,8 +126,8 @@ public class StudyControl : Singleton<StudyControl>
 
         TotalTrialCount = 0;
 
-        // StartCoroutine(RunTrials_between());
-        StartCoroutine(RunTrials_within());
+        StartCoroutine(RunTrials_between());
+        // StartCoroutine(RunTrials_within());
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;

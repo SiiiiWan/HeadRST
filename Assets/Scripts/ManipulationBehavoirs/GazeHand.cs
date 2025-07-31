@@ -10,7 +10,7 @@ public class GazeHand : ManipulationTechnique
 
     public override void ApplyObjectFreeBehaviour()
     {
-        VirtualHandPosition = Vector3.zero;
+        VirtualHandPosition = WristPosition;
     }
 
     public override void TriggerOnLookAtNewObjectBehavior()
