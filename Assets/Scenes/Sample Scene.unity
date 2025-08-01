@@ -26266,7 +26266,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20f1379cf72cdd4480714d22bb0be07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActivateAttenuation: 0
 --- !u!114 &1006584924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26294,7 +26293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ef77b2b3219c94cbdcd6a70bbc0532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActivateAttenuation: 1
+  MaxHandSpeed: 0.1
 --- !u!114 &1006584926
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -121,13 +121,9 @@ public class AnywhereHand : ManipulationTechnique
     public float MaxGainDeg { get; protected set; } = 10;
     public float BaseGain { get; protected set; }
     public float EdgeGain { get; protected set; }
-    public float Attenuation { get; protected set; } = 1;
-    public float MaxHandSpeed { get; protected set; } = 0.1f;
-    public bool ActivateAttenuation = true;
 
 
-
-    Vector3 GetHeadDepthOffset(Vector3 objectDirection)
+    public virtual Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
         float max_gain = (MaxDepth - MinDepth) / MaxGainDeg;
         float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
@@ -136,45 +132,11 @@ public class AnywhereHand : ManipulationTechnique
         EdgeGain = EyeHeadGain();
         Vector3 headDepthOffset = objectDirection * DeltaHeadY * BaseGain * EdgeGain;
 
-        Attenuation = HeadAttenuation(headDepthOffset);
 
-        return headDepthOffset * Attenuation;
-        // return headDepthOffset;
+        return headDepthOffset;
     }
 
-    float HeadAttenuation(Vector3 headDepthOffset)
-    {
-        float attenuation = 1;
-
-        if (ActivateAttenuation == false) return attenuation;
-
-        // if (Filtered_EyeInHeadAngle < Filtered_EyeInHeadAngle_Pre && Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0 && Filtered_EyeInHeadAngle > EyeInHeadYAngle_OnGazeFixation) // eye in head angle is decreasing
-        if (Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0)
-        {
-            float maxSpd = MaxHandSpeed;
-            Vector3 gazeOriginToHand = PinchPosition - GazeOrigin;
-            float handToGazeOriginDistance = (Vector3.Dot(GazeDirection, gazeOriginToHand) > 0) ? Vector3.Project(gazeOriginToHand, headDepthOffset).magnitude : 0;
-
-            float minRatio = 0.1f;
-            if (handToGazeOriginDistance < 0.3f)
-            {
-                float k = Mathf.Clamp(minRatio + (1 - minRatio) / 0.3f * handToGazeOriginDistance, minRatio, 1);
-                maxSpd = maxSpd * k;
-            }
-
-            float projectedSpeed = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / Time.deltaTime;
-            attenuation = 1 - projectedSpeed / maxSpd;
-
-
-
-            // attenuation = 0;
-            // attenuation = Vector3.Project(Filtered_HandMovementVector, headDepthOffset).magnitude / headDepthOffset.magnitude;
-        }
-
-        return Mathf.Clamp(attenuation, 0, 1);
-    }
-
-    float EyeHeadGain()
+    public float EyeHeadGain()
     {
         float eyeRange = GetEyeRange(EyeInHeadXAngle, EyeInHeadYAngle);
         float k = 3;

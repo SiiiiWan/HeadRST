@@ -72,20 +72,20 @@ public class StudyControl : Singleton<StudyControl>
             }
         }
 
-        if (DominantHand == Handedness.right)
-        {
-            RightHand_Virtual.SetActive(true);
-            LeftHand_Virtual.SetActive(false);
-            RightHandSynth_Virtual.SetActive(true);
-            LeftHandSynth_Virtual.SetActive(false);
-        }
-        else
-        {
-            RightHand_Virtual.SetActive(false);
-            LeftHand_Virtual.SetActive(true);
-            RightHandSynth_Virtual.SetActive(false);
-            LeftHandSynth_Virtual.SetActive(true);
-        }
+        // if (DominantHand == Handedness.right)
+        // {
+        //     RightHand_Virtual.SetActive(true);
+        //     LeftHand_Virtual.SetActive(false);
+        //     RightHandSynth_Virtual.SetActive(true);
+        //     LeftHandSynth_Virtual.SetActive(false);
+        // }
+        // else
+        // {
+        //     RightHand_Virtual.SetActive(false);
+        //     LeftHand_Virtual.SetActive(true);
+        //     RightHandSynth_Virtual.SetActive(false);
+        //     LeftHandSynth_Virtual.SetActive(true);
+        // }
 
     }
 
