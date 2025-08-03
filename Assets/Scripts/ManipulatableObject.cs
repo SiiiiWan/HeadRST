@@ -40,7 +40,7 @@ public class ManipulatableObject : MonoBehaviour
         //     IsHitbyGaze = AngleToGaze <= 20f;
         // } 
 
-        
+        transform.localScale = MathFunctions.Deg2Meter(StudyControl.GetInstance().TargetSize, Vector3.Distance(Camera.main.transform.position, transform.position)) * Vector3.one;
     }
 
     public void SetGrabbedState(GrabbedState state)
