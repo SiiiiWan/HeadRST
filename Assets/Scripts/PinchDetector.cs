@@ -28,17 +28,27 @@ public class PinchDetector : Singleton<PinchDetector>
 
         StudyControl studyControl = StudyControl.GetInstance();
 
-        if (IsRightPinching && IsLeftPinching)
+        if (studyControl.DominantHand == Handedness.right)
         {
-            // PinchState = PinchState.BothHandsPinching;
-        }
-        else if ((IsRightPinching && studyControl.DominantHand == Handedness.right) || (IsLeftPinching && studyControl.DominantHand == Handedness.left))
-        {
-            PinchState = PinchState.OneHandPinching;
+            if (IsRightPinching)
+            {
+                PinchState = PinchState.OneHandPinching;
+            }
+            else
+            {
+                PinchState = PinchState.NotPinching;
+            }
         }
         else
         {
-            PinchState = PinchState.NotPinching;
+            if (IsLeftPinching)
+            {
+                PinchState = PinchState.OneHandPinching;
+            }
+            else
+            {
+                PinchState = PinchState.NotPinching;
+            }
         }
 
         IsBothHandsPinching = PinchState == PinchState.BothHandsPinching;

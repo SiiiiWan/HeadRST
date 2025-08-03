@@ -26219,7 +26219,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticipantID: TEST
-  DominantHand: 1
+  DominantHand: 0
+  TaskMode: 0
   IsPractice: 0
   TotalTrialCount: 0
   ManipulationBehavior: {fileID: 1006584925}
@@ -26241,6 +26242,7 @@ MonoBehaviour:
   - 15
   - 30
   MaxAmplitude_between: 20
+  TargetSize: 4
 --- !u!114 &1006584921
 MonoBehaviour:
   m_ObjectHideFlags: 0

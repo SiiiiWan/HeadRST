@@ -53,7 +53,8 @@ public class StudyControl : Singleton<StudyControl>
 
     void Start()
     {
-        // StartTask();
+        UpdateHandVisuals();
+        StartTask();
     }
 
     void Update()
@@ -75,24 +76,27 @@ public class StudyControl : Singleton<StudyControl>
             }
         }
 
-        // if (DominantHand == Handedness.right)
-        // {
-        //     RightHand_Virtual.SetActive(true);
-        //     LeftHand_Virtual.SetActive(false);
-        //     RightHandSynth_Virtual.SetActive(true);
-        //     LeftHandSynth_Virtual.SetActive(false);
-        // }
-        // else
-        // {
-        //     RightHand_Virtual.SetActive(false);
-        //     LeftHand_Virtual.SetActive(true);
-        //     RightHandSynth_Virtual.SetActive(false);
-        //     LeftHandSynth_Virtual.SetActive(true);
-        // }
+        UpdateHandVisuals();
 
     }
 
-
+    void UpdateHandVisuals()
+    {
+        if (DominantHand == Handedness.right)
+        {
+            RightHand_Virtual.SetActive(true);
+            LeftHand_Virtual.SetActive(false);
+            RightHandSynth_Virtual.SetActive(true);
+            LeftHandSynth_Virtual.SetActive(false);
+        }
+        else
+        {
+            RightHand_Virtual.SetActive(false);
+            LeftHand_Virtual.SetActive(true);
+            RightHandSynth_Virtual.SetActive(false);
+            LeftHandSynth_Virtual.SetActive(true);
+        }
+    }
 
 
     public GameObject SpawnPrefab(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
