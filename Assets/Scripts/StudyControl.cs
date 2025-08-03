@@ -19,11 +19,13 @@ public enum CubePositionLabels
 
 public enum DockingDirections { forward, backward }
 public enum Handedness { left, right }
+public enum TaskMode { amp_and_depth, depth_only }
 
 public class StudyControl : Singleton<StudyControl>
 {
     public string ParticipantID;
     public Handedness DominantHand = Handedness.right;
+    public TaskMode TaskMode = TaskMode.amp_and_depth;
     public bool IsPractice;
     public int TotalTrialCount;
     public ManipulationTechnique ManipulationBehavior;
@@ -43,10 +45,11 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (5f, 9f) };
+    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (1f, 9f) };
     [HideInInspector] public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
     [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f };
     [HideInInspector] public float MaxAmplitude_between = 20f;
+    [HideInInspector] public float TargetSize = 4f; // in degrees
 
     void Start()
     {
@@ -92,20 +95,23 @@ public class StudyControl : Singleton<StudyControl>
 
 
 
-    public GameObject SpawnPrefab(GameObject prefab, Vector3 position, Quaternion rotation)
+    public GameObject SpawnPrefab(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
     {
         GameObject obj = Instantiate(prefab, position, rotation);
         obj.transform.SetParent(transform);
-
+        obj.transform.localScale = scale;
         return obj;
     }
 
     public void StartTrial(Vector3 startPos, Vector3 endPos, out GameObject startObj, out GameObject target)
     {
-        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity);
+        Vector3 scale = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, endPos)) * Vector3.one;
+        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, scale);
 
         Quaternion randomRotationOffset = Quaternion.AngleAxis(Random.Range(-30f, 30f), Random.onUnitSphere);
-        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation);
+        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, scale);
+
+        print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
         TotalTrialCount++;
     }
@@ -126,8 +132,8 @@ public class StudyControl : Singleton<StudyControl>
 
         TotalTrialCount = 0;
 
-        StartCoroutine(RunTrials_between());
-        // StartCoroutine(RunTrials_within());
+        if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
+        else StartCoroutine(RunTrials_within());
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
