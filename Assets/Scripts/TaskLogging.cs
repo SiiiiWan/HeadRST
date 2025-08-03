@@ -38,6 +38,7 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             ("IsAligned", () => targetIndicator == null ? "false" : targetIndicator.GetComponent<DockingTarget>().IsPoseAligned().ToString()),
             ("TrialStartPosition", () => studyControl.TrialStartPosition.ToString()),
             ("TrialEndPosition", () => studyControl.TrialEndPosition.ToString()),
+            ("HeadPosition_OnTrialStart", () => studyControl.HeadPosition_OnTrialStart.ToString()),
 
             // technique used hand data
             ("VirtualHandPosition", () => technique.VirtualHandPosition.ToString()),
@@ -112,6 +113,8 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             ("HandDistance_delta", () => handData.HandDistance_delta.ToString()),
             ("HandMidPosition", () => handData.HandMidPosition.ToString()),
             ("HandMidPosition_delta", () => handData.HandMidPosition_delta.ToString()),
+
+            // raw gaze data
 
             ("Time", () => Time.realtimeSinceStartup.ToString()),
 

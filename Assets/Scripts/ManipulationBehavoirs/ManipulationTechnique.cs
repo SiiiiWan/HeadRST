@@ -151,6 +151,13 @@ public class ManipulationTechnique : MonoBehaviour
         HeadSpeed = HeadData.HeadSpeed;
         DeltaHeadY = HeadData.DeltaHeadY;
         HeadYAngle = HeadData.HeadAngle_WorldY;
+
+        ExtraUpdateTrackingData();
+    }
+
+    public virtual void ExtraUpdateTrackingData()
+    {
+
     }
 
     public void UpdatePreData()

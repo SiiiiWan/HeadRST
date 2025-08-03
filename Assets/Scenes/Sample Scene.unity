@@ -26766,6 +26766,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TorsoOffset: 0.35
+  FilteringGaze: 1
+  FilterFrequency: 90
+  FilterMinCutOff: 0.9
+  FilterBeta: 15
+  FilterDcutoff: 1
 --- !u!114 &1006584923
 MonoBehaviour:
   m_ObjectHideFlags: 0

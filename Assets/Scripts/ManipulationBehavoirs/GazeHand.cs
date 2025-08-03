@@ -8,6 +8,35 @@ public class GazeHand : ManipulationTechnique
     Vector3 _handInitPosition;
     Vector3 _pivotPoint;
 
+    [Header("One Euro Filter")]
+
+    public bool FilteringGaze = true;
+
+
+    public float FilterFrequency = 90f;
+    public float FilterMinCutOff = 0.9f;
+    public float FilterBeta = 15f;
+    public float FilterDcutoff = 1f;
+
+    private OneEuroFilter<Vector3> _gazeDirFilter = new OneEuroFilter<Vector3>(90f);
+    private OneEuroFilter<Vector3> _gazePosFilter = new OneEuroFilter<Vector3>(90f);
+
+    public Vector3 ExtraFilteredGazeDirection { get; private set; }
+    public Vector3 ExtraFilteredGazeOrigin { get; private set; }
+
+    public override void ExtraUpdateTrackingData()
+    {
+
+        if (FilteringGaze)
+        {
+            _gazeDirFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FilterDcutoff);
+            _gazePosFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FilterDcutoff);
+
+            ExtraFilteredGazeDirection = _gazeDirFilter.Filter(GazeData.GetRawGazeDirection());
+            ExtraFilteredGazeOrigin = _gazePosFilter.Filter(GazeData.GetRawGazeOrigin());
+        }
+    }
+
     public override void ApplyObjectFreeBehaviour()
     {
         VirtualHandPosition = WristPosition;
@@ -51,7 +80,7 @@ public class GazeHand : ManipulationTechnique
         Vector3 manubriumPoint = HeadPosition + Vector3.down * TorsoOffset;
         Vector3 manubriumToHandOffset = WristPosition - manubriumPoint;
 
-        _pivotPoint = GazeOrigin + GazeDirection * _depth;
+        _pivotPoint = ExtraFilteredGazeOrigin + ExtraFilteredGazeDirection * _depth;
 
         VirtualHandPosition = _pivotPoint + manubriumToHandOffset;
     }
