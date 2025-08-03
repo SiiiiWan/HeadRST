@@ -3,23 +3,22 @@ using UnityEngine;
 public class GazeNPinchOrigin : ManipulationTechnique
 {
 
-    // float GetVisualGain_Plus(Transform target)
-    // {
-    //     EyeGaze gazeData = EyeGaze.GetInstance();
-    //     HandData handData = global::HandData.GetInstance();
+    public override void Update()
+    {
+        base.Update();
+        VirtualHandPosition = WristPosition;
+    }
 
-    //     Vector3 gazeOrigin = gazeData.GetGazeRay().origin;
-    //     Vector3 gazeDirection = gazeData.GetGazeRay().direction;
+    public override void ApplyIndirectGrabbedBehaviour()
+    {
 
-    //     Vector3 gazeToTargetVector = target.position - gazeOrigin;
-    //     float targetDistance = gazeToTargetVector.magnitude;
+        GrabbedObject.transform.position += GetVisualGain(GrabbedObject.transform.position) * PinchPosition_delta;
 
-    //     Vector3 gazeToHandVector = handData.GetHandPosition(usePinchTip: true) - gazeOrigin;
-    //     Vector3 gazeToHandVectorProjected = Vector3.Project(gazeToHandVector, gazeDirection);
-    //     float handDistance = gazeToHandVectorProjected.magnitude;
+        GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
+    }
 
-    //     return targetDistance / handDistance;
-    // }
-
-
+    public float GetVisualGain(Vector3 objectPosition)
+    {
+        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
+    }
 }

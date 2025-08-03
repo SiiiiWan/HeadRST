@@ -248,11 +248,6 @@ public class ManipulationTechnique : MonoBehaviour
 
     #region Accessory Functions
 
-    public float GetVisualGain(Vector3 objectPosition)
-    {
-        return Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin);
-    }
-
 
     public float VitLerp(float x, float k1 = 0.8f / 3f, float k2 = 0.8f, float v1 = 0.2f, float v2 = 0.6f)
     {

@@ -39,6 +39,8 @@ public class ManipulatableObject : MonoBehaviour
         //     AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
         //     IsHitbyGaze = AngleToGaze <= 20f;
         // } 
+
+        
     }
 
     public void SetGrabbedState(GrabbedState state)

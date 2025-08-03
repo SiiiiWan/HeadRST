@@ -26184,6 +26184,7 @@ GameObject:
   - component: {fileID: 1006584923}
   - component: {fileID: 1006584924}
   - component: {fileID: 1006584921}
+  - component: {fileID: 1006584927}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -26219,11 +26220,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticipantID: TEST
-  DominantHand: 0
+  DominantHand: 1
   TaskMode: 0
   IsPractice: 0
   TotalTrialCount: 0
-  ManipulationBehavior: {fileID: 1006584925}
+  ManipulationBehavior: {fileID: 1006584927}
   TechniqueText: {fileID: 373964267}
   TargetPrefab: {fileID: 2676514430063476796, guid: acf565eedf6b18e47a5e2dcfde534009, type: 3}
   ObjectPrefab: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -26290,7 +26291,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63ef77b2b3219c94cbdcd6a70bbc0532, type: 3}
   m_Name: 
@@ -26309,6 +26310,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LogData: 0
+--- !u!114 &1006584927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99c8cdde9d08db40ad6f0ff5a8e461e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
