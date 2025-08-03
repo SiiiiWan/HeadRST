@@ -23,15 +23,19 @@ public enum TaskMode { amp_and_depth, depth_only }
 
 public class StudyControl : Singleton<StudyControl>
 {
+    [Header("Study Settings")]
     public string ParticipantID;
     public Handedness DominantHand = Handedness.right;
     public TaskMode TaskMode = TaskMode.amp_and_depth;
     public bool IsPractice;
-    public int TotalTrialCount;
     public ManipulationTechnique ManipulationBehavior;
+
+    [Header("Study States")]
+    public int TotalTrialCount;
 
     [Header("Bindings")]
     public TextMeshPro TechniqueText;
+    public TextMeshPro TaskText;
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
     public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
@@ -54,7 +58,8 @@ public class StudyControl : Singleton<StudyControl>
     void Start()
     {
         UpdateHandVisuals();
-        StartTask();
+        SwitchTask_AmpAndDepth();
+        SwitchToGazeNPinch();
     }
 
     void Update()
@@ -109,13 +114,14 @@ public class StudyControl : Singleton<StudyControl>
 
     public void StartTrial(Vector3 startPos, Vector3 endPos, out GameObject startObj, out GameObject target)
     {
-        Vector3 scale = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, endPos)) * Vector3.one;
+        HeadPosition_OnTrialStart = Camera.main.transform.position;
+        Vector3 scale = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
         startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, scale);
 
         Quaternion randomRotationOffset = Quaternion.AngleAxis(Random.Range(-30f, 30f), Random.onUnitSphere);
         target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, scale);
 
-        print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
+        // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
         TotalTrialCount++;
     }
@@ -142,6 +148,7 @@ public class StudyControl : Singleton<StudyControl>
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
     public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
+    public Vector3 HeadPosition_OnTrialStart { get; private set; } = Vector3.zero;
 
     private IEnumerator RunTrials_within()
     {
@@ -319,11 +326,11 @@ public class StudyControl : Singleton<StudyControl>
         return positions;
     }
 
-    public void SwitchToVisualGain()
-    {
-        ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-        TechniqueText.text = "Current Technique: Visual Gain";
-    }
+    // public void SwitchToVisualGain()
+    // {
+    //     ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
+    //     TechniqueText.text = "Current Technique: Visual Gain";
+    // }
 
     public Vector3 GetVirtualHandPosition(bool isRightHand)
     {
@@ -351,17 +358,42 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
-    // public void SwitchToAnywhereHandContinuous()
-    // {
-    //     ManipulationBehavior = GetComponent<AnywhereHandContinuous>();
-    //     TechniqueText.text = "Current Technique: AnywhereHand 1";
-    // }
+    public void SwitchToAnywhereHandBase()
+    {
+        var techniques = GetComponents<ManipulationTechnique>();
+        foreach (var technique in techniques)
+        {
+            if (technique is AnywhereHand_Base)
+            {
+                technique.enabled = true;
+                ManipulationBehavior = GetComponent<AnywhereHand_Base>();
+            }
+            else
+            {
+                technique.enabled = false;
+            }
+        }
 
-    // public void SwitchToAnywhereHandDiscrete()
-    // {
-    //     ManipulationBehavior = GetComponent<AnywhereHandDiscrete>();
-    //     TechniqueText.text = "Current Technique: Anywhere Hand Discrete";
-    // }
+        TechniqueText.text = "Current Technique: AnywhereHand- HeadPriority";
+    }
+
+    public void SwitchToAnywhereHandAttenuated()
+    {
+        var techniques = GetComponents<ManipulationTechnique>();
+        foreach (var technique in techniques)
+        {
+            if (technique is AnywhereHand_Att)
+            {
+                technique.enabled = true;
+                ManipulationBehavior = GetComponent<AnywhereHand_Att>();
+            }
+            else
+            {
+                technique.enabled = false;
+            }
+        }
+        TechniqueText.text = "Current Technique: AnywhereHand - HandPriority";
+    }
 
     // public void SwitchToContinuous2()
     // {
@@ -369,17 +401,55 @@ public class StudyControl : Singleton<StudyControl>
     //     TechniqueText.text = "Current Technique: AnywhereHand 2";
     // }
 
-    // public void SwitchToGazeHand()
-    // {
-    //     ManipulationBehavior = GetComponent<GazeHand>();
-    //     TechniqueText.text = "Current Technique: Gaze Hand";
-    // }
+    public void SwitchToGazeHand()
+    {
+        var techniques = GetComponents<ManipulationTechnique>();
+        foreach (var technique in techniques)
+        {
+            if (technique is GazeHand)
+            {
+                technique.enabled = true;
+                ManipulationBehavior = GetComponent<GazeHand>();
+            }
+            else
+            {
+                technique.enabled = false;
+            }
+        }
+        TechniqueText.text = "Current Technique: GazeHand2";
+    }
 
-    // public void SwitchToGazeNPinch()
-    // {
-    //     ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-    //     TechniqueText.text = "Current Technique: Gaze and Pinch";
-    // }
+    public void SwitchToGazeNPinch()
+    {
+        var techniques = GetComponents<ManipulationTechnique>();
+        foreach (var technique in techniques)
+        {
+            if (technique is GazeNPinchOrigin)
+            {
+                technique.enabled = true;
+                ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
+            }
+            else
+            {
+                technique.enabled = false;
+            }
+        }
+        TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
+    }
+
+    public void SwitchTask_DepthOnly()
+    {
+        TaskMode = TaskMode.depth_only;
+        TaskText.text = "Current Task: Far-Close Switching";
+        StartTask();
+    }
+
+    public void SwitchTask_AmpAndDepth()
+    {
+        TaskMode = TaskMode.amp_and_depth;
+        TaskText.text = "Current Task: Distance Manipulation";
+        StartTask();
+    }
 
     // public void SwitchToScaledHOMER()
     // {
