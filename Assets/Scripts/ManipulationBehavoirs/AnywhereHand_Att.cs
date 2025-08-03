@@ -51,11 +51,14 @@ public class AnywhereHand_Att : AnywhereHand
             // attenuation = 1 - projectedSpeed / maxSpd;
 
             float sqrtPart = Mathf.Sqrt(projectedSpeed / maxSpd);
-            float exponent = 2f * MathFunctions.ProjectVectorOntoPlane(GrabbedObject.transform.position - GazeOrigin, Vector3.up).magnitude / MaxDepth;  // same as d / 5
+            float distance = MathFunctions.ProjectVectorOntoPlane(GrabbedObject.transform.position - GazeOrigin, Vector3.up).magnitude;
+            // float exponent = 2f * distance / MaxDepth;
+            float exponent = 2f * distance * distance;
+
 
             attenuation = -Mathf.Pow(sqrtPart, exponent) + 1f;
 
-
+            // attenuation = 1 / (1 + Mathf.Pow((float)Math.E, 10 * (distance + 10) * (projectedSpeed - maxSpd/2)));
 
             // attenuation = 1 - Mathf.Sqrt(projectedSpeed / maxSpd);
         }
