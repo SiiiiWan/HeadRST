@@ -32,6 +32,7 @@ public class StudyControl : Singleton<StudyControl>
 
     [Header("Study States")]
     public int TotalTrialCount;
+    public bool StudyFlag = false; // Indicates if the study is currently running
 
     [Header("Bindings")]
     public TextMeshPro TechniqueText;
@@ -39,6 +40,7 @@ public class StudyControl : Singleton<StudyControl>
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
     public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
+    public Transform TaskButtonsFront;
 
     [HideInInspector] public GameObject ObjectToBeManipulated;
     [HideInInspector] public GameObject TargetIndicator;
@@ -65,15 +67,14 @@ public class StudyControl : Singleton<StudyControl>
     void Start()
     {
         UpdateHandVisuals();
-        SwitchTask_AmpAndDepth();
+        // SwitchTask_AmpAndDepth();
         SwitchToGazeNPinch();
-
     }
 
     void Update()
     {
         UpdateHandVisuals();
-
+        TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
         // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
@@ -168,6 +169,7 @@ public class StudyControl : Singleton<StudyControl>
 
     private IEnumerator RunTrials_within()
     {
+        StudyFlag = true;
 
         DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
@@ -197,6 +199,8 @@ public class StudyControl : Singleton<StudyControl>
                 yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
             }
         }
+
+        StudyFlag = false;
     }
 
     private void ShowTrials_within()
