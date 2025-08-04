@@ -30,8 +30,17 @@ public class ManipulatableObject : MonoBehaviour
         IsHitbyGaze = AngleToGaze <= 10f;
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
 
-        // IsPinchTipWithinCube = IsPointWithinBoxCollider(GetComponent<BoxCollider>(), ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
-        transform.GetComponent<Outline>().enabled = IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed;
+        IsPinchTipWithinCube = IsPointWithinCube(ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
+        // if(ManipulationBehavior == GazeHand)
+        if (ManipulationBehavior is GazeHand)
+        {
+            SetOutlineVisibility(GrabbedState == GrabbedState.NotGrabbed && IsPinchTipWithinCube);
+        }
+        else
+        {
+            SetOutlineVisibility(IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed);
+        }
+        // print(ManipulationBehavior.GetType().Name);
         //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
 
         // if (IsHand)
@@ -48,17 +57,32 @@ public class ManipulatableObject : MonoBehaviour
         GrabbedState = state;
     }
 
-    public static bool IsPointWithinBoxCollider(BoxCollider box, Vector3 point)
+    public bool IsPointWithinCube(Vector3 point, float tolerancePercentage = 0.9f)
     {
-        // Transform the point into the local space of the collider
-        Vector3 localPoint = box.transform.InverseTransformPoint(point);
-        Vector3 halfSize = box.size * 0.5f;
-        Vector3 center = box.center;
+        Vector3 center = transform.position;
+        Vector3 halfSize = transform.localScale * 0.5f;
+
+        // Calculate tolerance based on percentage of each dimension
+        Vector3 tolerance = new Vector3(
+            halfSize.x * (1 - tolerancePercentage),
+            halfSize.y * (1 - tolerancePercentage),
+            halfSize.z * (1 - tolerancePercentage)
+        );
 
         return
-            (localPoint.x >= center.x - halfSize.x && localPoint.x <= center.x + halfSize.x) &&
-            (localPoint.y >= center.y - halfSize.y && localPoint.y <= center.y + halfSize.y) &&
-            (localPoint.z >= center.z - halfSize.z && localPoint.z <= center.z + halfSize.z);
+            (point.x >= center.x - halfSize.x + tolerance.x && point.x <= center.x + halfSize.x - tolerance.x) &&
+            (point.y >= center.y - halfSize.y + tolerance.y && point.y <= center.y + halfSize.y - tolerance.y) &&
+            (point.z >= center.z - halfSize.z + tolerance.z && point.z <= center.z + halfSize.z - tolerance.z);
+    }
+
+    
+
+    public void SetOutlineVisibility(bool isVisible)
+    {
+        if (transform.TryGetComponent<Outline>(out Outline outline))
+        {
+            outline.enabled = isVisible;
+        }
     }
 
     public void DisableDirectGrab()
