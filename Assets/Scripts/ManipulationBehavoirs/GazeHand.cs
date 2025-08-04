@@ -8,35 +8,13 @@ public class GazeHand : ManipulationTechnique
     Vector3 _handInitPosition;
     Vector3 _pivotPoint;
 
-    // [Header("One Euro Filter")]
-
-    // public bool FilteringGaze = true;
-
-
-    // public float FilterFrequency = 90f;
-    // public float FilterMinCutOff = 0.9f;
-    // public float FilterBeta = 15f;
-    // public float FilterDcutoff = 1f;
-
-    // private OneEuroFilter<Vector3> _gazeDirFilter = new OneEuroFilter<Vector3>(90f);
-    // private OneEuroFilter<Vector3> _gazePosFilter = new OneEuroFilter<Vector3>(90f);
+    public Vector3 VirtualHandOffsetFromObject {get; private set; } = Vector3.zero;
 
     public Vector3 ExtraFilteredGazeDirection { get; private set; }
 
     public override void ExtraUpdateTrackingData()
     {
-
-        // if (FilteringGaze)
-        // {
-        //     _gazeDirFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FilterDcutoff);
-        //     _gazePosFilter.UpdateParams(FilterFrequency, FilterMinCutOff, FilterBeta, FilterDcutoff);
-
-        //     ExtraFilteredGazeDirection = _gazeDirFilter.Filter(GazeData.GetRawGazeDirection());
-        //     ExtraFilteredGazeOrigin = _gazePosFilter.Filter(GazeData.GetRawGazeOrigin());
-        // }
-
-        ExtraFilteredGazeDirection = Vector3.Lerp(ExtraFilteredGazeDirection, GazeData.GetRawGazeDirection(), 0.1f);
-
+        ExtraFilteredGazeDirection = Vector3.Lerp(ExtraFilteredGazeDirection, GazeData.GetRawGazeDirection(), 0.1f).normalized;
     }
 
     public override void ApplyObjectFreeBehaviour()
@@ -51,7 +29,9 @@ public class GazeHand : ManipulationTechnique
         Vector3 manubriumToHandOffset = WristPosition - manubriumPoint;
 
         _depth = gazeToObjectVector.magnitude - _offset;
-        _depth = Mathf.Clamp(_depth, MinDepth, MaxDepth);
+        _depth = Mathf.Clamp(_depth, 0.05f, 15f);
+
+        // _depth = Mathf.Clamp(_depth, MinDepth, MaxDepth);
 
         _pivotPoint = GazeOrigin + gazeToObjectVector.normalized * _depth;
 
@@ -61,6 +41,8 @@ public class GazeHand : ManipulationTechnique
     public override void ApplyGazingButNotGrabbingBehaviour()
     {
         VirtualHandPosition += WristPosition_delta;
+
+        VirtualHandOffsetFromObject = VirtualHandPosition - GazingObject.transform.position;
     }
 
     public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
@@ -77,14 +59,16 @@ public class GazeHand : ManipulationTechnique
 
         if (handOffsetDistanceOnDepthAxis >= 0.05f) _depth += (handOffsetDistanceOnDepthAxis - 0.05f) * 100f * 0.144f * 100f * (Vector3.Dot(handOffsetFromGrabInit, GazeDirection) > 0 ? 1 : -1) * Time.deltaTime / 100f;
 
-        _depth = Mathf.Clamp(_depth, MinDepth, MaxDepth);
+        _depth = Mathf.Clamp(_depth, 0.05f, 15f);
 
         Vector3 manubriumPoint = HeadPosition + Vector3.down * TorsoOffset;
         Vector3 manubriumToHandOffset = WristPosition - manubriumPoint;
 
         _pivotPoint = GazeData.GetRawGazeOrigin() + ExtraFilteredGazeDirection * _depth;
 
-        VirtualHandPosition = _pivotPoint + manubriumToHandOffset;
+        GrabbedObject.transform.position = _pivotPoint + manubriumToHandOffset;
+
+        VirtualHandPosition = GrabbedObject.transform.position + VirtualHandOffsetFromObject;
     }
 
     public override void ApplyIndirectGrabbedBehaviour()
