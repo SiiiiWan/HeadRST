@@ -17,7 +17,9 @@ public class DockingTarget : MonoBehaviour
         {
             PositionDifference = Vector3.Distance(transform.position, grabbedObject.transform.position);
             OrientationDifference = Quaternion.Angle(transform.rotation, grabbedObject.transform.rotation);
-            _poseAligned = PositionDifference < 0.1f && OrientationDifference < 10f;
+            // _poseAligned = PositionDifference < 0.1f && OrientationDifference < 10f;
+            _poseAligned = PositionDifference < 0.3f * transform.localScale.x && OrientationDifference < 10f;
+
             // _poseAligned = DistanceToGrabbedObj < 0.05f && IsAxisAligned(grabbedObject.transform, 5f);
             // _poseAligned = DistanceToGrabbedObj < 0.015f && IsAxisAligned(grabbedObject.transform, 3.5f);
 

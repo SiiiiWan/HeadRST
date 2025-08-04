@@ -42,6 +42,7 @@ public class StudyControl : Singleton<StudyControl>
 
     [HideInInspector] public GameObject ObjectToBeManipulated;
     [HideInInspector] public GameObject TargetIndicator;
+    [HideInInspector] public Linescript TargetLine;
 
     public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
     public List<(float depth, DockingDirections direction)> DepthDirectionCombinations = new List<(float, DockingDirections)>();
@@ -55,19 +56,35 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public float MaxAmplitude_between = 20f;
     [HideInInspector] public float TargetSize = 4f; // in degrees
 
+    protected override void Awake()
+    {
+        base.Awake();
+        TargetLine = new Linescript();
+    }
+
     void Start()
     {
         UpdateHandVisuals();
         SwitchTask_AmpAndDepth();
         SwitchToGazeNPinch();
+
     }
 
     void Update()
     {
+        UpdateHandVisuals();
+
+
+        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
+            TargetLine.IsVisible = false;
             return; // No target indicator to check
         }
+
+        TargetLine.IsVisible = true;
+        TargetLine.SetPosition(TargetIndicator.transform.position, ObjectToBeManipulated.transform.position);
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
@@ -80,8 +97,6 @@ public class StudyControl : Singleton<StudyControl>
                 TargetIndicator = null;
             }
         }
-
-        UpdateHandVisuals();
 
     }
 
@@ -115,11 +130,12 @@ public class StudyControl : Singleton<StudyControl>
     public void StartTrial(Vector3 startPos, Vector3 endPos, out GameObject startObj, out GameObject target)
     {
         HeadPosition_OnTrialStart = Camera.main.transform.position;
-        Vector3 scale = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
-        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, scale);
+        Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, startPos)) * Vector3.one;
+        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, scale_start);
 
+        Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
         Quaternion randomRotationOffset = Quaternion.AngleAxis(Random.Range(-30f, 30f), Random.onUnitSphere);
-        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, scale);
+        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, scale_end);
 
         // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
@@ -152,6 +168,7 @@ public class StudyControl : Singleton<StudyControl>
 
     private IEnumerator RunTrials_within()
     {
+
         DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
@@ -180,6 +197,39 @@ public class StudyControl : Singleton<StudyControl>
                 yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
             }
         }
+    }
+
+    private void ShowTrials_within()
+    {
+        DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+
+        foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
+        {
+            var depthPair = depthAmpCondition.Item1;
+            float amplitude = depthAmpCondition.Item2;
+
+            CubePositions = GetCubePositions_Visual(
+                viewPoint: Camera.main.transform.position,
+                forwardDir: Vector3.forward,
+                minDepth: depthPair.depth_min,
+                maxDepth: depthPair.depth_max,
+                angularDeviation_horizontal: amplitude,
+                angularDeviation_vertical: amplitude);
+
+            StartPositionLabelsList = GetShuffledStartPositionLabels();
+
+            foreach (CubePositionLabels startPosition in StartPositionLabelsList)
+            {
+                TrialStartPosition = CubePositions[startPosition];
+                TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
+
+                Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
+                Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
+                SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, scale_start);
+                SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
+                // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");
+            }
+        }        
     }
 
     private IEnumerator RunTrials_between()
@@ -227,6 +277,9 @@ public class StudyControl : Singleton<StudyControl>
     Dictionary<CubePositionLabels, Vector3> GetCubePositions_Visual(
         Vector3 viewPoint, Vector3 forwardDir, float minDepth, float maxDepth, float angularDeviation_horizontal, float angularDeviation_vertical)
     {
+        angularDeviation_vertical = angularDeviation_vertical / Mathf.Sqrt(2f); 
+        angularDeviation_horizontal = angularDeviation_horizontal / Mathf.Sqrt(2f);
+
         Dictionary<CubePositionLabels, Vector3> positions = new Dictionary<CubePositionLabels, Vector3>
         {
             {CubePositionLabels.FrontUpperLeft,

@@ -68,7 +68,7 @@ public class Linescript
     }
 
 
-    public void SetPostion(Vector3 start, Vector3 end)
+    public void SetPosition(Vector3 start, Vector3 end)
     {
         LineRenderer lineRenderer = LineGameObject.GetComponent<LineRenderer>();
 
