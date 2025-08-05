@@ -116,6 +116,8 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
 
             // raw gaze data
 
+            // position, oritenation aligned, double aligned
+
             ("Time", () => Time.realtimeSinceStartup.ToString()),
 
         };

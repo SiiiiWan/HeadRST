@@ -752,6 +752,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PositionDifference: 0
   OrientationDifference: 0
+  Wedges:
+  - {fileID: 6199117769863934795}
+  - {fileID: 1083292724795973282}
+  - {fileID: 8923492801269277317}
 --- !u!114 &4148982463451767899
 MonoBehaviour:
   m_ObjectHideFlags: 0

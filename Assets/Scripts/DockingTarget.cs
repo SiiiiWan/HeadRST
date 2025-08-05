@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DockingTarget : MonoBehaviour
@@ -7,22 +8,26 @@ public class DockingTarget : MonoBehaviour
 
     public float PositionDifference;
     public float OrientationDifference;
+    public List<Transform> Wedges = new List<Transform>();
+
     void Update()
     {
         StudyControl studyControl = StudyControl.GetInstance();
 
-        ManipulatableObject grabbedObject = studyControl.ManipulationBehavior.GrabbedObject;
+        GameObject taskObject = studyControl.ObjectToBeManipulated;
 
-        if (grabbedObject != null)
+        if (taskObject != null)
         {
-            PositionDifference = Vector3.Distance(transform.position, grabbedObject.transform.position);
-            OrientationDifference = Quaternion.Angle(transform.rotation, grabbedObject.transform.rotation);
+            OrientationDifference = Quaternion.Angle(transform.rotation, taskObject.transform.rotation);
             // _poseAligned = PositionDifference < 0.1f && OrientationDifference < 10f;
-            _poseAligned = PositionDifference < 0.3f * transform.localScale.x && IsAxisAligned(grabbedObject.transform, 10f);
+            _poseAligned = IsOrientationAligned() && IsPositionAligned();
 
             // _poseAligned = DistanceToGrabbedObj < 0.05f && IsAxisAligned(grabbedObject.transform, 5f);
             // _poseAligned = DistanceToGrabbedObj < 0.015f && IsAxisAligned(grabbedObject.transform, 3.5f);
 
+            studyControl.TargetLine.IsVisible = !IsPositionAligned();
+            SetActiveWedges(!IsOrientationAligned());
+            taskObject.GetComponent<ManipulatableObject>().SetActiveWedges(!IsOrientationAligned());
         }
 
         // transform.GetComponent<Outline>().OutlineColor = _poseAligned? Color.green : Color.red;
@@ -34,6 +39,19 @@ public class DockingTarget : MonoBehaviour
     public bool IsPoseAligned()
     {
         return _poseAligned;
+    }
+
+    public bool IsPositionAligned()
+    {
+        GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
+        PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
+        return PositionDifference < 0.3f * transform.localScale.x;
+    }
+
+    public bool IsOrientationAligned()
+    {
+        GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
+        return IsAxisAligned(taskObject.transform, 10f);
     }
 
     public bool IsAxisAligned(Transform grabbedTransform, float angleThreshold)
@@ -52,5 +70,16 @@ public class DockingTarget : MonoBehaviour
         }
 
         return true;
+    }
+    
+    public void SetActiveWedges(bool isActive)
+    {
+        foreach (Transform wedge in Wedges)
+        {
+            if (wedge != null)
+            {
+                wedge.gameObject.SetActive(isActive);
+            }
+        }
     }
 }

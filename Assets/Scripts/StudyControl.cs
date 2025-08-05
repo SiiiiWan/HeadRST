@@ -62,6 +62,7 @@ public class StudyControl : Singleton<StudyControl>
     {
         base.Awake();
         TargetLine = new Linescript();
+        TargetLine.IsVisible = false;
     }
 
     void Start()
@@ -84,7 +85,7 @@ public class StudyControl : Singleton<StudyControl>
             return; // No target indicator to check
         }
 
-        TargetLine.IsVisible = true;
+        
         TargetLine.SetPosition(TargetIndicator.transform.position, ObjectToBeManipulated.transform.position);
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)

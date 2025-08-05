@@ -859,6 +859,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 4681531026137562050}
   HandGrabInteractable: {fileID: 7236193745487029502}
+  Wedges:
+  - {fileID: 6199117769863934795}
+  - {fileID: 1083292724795973282}
+  - {fileID: 8923492801269277317}
 --- !u!114 &5127447467895476149
 MonoBehaviour:
   m_ObjectHideFlags: 0

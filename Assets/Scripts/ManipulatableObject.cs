@@ -1,8 +1,7 @@
 using UnityEngine;
 using Oculus.Interaction;
-using Unity.VisualScripting;
-using NUnit.Framework;
 using Oculus.Interaction.HandGrab;
+using System.Collections.Generic;
 
 public enum GrabbedState
 {
@@ -21,6 +20,8 @@ public class ManipulatableObject : MonoBehaviour
     public ManipulationTechnique ManipulationBehavior { get; private set; }
     public bool IsPinchTipWithinCube { get; private set; }
     // public bool IsHand = false;
+
+    public List<Transform> Wedges = new List<Transform>();
 
     void Update()
     {
@@ -75,7 +76,7 @@ public class ManipulatableObject : MonoBehaviour
             (point.z >= center.z - halfSize.z + tolerance.z && point.z <= center.z + halfSize.z - tolerance.z);
     }
 
-    
+
 
     public void SetOutlineVisibility(bool isVisible)
     {
@@ -97,4 +98,14 @@ public class ManipulatableObject : MonoBehaviour
         }
     }
 
+    public void SetActiveWedges(bool isActive)
+    {
+        foreach (Transform wedge in Wedges)
+        {
+            if (wedge != null)
+            {
+                wedge.gameObject.SetActive(isActive);
+            }
+        }
+    }
 }
