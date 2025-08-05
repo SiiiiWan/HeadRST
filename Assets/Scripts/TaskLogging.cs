@@ -16,107 +16,121 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
     
     void SetupDataLogging()
     {
-        StudyControl studyControl = StudyControl.GetInstance();
-        ManipulationTechnique technique = studyControl.ManipulationBehavior;
-        GameObject objectToBeManipulated = studyControl.ObjectToBeManipulated;
-        GameObject targetIndicator = studyControl.TargetIndicator;
-
-        HandData handData = HandData.GetInstance();
-
         (string, System.Func<string>)[] _dataLoggerInput = {
-            ("Participant", () => studyControl.ParticipantID.ToString()),
-            ("Technique", () => technique.ToString()),
-            ("TotalTrialCount", () => studyControl.TotalTrialCount.ToString()),
 
+            // study settings
+            ("Participant", () => StudyControl.GetInstance().ParticipantID.ToString()),
+            ("DominantHand", () => StudyControl.GetInstance().DominantHand.ToString()),
+            ("Technique", () => StudyControl.GetInstance().ManipulationBehavior.GetType().Name.ToString()),
+            ("TaskMode", () => StudyControl.GetInstance().TaskMode.ToString()),
+            ("IsPractice", () => StudyControl.GetInstance().IsPractice.ToString()),
 
-            ("ObjectPosition", () => objectToBeManipulated == null ? Vector3.zero.ToString() : objectToBeManipulated.transform.position.ToString()),
-            ("ObjectRotation", () => objectToBeManipulated == null ? Quaternion.identity.ToString() : objectToBeManipulated.transform.rotation.ToString()),
-            ("TargetPosition", () => targetIndicator == null ? Vector3.zero.ToString() : targetIndicator.transform.position.ToString()),
-            ("TargetRotation", () => targetIndicator == null ? Quaternion.identity.ToString() : targetIndicator.transform.rotation.ToString()),
-            ("PositionDifference", () => targetIndicator == null ? (-1f).ToString() : targetIndicator.GetComponent<DockingTarget>().PositionDifference.ToString()),
-            ("OrientationDifference", () => targetIndicator == null ? (-1f).ToString() : targetIndicator.GetComponent<DockingTarget>().OrientationDifference.ToString()),
-            ("IsAligned", () => targetIndicator == null ? "false" : targetIndicator.GetComponent<DockingTarget>().IsPoseAligned().ToString()),
-            ("TrialStartPosition", () => studyControl.TrialStartPosition.ToString()),
-            ("TrialEndPosition", () => studyControl.TrialEndPosition.ToString()),
-            ("HeadPosition_OnTrialStart", () => studyControl.HeadPosition_OnTrialStart.ToString()),
-
-            // technique used hand data
-            ("VirtualHandPosition", () => technique.VirtualHandPosition.ToString()),
-            ("PinchPosition", () => technique.PinchPosition.ToString()),
-            ("PinchPosition_delta", () => technique.PinchPosition_delta.ToString()),
-            ("WristPosition", () => technique.WristPosition.ToString()),
-            ("WristPosition_delta", () => technique.WristPosition_delta.ToString()),
-            ("PinchRotation_delta", () => technique.PinchRotation_delta.ToString()),
-            ("HandTranslationSpeed", () => technique.HandTranslationSpeed.ToString()),
-            ("HandRotationSpeed", () => technique.HandRotationSpeed.ToString()),
-            ("IsHandStablized", () => technique.IsHandStablized.ToString()),
-            ("VirtualHandPosition_OnGrab", () => technique.VirtualHandPosition_OnGrab.ToString()),
-            ("ObjectPosition_OnGrab", () => technique.ObjectPosition_OnGrab.ToString()),
-
-            // technique used gaze data
-            ("GazeOrigin", () => technique.GazeOrigin.ToString()),
-            ("GazeDirection", () => technique.GazeDirection.ToString()),
-            ("IsGazeFixating", () => technique.IsGazeFixating.ToString()),
-            ("IsGazeFixating_pre", () => technique.IsGazeFixating_pre.ToString()),
-            ("GazeFixationCentroid", () => technique.GazeFixationCentroid.ToString()),
-            ("IsGazeSaccading", () => technique.IsGazeSaccading.ToString()),
-            ("GazeDirection_OnGazeFixation", () => technique.GazeDirection_OnGazeFixation.ToString()),
-            ("HeadDirection_OnGazeFixation", () => technique.HeadDirection_OnGazeFixation.ToString()),
-            ("EyeInHeadYAngle", () => technique.EyeInHeadYAngle.ToString()),
-            ("Filtered_EyeInHeadAngle", () => technique.Filtered_EyeInHeadAngle.ToString()),
-            ("Filtered_EyeInHeadAngle_Pre", () => technique.Filtered_EyeInHeadAngle_Pre.ToString()),
-            ("EyeInHeadXAngle", () => technique.EyeInHeadXAngle.ToString()),
-            ("EyeInHeadYAngle_OnGazeFixation", () => technique.EyeInHeadYAngle_OnGazeFixation.ToString()),
-            ("Filtered_HandMovementVector", () => technique.Filtered_HandMovementVector.ToString()),
-
-            // technique used head data
-            ("HeadForward", () => technique.HeadForward.ToString()),
-            ("HeadRight", () => technique.HeadRight.ToString()),
-            ("HeadPosition", () => technique.HeadPosition.ToString()),
-            ("IsHeadFixating", () => technique.IsHeadFixating.ToString()),
-            ("IsHeadFixating_pre", () => technique.IsHeadFixating_pre.ToString()),
-            ("HeadFixationCentroid", () => technique.HeadFixationCentroid.ToString()),
-            ("HeadSpeed", () => technique.HeadSpeed.ToString()),
-            ("HeadYAngle", () => technique.HeadYAngle.ToString()),
-            ("DeltaHeadY", () => technique.DeltaHeadY.ToString()),
-            ("Limit_HeadY_Up", () => technique.Limit_HeadY_Up.ToString()),
-            ("Limit_HeadY_Down", () => technique.Limit_HeadY_Down.ToString()),
-            ("HeadYAngle_OnGazeFixation", () => technique.HeadYAngle_OnGazeFixation.ToString()),
+            // study status
+            ("TotalTrialCount", () => StudyControl.GetInstance().TotalTrialCount.ToString()),
+            ("StudyFlag", () => StudyControl.GetInstance().StudyFlag.ToString()),
             
 
+            ("ObjectPosition", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Vector3.zero.ToString() : StudyControl.GetInstance().ObjectToBeManipulated.transform.position.ToString()),
+            ("ObjectRotation", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Quaternion.identity.ToString() : StudyControl.GetInstance().ObjectToBeManipulated.transform.rotation.ToString()),
+            ("TargetPosition", () => StudyControl.GetInstance().TargetIndicator == null ? Vector3.zero.ToString() : StudyControl.GetInstance().TargetIndicator.transform.position.ToString()),
+            ("TargetRotation", () => StudyControl.GetInstance().TargetIndicator == null ? Quaternion.identity.ToString() : StudyControl.GetInstance().TargetIndicator.transform.rotation.ToString()),
+            ("PositionDifference", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().PositionDifference.ToString()),
+            ("OrientationDifference", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().OrientationDifference.ToString()),
+            ("IsPoseAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned().ToString()),
+            ("IsPositionAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPositionAligned().ToString()),
+            ("IsOrientationAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsOrientationAligned().ToString()),
+            ("TrialStartPosition", () => StudyControl.GetInstance().TrialStartPosition.ToString()),
+            ("TrialEndPosition", () => StudyControl.GetInstance().TrialEndPosition.ToString()),
+            ("HeadPosition_OnTrialStart", () => StudyControl.GetInstance().HeadPosition_OnTrialStart.ToString()),
+
+            //TODO: Pick up and drop state, first pick up time, and drop time
+
+            //TODO: is coarse aligned or not - double the threshold
+
+            // technique used hand data
+            ("TechInput_VirtualHandPosition", () => StudyControl.GetInstance().ManipulationBehavior.VirtualHandPosition.ToString()),
+            ("TechInput_PinchPosition", () => StudyControl.GetInstance().ManipulationBehavior.PinchPosition.ToString()),
+            ("TechInput_PinchPosition_delta", () => StudyControl.GetInstance().ManipulationBehavior.PinchPosition_delta.ToString()),
+            ("TechInput_WristPosition", () => StudyControl.GetInstance().ManipulationBehavior.WristPosition.ToString()),
+            ("TechInput_WristPosition_delta", () => StudyControl.GetInstance().ManipulationBehavior.WristPosition_delta.ToString()),
+            ("TechInput_PinchRotation_delta", () => StudyControl.GetInstance().ManipulationBehavior.PinchRotation_delta.ToString()),
+            ("TechInput_HandTranslationSpeed", () => StudyControl.GetInstance().ManipulationBehavior.HandTranslationSpeed.ToString()),
+            ("TechInput_HandRotationSpeed", () => StudyControl.GetInstance().ManipulationBehavior.HandRotationSpeed.ToString()),
+            ("TechInput_IsHandStablized", () => StudyControl.GetInstance().ManipulationBehavior.IsHandStablized.ToString()),
+            ("TechInput_VirtualHandPosition_OnGrab", () => StudyControl.GetInstance().ManipulationBehavior.VirtualHandPosition_OnGrab.ToString()),
+            ("TechInput_ObjectPosition_OnGrab", () => StudyControl.GetInstance().ManipulationBehavior.ObjectPosition_OnGrab.ToString()),
+
+            // technique used gaze data
+            ("TechInput_GazeOrigin", () => StudyControl.GetInstance().ManipulationBehavior.GazeOrigin.ToString()),
+            ("TechInput_GazeDirection", () => StudyControl.GetInstance().ManipulationBehavior.GazeDirection.ToString()),
+            ("TechInput_IsGazeFixating", () => StudyControl.GetInstance().ManipulationBehavior.IsGazeFixating.ToString()),
+            ("TechInput_IsGazeFixating_pre", () => StudyControl.GetInstance().ManipulationBehavior.IsGazeFixating_pre.ToString()),
+            ("TechInput_GazeFixationCentroid", () => StudyControl.GetInstance().ManipulationBehavior.GazeFixationCentroid.ToString()),
+            ("TechInput_IsGazeSaccading", () => StudyControl.GetInstance().ManipulationBehavior.IsGazeSaccading.ToString()),
+            ("TechInput_GazeDirection_OnGazeFixation", () => StudyControl.GetInstance().ManipulationBehavior.GazeDirection_OnGazeFixation.ToString()),
+            ("TechInput_HeadDirection_OnGazeFixation", () => StudyControl.GetInstance().ManipulationBehavior.HeadDirection_OnGazeFixation.ToString()),
+            ("TechInput_EyeInHeadYAngle", () => StudyControl.GetInstance().ManipulationBehavior.EyeInHeadYAngle.ToString()),
+            ("TechInput_Filtered_EyeInHeadAngle", () => StudyControl.GetInstance().ManipulationBehavior.Filtered_EyeInHeadAngle.ToString()),
+            ("TechInput_Filtered_EyeInHeadAngle_Pre", () => StudyControl.GetInstance().ManipulationBehavior.Filtered_EyeInHeadAngle_Pre.ToString()),
+            ("TechInput_EyeInHeadXAngle", () => StudyControl.GetInstance().ManipulationBehavior.EyeInHeadXAngle.ToString()),
+            ("TechInput_EyeInHeadYAngle_OnGazeFixation", () => StudyControl.GetInstance().ManipulationBehavior.EyeInHeadYAngle_OnGazeFixation.ToString()),
+            ("TechInput_Filtered_HandMovementVector", () => StudyControl.GetInstance().ManipulationBehavior.Filtered_HandMovementVector.ToString()),
+
+            // technique used head data
+            ("TechInput_HeadForward", () => StudyControl.GetInstance().ManipulationBehavior.HeadForward.ToString()),
+            ("TechInput_HeadRight", () => StudyControl.GetInstance().ManipulationBehavior.HeadRight.ToString()),
+            ("TechInput_HeadPosition", () => StudyControl.GetInstance().ManipulationBehavior.HeadPosition.ToString()),
+            ("TechInput_IsHeadFixating", () => StudyControl.GetInstance().ManipulationBehavior.IsHeadFixating.ToString()),
+            ("TechInput_IsHeadFixating_pre", () => StudyControl.GetInstance().ManipulationBehavior.IsHeadFixating_pre.ToString()),
+            ("TechInput_HeadFixationCentroid", () => StudyControl.GetInstance().ManipulationBehavior.HeadFixationCentroid.ToString()),
+            ("TechInput_HeadSpeed", () => StudyControl.GetInstance().ManipulationBehavior.HeadSpeed.ToString()),
+            ("TechInput_HeadYAngle", () => StudyControl.GetInstance().ManipulationBehavior.HeadYAngle.ToString()),
+            ("TechInput_DeltaHeadY", () => StudyControl.GetInstance().ManipulationBehavior.DeltaHeadY.ToString()),
+            ("TechInput_Limit_HeadY_Up", () => StudyControl.GetInstance().ManipulationBehavior.Limit_HeadY_Up.ToString()),
+            ("TechInput_Limit_HeadY_Down", () => StudyControl.GetInstance().ManipulationBehavior.Limit_HeadY_Down.ToString()),
+            ("TechInput_HeadYAngle_OnGazeFixation", () => StudyControl.GetInstance().ManipulationBehavior.HeadYAngle_OnGazeFixation.ToString()),
+
             // raw hand data
-            ("RightHandPosition", () => handData.RightHandPosition.ToString()),
-            ("LeftHandPosition", () => handData.LeftHandPosition.ToString()),
-            ("RightPinchTipPosition", () => handData.RightPinchTipPosition.ToString()),
-            ("LeftPinchTipPosition", () => handData.LeftPinchTipPosition.ToString()),
-            ("RightHandRotation", () => handData.RightHandRotation.ToString()),
-            ("LeftHandRotation", () => handData.LeftHandRotation.ToString()),
-            ("RightPinchTipRotation", () => handData.RightPinchTipRotation.ToString()),
-            ("LeftPinchTipRotation", () => handData.LeftPinchTipRotation.ToString()),
-            ("RightHandPosition_delta", () => handData.RightHandPosition_delta.ToString()),
-            ("LeftHandPosition_delta", () => handData.LeftHandPosition_delta.ToString()),
-            ("RightPinchTipPosition_delta", () => handData.RightPinchTipPosition_delta.ToString()),
-            ("LeftPinchTipPosition_delta", () => handData.LeftPinchTipPosition_delta.ToString()),
-            ("RightHandRotation_delta", () => handData.RightHandRotation_delta.ToString()),
-            ("LeftHandRotation_delta", () => handData.LeftHandRotation_delta.ToString()),
-            ("RightPinchTipRotation_delta", () => handData.RightPinchTipRotation_delta.ToString()),
-            ("LeftPinchTipRotation_delta", () => handData.LeftPinchTipRotation_delta.ToString()),
-            ("RightHandDirection", () => handData.RightHandDirection.ToString()),
-            ("LeftHandDirection", () => handData.LeftHandDirection.ToString()),
-            ("RightHandDirection_delta", () => handData.RightHandDirection_delta.ToString()),
-            ("LeftHandDirection_delta", () => handData.LeftHandDirection_delta.ToString()),
-            ("RightHandSpeed_wrist", () => handData.RightHandSpeed_wrist.ToString()),
-            ("LeftHandSpeed_wrist", () => handData.LeftHandSpeed_wrist.ToString()),
-            ("RightHandSpeed_pinch", () => handData.RightHandSpeed_pinch.ToString()),
-            ("LeftHandSpeed_pinch", () => handData.LeftHandSpeed_pinch.ToString()),
-            ("HandDistance", () => handData.HandDistance.ToString()),
-            ("HandDistance_delta", () => handData.HandDistance_delta.ToString()),
-            ("HandMidPosition", () => handData.HandMidPosition.ToString()),
-            ("HandMidPosition_delta", () => handData.HandMidPosition_delta.ToString()),
+            ("RightHandPosition", () => HandData.GetInstance().RightHandPosition.ToString()),
+            ("LeftHandPosition", () => HandData.GetInstance().LeftHandPosition.ToString()),
+            ("RightPinchTipPosition", () => HandData.GetInstance().RightPinchTipPosition.ToString()),
+            ("LeftPinchTipPosition", () => HandData.GetInstance().LeftPinchTipPosition.ToString()),
+            ("RightHandRotation", () => HandData.GetInstance().RightHandRotation.ToString()),
+            ("LeftHandRotation", () => HandData.GetInstance().LeftHandRotation.ToString()),
+            ("RightPinchTipRotation", () => HandData.GetInstance().RightPinchTipRotation.ToString()),
+            ("LeftPinchTipRotation", () => HandData.GetInstance().LeftPinchTipRotation.ToString()),
+            ("RightHandPosition_delta", () => HandData.GetInstance().RightHandPosition_delta.ToString()),
+            ("LeftHandPosition_delta", () => HandData.GetInstance().LeftHandPosition_delta.ToString()),
+            ("RightPinchTipPosition_delta", () => HandData.GetInstance().RightPinchTipPosition_delta.ToString()),
+            ("LeftPinchTipPosition_delta", () => HandData.GetInstance().LeftPinchTipPosition_delta.ToString()),
+            ("RightHandRotation_delta", () => HandData.GetInstance().RightHandRotation_delta.ToString()),
+            ("LeftHandRotation_delta", () => HandData.GetInstance().LeftHandRotation_delta.ToString()),
+            ("RightPinchTipRotation_delta", () => HandData.GetInstance().RightPinchTipRotation_delta.ToString()),
+            ("LeftPinchTipRotation_delta", () => HandData.GetInstance().LeftPinchTipRotation_delta.ToString()),
+            ("RightHandDirection", () => HandData.GetInstance().RightHandDirection.ToString()),
+            ("LeftHandDirection", () => HandData.GetInstance().LeftHandDirection.ToString()),
+            ("RightHandDirection_delta", () => HandData.GetInstance().RightHandDirection_delta.ToString()),
+            ("LeftHandDirection_delta", () => HandData.GetInstance().LeftHandDirection_delta.ToString()),
+            ("RightHandSpeed_wrist", () => HandData.GetInstance().RightHandSpeed_wrist.ToString()),
+            ("LeftHandSpeed_wrist", () => HandData.GetInstance().LeftHandSpeed_wrist.ToString()),
+            ("RightHandSpeed_pinch", () => HandData.GetInstance().RightHandSpeed_pinch.ToString()),
+            ("LeftHandSpeed_pinch", () => HandData.GetInstance().LeftHandSpeed_pinch.ToString()),
+            ("HandDistance", () => HandData.GetInstance().HandDistance.ToString()),
+            ("HandDistance_delta", () => HandData.GetInstance().HandDistance_delta.ToString()),
+            ("HandMidPosition", () => HandData.GetInstance().HandMidPosition.ToString()),
+            ("HandMidPosition_delta", () => HandData.GetInstance().HandMidPosition_delta.ToString()),
 
             // raw gaze data
+            ("GazeOrigin", () => EyeGaze.GetInstance().GetGazeRay().origin.ToString()),
+            ("GazeDirection", () => EyeGaze.GetInstance().GetGazeRay().direction.ToString()),
+            ("RawGazeOrigin", () => EyeGaze.GetInstance().GetRawGazeOrigin().ToString()),
+            ("RawGazeDirection", () => EyeGaze.GetInstance().GetRawGazeDirection().ToString()),
+            ("FilteredEyeInHeadAngle", () => EyeGaze.GetInstance().FilteredEyeInHeadAngle.ToString()),
+            ("FilteredEyeInHeadAngle_Pre", () => EyeGaze.GetInstance().FilteredEyeInHeadAngle_Pre.ToString()),
+            ("EyeInHeadYAngle", () => EyeGaze.GetInstance().EyeInHeadYAngle.ToString()),
+            ("EyeInHeadXAngle", () => EyeGaze.GetInstance().EyeInHeadXAngle.ToString()),
+            
 
-            // position, oritenation aligned, double aligned
 
             ("Time", () => Time.realtimeSinceStartup.ToString()),
 

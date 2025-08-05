@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Metaface.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EyeGaze : Singleton<EyeGaze>
