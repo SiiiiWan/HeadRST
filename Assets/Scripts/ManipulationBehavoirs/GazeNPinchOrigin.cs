@@ -12,7 +12,9 @@ public class GazeNPinchOrigin : ManipulationTechnique
     public override void ApplyIndirectGrabbedBehaviour()
     {
 
-        GrabbedObject.transform.position += GetVisualGain(GrabbedObject.transform.position) * PinchPosition_delta;
+        GrabbedObject.transform.position += Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position)) * PinchPosition_delta;
+        // GrabbedObject.transform.position += Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin)) * PinchPosition_delta;
+
 
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
     }

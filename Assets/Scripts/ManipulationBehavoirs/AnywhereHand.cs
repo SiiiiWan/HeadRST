@@ -61,7 +61,7 @@ public class AnywhereHand : ManipulationTechnique
     //     HandOffsetAroundObject = VirtualHandPosition - obj.transform.position;
 
     //     if(grabbedState == GrabbedState.Grabbed_Direct) CloseDirectGrabbed = Vector3.Distance(GazeOrigin, GazingObject.transform.position) < 1f;
-        
+
     // }
 
     // public override void ApplyDirectGrabbedBehaviour()
@@ -91,7 +91,9 @@ public class AnywhereHand : ManipulationTechnique
     public override void ApplyIndirectGrabbedBehaviour()
     {
 
-        GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin));
+        // GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin));
+        GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
 
         if (CurrentState == StaticState.Gaze)
@@ -137,7 +139,7 @@ public class AnywhereHand : ManipulationTechnique
         float max_gain = 0.8f;
 
         // float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
-        float min_gain = 0.4f/3;
+        float min_gain = 0.4f / 3;
 
 
         BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
@@ -178,5 +180,11 @@ public class AnywhereHand : ManipulationTechnique
 
         return k * x + b;
     }
+
+    public float GetVisualGain(Vector3 objectPosition)
+    {
+        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
+    }
+
     #endregion
 }

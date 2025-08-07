@@ -9,8 +9,8 @@ public class AnywhereHand_Att : AnywhereHand
     public override Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
 
-        float max_gain = (MaxDepth - MinDepth) / MaxGainDeg;
-        float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
+        float max_gain = 0.8f;
+        float min_gain = 0.4f / 3;
 
         min_gain = min_gain / (1 + (Mathf.Pow(2, 4) - 1) * HandTranslationSpeed / MaxHandSpeed);
 
@@ -18,7 +18,10 @@ public class AnywhereHand_Att : AnywhereHand
         EdgeGain = EyeHeadGain();
         Vector3 headDepthOffset = objectDirection * DeltaHeadY * BaseGain;
 
+        // return headDepthOffset * (Math.Abs(HeadSpeed) < (MaxHeadSpeed - MinHeadSpeed) / 2f ? HeadAttenuation(headDepthOffset) : 1);
         return headDepthOffset * HeadAttenuation(headDepthOffset);
+        // return headDepthOffset;
+
 
     }
 
@@ -56,7 +59,9 @@ public class AnywhereHand_Att : AnywhereHand
             float exponent = 2 * distance * distance;
 
 
-            attenuation = -Mathf.Pow(sqrtPart, exponent) + 1f;
+            // attenuation = -Mathf.Pow(sqrtPart, exponent) + 1f;
+            attenuation = -sqrtPart + 1f;
+
 
             // attenuation = 1 / (1 + Mathf.Pow((float)Math.E, 10 * (distance + 10) * (projectedSpeed - maxSpd/2)));
 
