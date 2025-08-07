@@ -9093,6 +9093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!65 &346163902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12717,7 +12718,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Switch Task \n(Distance Manipulation)\n"
+  m_text: 'Start
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13843,6 +13846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24440,7 +24444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &886115786
 Transform:
   m_ObjectHideFlags: 0
@@ -27502,9 +27506,13 @@ MonoBehaviour:
   DominantHand: 1
   TaskMode: 0
   IsPractice: 0
-  ManipulationBehavior: {fileID: 1006584927}
-  TotalTrialCount: 0
+  ManipulationBehavior: {fileID: 1006584925}
   StudyFlag: 0
+  TotalTrialCount: 0
+  StartPositionLabel: 0
+  TaskMinDepth: 0
+  TaskMaxDepth: 0
+  TaskAmplitude: 0
   TechniqueText: {fileID: 373964267}
   TaskText: {fileID: 1664126783}
   TargetPrefab: {fileID: 2676514430063476796, guid: acf565eedf6b18e47a5e2dcfde534009, type: 3}
@@ -27573,7 +27581,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63ef77b2b3219c94cbdcd6a70bbc0532, type: 3}
   m_Name: 
@@ -27591,7 +27599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 013cec37d8a328f4ea81bbf80aa76838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LogData: 0
+  LogData: 1
 --- !u!114 &1006584927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27599,7 +27607,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b99c8cdde9d08db40ad6f0ff5a8e461e, type: 3}
   m_Name: 
@@ -39040,7 +39048,7 @@ Transform:
   m_GameObject: {fileID: 1476795275}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0011080351, y: -0.000022310389, z: 0.020131003, w: 0.9997967}
-  m_LocalPosition: {x: 0.501, y: 0.087, z: -0.848}
+  m_LocalPosition: {x: 0.662, y: 0.093, z: -0.848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -39219,7 +39227,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1006584915}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
-        m_MethodName: SwitchTask_AmpAndDepth
+        m_MethodName: StartTask
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -39929,6 +39937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0

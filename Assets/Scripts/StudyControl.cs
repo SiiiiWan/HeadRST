@@ -31,8 +31,10 @@ public class StudyControl : Singleton<StudyControl>
     public ManipulationTechnique ManipulationBehavior;
 
     [Header("Study States")]
-    public int TotalTrialCount;
     public bool StudyFlag = false; // Indicates if the study is currently running
+    public int TotalTrialCount;
+    public CubePositionLabels StartPositionLabel;
+    public float TaskMinDepth, TaskMaxDepth, TaskAmplitude;
 
     [Header("Bindings")]
     public TextMeshPro TechniqueText;
@@ -68,8 +70,7 @@ public class StudyControl : Singleton<StudyControl>
     void Start()
     {
         UpdateHandVisuals();
-        // SwitchTask_AmpAndDepth();
-        SwitchToGazeNPinch();
+        // SwitchToGazeNPinch();
     }
 
     void Update()
@@ -77,7 +78,7 @@ public class StudyControl : Singleton<StudyControl>
         UpdateHandVisuals();
         TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
-        if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
@@ -180,13 +181,17 @@ public class StudyControl : Singleton<StudyControl>
             var depthPair = depthAmpCondition.Item1;
             float amplitude = depthAmpCondition.Item2;
 
+            TaskMinDepth = depthPair.depth_min;
+            TaskMaxDepth = depthPair.depth_max;
+            TaskAmplitude = amplitude; 
+
             CubePositions = GetCubePositions_Visual(
                 viewPoint: Camera.main.transform.position,
                 forwardDir: Vector3.forward,
-                minDepth: depthPair.depth_min,
-                maxDepth: depthPair.depth_max,
-                angularDeviation_horizontal: amplitude,
-                angularDeviation_vertical: amplitude);
+                minDepth: TaskMinDepth,
+                maxDepth: TaskMaxDepth,
+                angularDeviation_horizontal: TaskAmplitude,
+                angularDeviation_vertical: TaskAmplitude);
 
             StartPositionLabelsList = GetShuffledStartPositionLabels();
 
@@ -330,7 +335,7 @@ public class StudyControl : Singleton<StudyControl>
         return positions;
     }
 
-    CubePositionLabels GetDiagonalPositionLabel(CubePositionLabels label)
+    public CubePositionLabels GetDiagonalPositionLabel(CubePositionLabels label)
     {
         switch (label)
         {

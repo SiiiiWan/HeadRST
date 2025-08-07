@@ -12,6 +12,9 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
     {
         base.Awake();
         SetupDataLogging();
+
+        pid = StudyControl.GetInstance().ParticipantID.ToString();
+        technique = StudyControl.GetInstance().ManipulationBehavior.GetType().Name.ToString();
     }
     
     void SetupDataLogging()
@@ -28,24 +31,31 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             // study status
             ("TotalTrialCount", () => StudyControl.GetInstance().TotalTrialCount.ToString()),
             ("StudyFlag", () => StudyControl.GetInstance().StudyFlag.ToString()),
-            
+            ("TaskMinDepth", () => StudyControl.GetInstance().TaskMinDepth.ToString()),
+            ("TaskMaxDepth", () => StudyControl.GetInstance().TaskMaxDepth.ToString()),
+            ("TaskAmplitude", () => StudyControl.GetInstance().TaskAmplitude.ToString()),
+            ("StartPositionLabel", () => StudyControl.GetInstance().StartPositionLabel.ToString()),
+            ("EndPositionLabel", () => StudyControl.GetInstance().GetDiagonalPositionLabel(StudyControl.GetInstance().StartPositionLabel).ToString()),
 
             ("ObjectPosition", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Vector3.zero.ToString() : StudyControl.GetInstance().ObjectToBeManipulated.transform.position.ToString()),
             ("ObjectRotation", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Quaternion.identity.ToString() : StudyControl.GetInstance().ObjectToBeManipulated.transform.rotation.ToString()),
             ("TargetPosition", () => StudyControl.GetInstance().TargetIndicator == null ? Vector3.zero.ToString() : StudyControl.GetInstance().TargetIndicator.transform.position.ToString()),
             ("TargetRotation", () => StudyControl.GetInstance().TargetIndicator == null ? Quaternion.identity.ToString() : StudyControl.GetInstance().TargetIndicator.transform.rotation.ToString()),
-            ("PositionDifference", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().PositionDifference.ToString()),
-            ("OrientationDifference", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().OrientationDifference.ToString()),
-            ("IsPoseAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned().ToString()),
-            ("IsPositionAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPositionAligned().ToString()),
-            ("IsOrientationAligned", () => StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsOrientationAligned().ToString()),
+            ("PositionDifference", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().PositionDifference.ToString()),
+            ("OrientationDifference", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().OrientationDifference.ToString()),
+            ("IsPoseAligned", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned().ToString()),
+            ("IsPositionAligned", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPositionAligned().ToString()),
+            ("IsPositionAligned_Double", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsPositionAligned_Double().ToString()),
+            ("IsOrientationAligned", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsOrientationAligned().ToString()),
+            ("IsOrientationAligned_Double", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>().IsOrientationAligned_Double().ToString()),
             ("TrialStartPosition", () => StudyControl.GetInstance().TrialStartPosition.ToString()),
             ("TrialEndPosition", () => StudyControl.GetInstance().TrialEndPosition.ToString()),
             ("HeadPosition_OnTrialStart", () => StudyControl.GetInstance().HeadPosition_OnTrialStart.ToString()),
 
-            //TODO: Pick up and drop state, first pick up time, and drop time
+            ("IsObjectHitbyGaze", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().ObjectToBeManipulated.GetComponent<ManipulatableObject>().IsHitbyGaze.ToString()),
+            ("ObjectAngleToGaze", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().ObjectToBeManipulated.GetComponent<ManipulatableObject>().AngleToGaze.ToString()),
+            ("IsObjectPinched", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().ObjectToBeManipulated.GetComponent<ManipulatableObject>().GrabbedState.ToString()),
 
-            //TODO: is coarse aligned or not - double the threshold
 
             // technique used hand data
             ("TechInput_VirtualHandPosition", () => StudyControl.GetInstance().ManipulationBehavior.VirtualHandPosition.ToString()),
@@ -120,6 +130,14 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             ("HandMidPosition", () => HandData.GetInstance().HandMidPosition.ToString()),
             ("HandMidPosition_delta", () => HandData.GetInstance().HandMidPosition_delta.ToString()),
 
+            ("IsRightPinching", () => PinchDetector.GetInstance().IsRightPinching.ToString()),
+            ("IsLeftPinching", () => PinchDetector.GetInstance().IsLeftPinching.ToString()),
+            ("IsBothHandsPinching", () => PinchDetector.GetInstance().IsBothHandsPinching.ToString()),
+            ("IsOneHandPinching", () => PinchDetector.GetInstance().IsOneHandPinching.ToString()),
+            ("IsNoHandPinching", () => PinchDetector.GetInstance().IsNoHandPinching.ToString()),
+            ("IsNoHandPinching_LastFrame", () => PinchDetector.GetInstance().IsNoHandPinching_LastFrame.ToString()),
+            ("PinchState", () => PinchDetector.GetInstance().PinchState.ToString()),
+
             // raw gaze data
             ("GazeOrigin", () => EyeGaze.GetInstance().GetGazeRay().origin.ToString()),
             ("GazeDirection", () => EyeGaze.GetInstance().GetGazeRay().direction.ToString()),
@@ -148,6 +166,7 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
         {
             DataLogger.LogData();
         }
+        
     }    
 
     void OnDisable()
