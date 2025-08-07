@@ -45,7 +45,7 @@ public class DockingTarget : MonoBehaviour
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < 0.3f * transform.localScale.x;
+        return PositionDifference < 0.25f * transform.localScale.x;
     }
 
     public bool IsOrientationAligned()

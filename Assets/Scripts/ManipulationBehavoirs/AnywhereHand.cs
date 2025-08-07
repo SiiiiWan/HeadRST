@@ -17,68 +17,76 @@ public class AnywhereHand : ManipulationTechnique
 {
     public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
 
-    public Vector3 HandOffsetAroundObject { get; private set; }
-    public bool CloseDirectGrabbed { get; private set; }
 
-
-    public override void ApplyObjectFreeBehaviour()
+    public override void Update()
     {
+        base.Update();
         VirtualHandPosition = WristPosition;
     }
 
-    public override void TriggerOnLookAtNewObjectBehavior()
-    {
-        float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
 
-        if (distance > 1f)
-        {
-            VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);      
-        }
+    // public Vector3 HandOffsetAroundObject { get; private set; }
+    // public bool CloseDirectGrabbed { get; private set; }
 
-    }
 
-    public override void ApplyGazingButNotGrabbingBehaviour()
-    {
-        float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
+    // public override void ApplyObjectFreeBehaviour()
+    // {
+    //     VirtualHandPosition = WristPosition;
+    // }
 
-        if (distance > 1f) VirtualHandPosition += WristPosition_delta * Vector3.Distance(GazingObject.transform.position, GazeOrigin);
-        else VirtualHandPosition = WristPosition;
-    }
+    // public override void TriggerOnLookAtNewObjectBehavior()
+    // {
+    //     float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
 
-    public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
-    {
-        base.TriggerOnSingleHandGrabbed(obj, grabbedState);
+    //     if (distance > 1f)
+    //     {
+    //         VirtualHandPosition = GazingObject.transform.position + (WristPosition - PinchPosition);      
+    //     }
 
-        CurrentState = StaticState.Head;
-        HandOffsetAroundObject = VirtualHandPosition - obj.transform.position;
+    // }
 
-        if(grabbedState == GrabbedState.Grabbed_Direct) CloseDirectGrabbed = Vector3.Distance(GazeOrigin, GazingObject.transform.position) < 1f;
+    // public override void ApplyGazingButNotGrabbingBehaviour()
+    // {
+    //     float distance = Vector3.Distance(GazeOrigin, GazingObject.transform.position);
+
+    //     if (distance > 1f) VirtualHandPosition += WristPosition_delta * Vector3.Distance(GazingObject.transform.position, GazeOrigin);
+    //     else VirtualHandPosition = WristPosition;
+    // }
+
+    // public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    // {
+    //     base.TriggerOnSingleHandGrabbed(obj, grabbedState);
+
+    //     CurrentState = StaticState.Head;
+    //     HandOffsetAroundObject = VirtualHandPosition - obj.transform.position;
+
+    //     if(grabbedState == GrabbedState.Grabbed_Direct) CloseDirectGrabbed = Vector3.Distance(GazeOrigin, GazingObject.transform.position) < 1f;
         
-    }
+    // }
 
-    public override void ApplyDirectGrabbedBehaviour()
-    {
-        VirtualHandPosition += WristPosition_delta;
+    // public override void ApplyDirectGrabbedBehaviour()
+    // {
+    //     VirtualHandPosition += WristPosition_delta;
 
-        if (CloseDirectGrabbed) return;
+    //     if (CloseDirectGrabbed) return;
 
-        if (CurrentState == StaticState.Gaze)
-        {
-            float distance = Vector3.Distance(GazeOrigin, VirtualHandPosition);
-            VirtualHandPosition = GazeOrigin + GazeDirection * distance;
+    //     if (CurrentState == StaticState.Gaze)
+    //     {
+    //         float distance = Vector3.Distance(GazeOrigin, VirtualHandPosition);
+    //         VirtualHandPosition = GazeOrigin + GazeDirection * distance;
 
-            if (IsGazeFixating) CurrentState = StaticState.Head; // switch to Head state if gaze is fixating
-        }
-        else
-        {
-            Vector3 objectDirection = (VirtualHandPosition - GazeOrigin).normalized;
-            VirtualHandPosition += GetHeadDepthOffset(objectDirection);
-            VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinDepth, MaxDepth);
+    //         if (IsGazeFixating) CurrentState = StaticState.Head; // switch to Head state if gaze is fixating
+    //     }
+    //     else
+    //     {
+    //         Vector3 objectDirection = (VirtualHandPosition - GazeOrigin).normalized;
+    //         VirtualHandPosition += GetHeadDepthOffset(objectDirection);
+    //         VirtualHandPosition = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(VirtualHandPosition, GazeOrigin), MinDepth, MaxDepth);
 
-            if (IsGazeFixating == false && Vector3.Angle(GazeDirection, VirtualHandPosition - GazeOrigin) > 5f) CurrentState = StaticState.Gaze; // 5 degrees threshold catches gaze little saccade during hand correction with distance gain
-        }
+    //         if (IsGazeFixating == false && Vector3.Angle(GazeDirection, VirtualHandPosition - GazeOrigin) > 5f) CurrentState = StaticState.Gaze; // 5 degrees threshold catches gaze little saccade during hand correction with distance gain
+    //     }
 
-    }
+    // }
 
     public override void ApplyIndirectGrabbedBehaviour()
     {
@@ -105,12 +113,12 @@ public class AnywhereHand : ManipulationTechnique
         VirtualHandPosition = WristPosition;
     }
 
-    public override void TriggerOnHandReleased()
-    {
+    // public override void TriggerOnHandReleased()
+    // {
 
-        VirtualHandPosition = HandOffsetAroundObject + GrabbedObject.transform.position;
-        base.TriggerOnHandReleased();
-    }
+    //     VirtualHandPosition = HandOffsetAroundObject + GrabbedObject.transform.position;
+    //     base.TriggerOnHandReleased();
+    // }
 
 
     #region HeadDepth EdgeGain
@@ -125,8 +133,12 @@ public class AnywhereHand : ManipulationTechnique
 
     public virtual Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
-        float max_gain = (MaxDepth - MinDepth) / MaxGainDeg;
-        float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
+        // float max_gain = (MaxDepth - MinDepth) / MaxGainDeg;
+        float max_gain = 0.8f;
+
+        // float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
+        float min_gain = 0.4f/3;
+
 
         BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
         EdgeGain = EyeHeadGain();

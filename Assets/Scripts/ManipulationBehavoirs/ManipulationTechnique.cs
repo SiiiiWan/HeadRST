@@ -204,11 +204,11 @@ public class ManipulationTechnique : MonoBehaviour
             // take action based on gaze state
             if (GazingObject != null)
             {
-                if (GazingObject.Grabbable.SelectingPointsCount > 0)
-                {
-                    TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
-                }
-                else if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinching_LastFrame)
+                // if (GazingObject.Grabbable.SelectingPointsCount > 0)
+                // {
+                //     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
+                // }
+                if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinching_LastFrame)
                 {
                     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
