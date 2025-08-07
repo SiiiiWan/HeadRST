@@ -106,8 +106,15 @@ public class AnywhereHand : ManipulationTechnique
         else
         {
             Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
-            GrabbedObject.transform.position += GetHeadDepthOffset(objectDirection);
-            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), MinDepth, MaxDepth);
+            Vector3 newPositionByHeadDepth = GrabbedObject.transform.position + GetHeadDepthOffset(objectDirection);
+
+            float currentDistance = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+            bool isNotValidDepthOffset = (currentDistance > MaxDepth && DeltaHeadY > 0) || (currentDistance < MinDepth && DeltaHeadY < 0);
+
+            if (isNotValidDepthOffset == false)
+            {
+                GrabbedObject.transform.position = newPositionByHeadDepth;
+            }
 
             if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin) > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
