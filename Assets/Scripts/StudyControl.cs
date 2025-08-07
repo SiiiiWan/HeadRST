@@ -52,7 +52,7 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (1f, 9f) };
+    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (1f, 9f), (0.5f, 4.5f), (0.5f, 8.5f)};
     [HideInInspector] public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
     [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f };
     [HideInInspector] public float MaxAmplitude_between = 20f;
@@ -77,7 +77,7 @@ public class StudyControl : Singleton<StudyControl>
         UpdateHandVisuals();
         TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
-        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+        if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
@@ -160,8 +160,9 @@ public class StudyControl : Singleton<StudyControl>
 
         TotalTrialCount = 0;
 
-        if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
-        else StartCoroutine(RunTrials_within());
+        // if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
+        // else
+        StartCoroutine(RunTrials_within());
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
@@ -193,6 +194,12 @@ public class StudyControl : Singleton<StudyControl>
             {
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
+
+                if (depthPair.depth_min < 1f)
+                {
+                    TrialStartPosition += Vector3.down * 0.5f;
+                    TrialEndPosition += Vector3.down * 0.5f;
+                }
 
                 StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
 
@@ -228,44 +235,51 @@ public class StudyControl : Singleton<StudyControl>
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
 
+                if (depthPair.depth_min < 1f)
+                {
+                    TrialStartPosition += Vector3.down * 0.5f;
+                    TrialEndPosition += Vector3.down * 0.5f;
+                }
+
                 Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
                 Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
-                SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, scale_start);
-                SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
+                GameObject obj = SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, scale_start);
+                obj.GetComponent<ManipulatableObject>().enabled = false; 
+                // SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
                 // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");
             }
         }        
     }
 
-    private IEnumerator RunTrials_between()
-    {
-        DepthDirectionCombinations = GetShuffledDepth_Direction_Combinations(Depths_between);
+    // private IEnumerator RunTrials_between()
+    // {
+    //     DepthDirectionCombinations = GetShuffledDepth_Direction_Combinations(Depths_between);
 
-        foreach ((float depth, DockingDirections direction) depthDirCondition in DepthDirectionCombinations)
-        {
-            Vector3 closePosition = GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
-            Vector3 farPosition = Camera.main.transform.position +
-                    Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.right) *
-                    Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.up) *
-                    Vector3.forward.normalized * depthDirCondition.depth;
+    //     foreach ((float depth, DockingDirections direction) depthDirCondition in DepthDirectionCombinations)
+    //     {
+    //         Vector3 closePosition = GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
+    //         Vector3 farPosition = Camera.main.transform.position +
+    //                 Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.right) *
+    //                 Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.up) *
+    //                 Vector3.forward.normalized * depthDirCondition.depth;
 
-            if (depthDirCondition.direction == DockingDirections.forward)
-            {
-                TrialStartPosition = closePosition;
-                TrialEndPosition = farPosition;
-            }
-            else
-            {
-                TrialStartPosition = farPosition;
-                TrialEndPosition = closePosition;
-            }
+    //         if (depthDirCondition.direction == DockingDirections.forward)
+    //         {
+    //             TrialStartPosition = closePosition;
+    //             TrialEndPosition = farPosition;
+    //         }
+    //         else
+    //         {
+    //             TrialStartPosition = farPosition;
+    //             TrialEndPosition = closePosition;
+    //         }
 
-            StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
+    //         StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
 
-            // Wait until TargetIndicator is null before continuing to the next trial
-            yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
-        }
-    }
+    //         // Wait until TargetIndicator is null before continuing to the next trial
+    //         yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
+    //     }
+    // }
 
 
     IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
@@ -351,30 +365,30 @@ public class StudyControl : Singleton<StudyControl>
         return combinations;
     }
 
-    public List<(float depth, DockingDirections direction)> GetShuffledDepth_Direction_Combinations(List<float> depths)
-    {
-        // Create all unique combinations
-        var combinations = new List<(float, DockingDirections)>();
-        foreach (var depth in depths)
-        {
-            foreach (DockingDirections direction in System.Enum.GetValues(typeof(DockingDirections)))
-            {
-                combinations.Add((depth, direction));
-            }
-        }
+    // public List<(float depth, DockingDirections direction)> GetShuffledDepth_Direction_Combinations(List<float> depths)
+    // {
+    //     // Create all unique combinations
+    //     var combinations = new List<(float, DockingDirections)>();
+    //     foreach (var depth in depths)
+    //     {
+    //         foreach (DockingDirections direction in System.Enum.GetValues(typeof(DockingDirections)))
+    //         {
+    //             combinations.Add((depth, direction));
+    //         }
+    //     }
 
-        // Shuffle the list
-        combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
+    //     // Shuffle the list
+    //     combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
 
-        return combinations;
-    }
+    //     return combinations;
+    // }
 
-    public Vector3 GetRandomFrontPosition(float height, float depth, float width)
-    {
-        Vector3 camPos = Camera.main.transform.position;
+    // public Vector3 GetRandomFrontPosition(float height, float depth, float width)
+    // {
+    //     Vector3 camPos = Camera.main.transform.position;
 
-        return new Vector3(camPos.x + Random.Range(-width / 2f, width / 2f), height, camPos.z + depth);
-    }
+    //     return new Vector3(camPos.x + Random.Range(-width / 2f, width / 2f), height, camPos.z + depth);
+    // }
 
     public List<CubePositionLabels> GetShuffledStartPositionLabels()
     {

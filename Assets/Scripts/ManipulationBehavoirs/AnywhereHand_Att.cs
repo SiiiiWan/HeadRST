@@ -21,8 +21,6 @@ public class AnywhereHand_Att : AnywhereHand
         // return headDepthOffset * (Math.Abs(HeadSpeed) < (MaxHeadSpeed - MinHeadSpeed) / 2f ? HeadAttenuation(headDepthOffset) : 1);
         return headDepthOffset * HeadAttenuation(headDepthOffset);
         // return headDepthOffset;
-
-
     }
 
         
@@ -56,7 +54,7 @@ public class AnywhereHand_Att : AnywhereHand
             float sqrtPart = Mathf.Sqrt(projectedSpeed / maxSpd);
             float distance = MathFunctions.ProjectVectorOntoPlane(GrabbedObject.transform.position - GazeOrigin, Vector3.up).magnitude;
             // float exponent = 2f * distance / MaxDepth;
-            float exponent = 2 * distance * distance;
+            float exponent = 2 * distance * distance; // TODO: maybe should be head angle sensitive?
 
 
             // attenuation = -Mathf.Pow(sqrtPart, exponent) + 1f;
