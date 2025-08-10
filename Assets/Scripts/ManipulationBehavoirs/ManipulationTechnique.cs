@@ -21,6 +21,7 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = obj;
         LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
+        StudyControl.GetInstance().IsAfterFirstPickUpInTrial = true;
 
         TriggerOnGazeFixation();
 
@@ -39,9 +40,9 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = null;
     }
 
-    public virtual void TriggerOnLookAtHandBehavior () { }
+    public virtual void TriggerOnLookAtHandBehavior() { }
     public virtual void TriggerOnLookAtNewObjectBehavior()
-    { 
+    {
         // ObjectHighlight(true, GazingObject);
     }
 
@@ -313,5 +314,29 @@ public class ManipulationTechnique : MonoBehaviour
             ObjectsInGazeCone.AddRange(sortedAnchors);
         }
     }
-# endregion
+    #endregion
+
+    // Special Technique Variables
+    public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
+
+    public float VisualGainValue { get; protected set; }
+    public Vector3 OffsetAddedByHand { get; protected set; }
+    public float AngleRotatedByHand { get; protected set; }
+    public float CurrentDistanceToGaze { get; protected set; }
+    public Vector3 HeadDepthOffset { get; protected set; }
+    public float DistanceToGazeAfterAddingHeadDepth { get; protected set; }
+    public float AngleGazeDirectionToObject { get; protected set; }
+
+    public float MinHeadSpeed { get; protected set; } = 0.12f;
+    public float MaxHeadSpeed { get; protected set; } = 0.6f;
+
+    public float MinGainDeg { get; protected set; } = 30;
+    public float MaxGainDeg { get; protected set; } = 10;
+    public float BaseGain { get; protected set; }
+    public float EdgeGain { get; protected set; }
+
+    // att
+    public Vector3 HeadDepthOffset_base { get; protected set; }
+    public float Attenuation { get; protected set; } = 1;
+
 }

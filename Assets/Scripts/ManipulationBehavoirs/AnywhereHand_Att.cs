@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class AnywhereHand_Att : AnywhereHand
 {
-    public float Attenuation { get; protected set; } = 1;
     public float MaxHandSpeed = 0.1f;
+
+
     public override Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
 
-        float max_gain = 0.8f;
-        float min_gain = 0.4f / 3;
+        // float max_gain = 0.8f;
+        // float min_gain = 0.4f / 3;
 
-        min_gain = min_gain / (1 + (Mathf.Pow(2, 4) - 1) * HandTranslationSpeed / MaxHandSpeed);
+        // min_gain = min_gain / (1 + (Mathf.Pow(2, 4) - 1) * HandTranslationSpeed / MaxHandSpeed);
 
-        BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
-        EdgeGain = EyeHeadGain();
-        Vector3 headDepthOffset = objectDirection * DeltaHeadY * BaseGain;
+        // BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
+        // EdgeGain = EyeHeadGain();
+        // Vector3 headDepthOffset = objectDirection * DeltaHeadY * BaseGain;
 
         // return headDepthOffset * (Math.Abs(HeadSpeed) < (MaxHeadSpeed - MinHeadSpeed) / 2f ? HeadAttenuation(headDepthOffset) : 1);
-        return headDepthOffset * HeadAttenuation(headDepthOffset);
+
+        HeadDepthOffset_base = base.GetHeadDepthOffset(objectDirection);
+        Attenuation = HeadAttenuation(HeadDepthOffset_base);
+        return HeadDepthOffset_base * Attenuation;
         // return headDepthOffset;
     }
 
@@ -54,7 +58,7 @@ public class AnywhereHand_Att : AnywhereHand
             float sqrtPart = Mathf.Sqrt(projectedSpeed / maxSpd);
             float distance = MathFunctions.ProjectVectorOntoPlane(GrabbedObject.transform.position - GazeOrigin, Vector3.up).magnitude;
             // float exponent = 2f * distance / MaxDepth;
-            float exponent = 2 * distance * distance; // TODO: maybe should be head angle sensitive?
+            // float exponent = 2 * distance * distance; // TODO: maybe should be head angle sensitive?
 
 
             // attenuation = -Mathf.Pow(sqrtPart, exponent) + 1f;

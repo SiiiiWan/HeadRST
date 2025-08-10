@@ -15,9 +15,6 @@ public enum StaticState
 
 public class AnywhereHand : ManipulationTechnique
 {
-    public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
-
-
     public override void Update()
     {
         base.Update();
@@ -90,28 +87,32 @@ public class AnywhereHand : ManipulationTechnique
 
     public override void ApplyIndirectGrabbedBehaviour()
     {
+        VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+        OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
+        GrabbedObject.transform.position += OffsetAddedByHand;
 
-        // GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin));
-        GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
-
+        AngleRotatedByHand = Quaternion.Angle(PinchRotation_delta * GrabbedObject.transform.rotation, GrabbedObject.transform.rotation);
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
+
+        CurrentDistanceToGaze = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
 
         if (CurrentState == StaticState.Gaze)
         {
-            float distance = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
-            GrabbedObject.transform.position = GazeOrigin + GazeDirection * distance;
+            GrabbedObject.transform.position = GazeOrigin + GazeDirection * CurrentDistanceToGaze;
 
             if (IsGazeFixating) CurrentState = StaticState.Head; // switch to Head state if gaze is fixating
         }
         else
         {
             Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
-            GrabbedObject.transform.position += GetHeadDepthOffset(objectDirection);
+            HeadDepthOffset = GetHeadDepthOffset(objectDirection);
+            GrabbedObject.transform.position += HeadDepthOffset;
 
-            float currentDistance = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
-            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(currentDistance, MinDepth, MaxDepth);
+            DistanceToGazeAfterAddingHeadDepth = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(DistanceToGazeAfterAddingHeadDepth, MinDepth, MaxDepth);
 
-            if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin) > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
+            if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
 
         VirtualHandPosition = WristPosition;
@@ -126,14 +127,6 @@ public class AnywhereHand : ManipulationTechnique
 
 
     #region HeadDepth EdgeGain
-    public float MinHeadSpeed { get; protected set; } = 0.12f;
-    public float MaxHeadSpeed { get; protected set; } = 0.6f;
-
-    public float MinGainDeg { get; protected set; } = 30;
-    public float MaxGainDeg { get; protected set; } = 10;
-    public float BaseGain { get; protected set; }
-    public float EdgeGain { get; protected set; }
-
 
     public virtual Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {

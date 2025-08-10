@@ -9,13 +9,14 @@ public class GazeNPinchOrigin : ManipulationTechnique
         VirtualHandPosition = WristPosition;
     }
 
+
     public override void ApplyIndirectGrabbedBehaviour()
     {
+        VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+        OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
+        GrabbedObject.transform.position += OffsetAddedByHand;
 
-        GrabbedObject.transform.position += Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position)) * PinchPosition_delta;
-        // GrabbedObject.transform.position += Mathf.Max(1, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin)) * PinchPosition_delta;
-
-
+        AngleRotatedByHand = Quaternion.Angle(PinchRotation_delta * GrabbedObject.transform.rotation, GrabbedObject.transform.rotation);
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
     }
 

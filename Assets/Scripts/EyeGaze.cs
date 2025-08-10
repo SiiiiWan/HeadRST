@@ -54,9 +54,13 @@ public class EyeGaze : Singleton<EyeGaze>
         _headRotationBuffer = new List<Quaternion>();
     }
 
+    public float EyeInHeadAngle
+    {
+        get { return Vector3.Angle(Camera.main.transform.forward, _combinedGazeDir); }
+    }
     public float EyeInHeadYAngle
     {
-        get {return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.right);}
+        get { return MathFunctions.AngleAroundAxis(_combinedGazeDir, Camera.main.transform.forward, Camera.main.transform.right); }
     }
 
     public float EyeInHeadXAngle

@@ -19,20 +19,19 @@ public enum CubePositionLabels
 
 public enum DockingDirections { forward, backward }
 public enum Handedness { left, right }
-public enum TaskMode { amp_and_depth, depth_only }
 
 public class StudyControl : Singleton<StudyControl>
 {
     [Header("Study Settings")]
     public string ParticipantID;
     public Handedness DominantHand = Handedness.right;
-    public TaskMode TaskMode = TaskMode.amp_and_depth;
     public bool IsPractice;
     public ManipulationTechnique ManipulationBehavior;
 
     [Header("Study States")]
     public bool StudyFlag = false; // Indicates if the study is currently running
     public int TotalTrialCount;
+    public bool IsAfterFirstPickUpInTrial = false;
     public CubePositionLabels StartPositionLabel;
     public float TaskMinDepth, TaskMaxDepth, TaskAmplitude;
 
@@ -57,6 +56,8 @@ public class StudyControl : Singleton<StudyControl>
     public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
     [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f, 60f };
 
+    
+
     protected override void Awake()
     {
         base.Awake();
@@ -66,13 +67,13 @@ public class StudyControl : Singleton<StudyControl>
 
     void Start()
     {
-        UpdateHandVisuals();
+        // UpdateHandVisuals();
         // SwitchToGazeNPinch();
     }
 
     void Update()
     {
-        UpdateHandVisuals();
+        // UpdateHandVisuals();
         TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
         // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
@@ -140,6 +141,7 @@ public class StudyControl : Singleton<StudyControl>
         // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
         TotalTrialCount++;
+        IsAfterFirstPickUpInTrial = false;
     }
 
     public void StartTask()
@@ -511,19 +513,19 @@ public class StudyControl : Singleton<StudyControl>
         TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
     }
 
-    public void SwitchTask_DepthOnly()
-    {
-        TaskMode = TaskMode.depth_only;
-        TaskText.text = "Current Task: Far-Close Switching";
-        StartTask();
-    }
+    // public void SwitchTask_DepthOnly()
+    // {
+    //     TaskMode = TaskMode.depth_only;
+    //     TaskText.text = "Current Task: Far-Close Switching";
+    //     StartTask();
+    // }
 
-    public void SwitchTask_AmpAndDepth()
-    {
-        TaskMode = TaskMode.amp_and_depth;
-        TaskText.text = "Current Task: Distance Manipulation";
-        StartTask();
-    }
+    // public void SwitchTask_AmpAndDepth()
+    // {
+    //     TaskMode = TaskMode.amp_and_depth;
+    //     TaskText.text = "Current Task: Distance Manipulation";
+    //     StartTask();
+    // }
 
     // public void SwitchToScaledHOMER()
     // {

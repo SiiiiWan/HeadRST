@@ -27503,9 +27503,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ParticipantID: TEST
   DominantHand: 1
-  TaskMode: 0
   IsPractice: 0
-  ManipulationBehavior: {fileID: 1006584923}
+  ManipulationBehavior: {fileID: 1006584928}
   StudyFlag: 0
   TotalTrialCount: 0
   StartPositionLabel: 0
@@ -27524,15 +27523,9 @@ MonoBehaviour:
   ObjectToBeManipulated: {fileID: 0}
   TargetIndicator: {fileID: 0}
   StartPositionLabelsList: 
-  Depths_between:
-  - 2
-  - 4
-  - 8
   Amplitudes_within:
   - 15
   - 30
-  MaxAmplitude_between: 20
-  TargetSize: 4
 --- !u!114 &1006584923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27540,7 +27533,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f20f1379cf72cdd4480714d22bb0be07, type: 3}
   m_Name: 
@@ -27590,7 +27583,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e36c962a3c54b04096d3a0d39f9fd54, type: 3}
   m_Name: 
