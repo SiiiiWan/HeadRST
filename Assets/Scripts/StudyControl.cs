@@ -54,11 +54,8 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (1f, 5f), (1f, 9f), (0.5f, 4.5f), (0.5f, 8.5f)};
-    [HideInInspector] public List<float> Depths_between = new List<float> { 2f, 4f, 8f };
-    [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f };
-    [HideInInspector] public float MaxAmplitude_between = 20f;
-    [HideInInspector] public float TargetSize = 4f; // in degrees
+    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
+    [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f, 60f };
 
     protected override void Awake()
     {
@@ -133,12 +130,12 @@ public class StudyControl : Singleton<StudyControl>
     public void StartTrial(Vector3 startPos, Vector3 endPos, out GameObject startObj, out GameObject target)
     {
         HeadPosition_OnTrialStart = Camera.main.transform.position;
-        Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, startPos)) * Vector3.one;
-        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, scale_start);
+        // Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, startPos)) * Vector3.one;
+        startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, ObjectPrefab.transform.localScale);
 
-        Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
+        // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
         Quaternion randomRotationOffset = Quaternion.AngleAxis(20, Random.onUnitSphere);
-        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, scale_end);
+        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, TargetPrefab.transform.localScale);
 
         // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
@@ -246,9 +243,9 @@ public class StudyControl : Singleton<StudyControl>
                     TrialEndPosition += Vector3.down * 0.5f;
                 }
 
-                Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
-                Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
-                GameObject obj = SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, scale_start);
+                // Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
+                // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
+                GameObject obj = SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
                 obj.GetComponent<ManipulatableObject>().enabled = false; 
                 // SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
                 // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");

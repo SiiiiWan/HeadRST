@@ -9,7 +9,7 @@ public class DockingTarget : MonoBehaviour
     public float PositionDifference;
     public float OrientationDifference;
     public List<Transform> Wedges = new List<Transform>();
-    public float PositionAlignmentThreshold {get; private set;} = 0.25f;
+    public float PositionAlignmentThreshold {get; private set;} = 0.20f;
     public float OrientationAlignmentThreshold {get; private set;} = 10f;
 
     void Update()
@@ -47,14 +47,14 @@ public class DockingTarget : MonoBehaviour
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < PositionAlignmentThreshold * transform.localScale.x;
+        return PositionDifference < PositionAlignmentThreshold;
     }
 
     public bool IsPositionAligned_Double()
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < PositionAlignmentThreshold * 2 * transform.localScale.x;
+        return PositionDifference < PositionAlignmentThreshold * 2;
     }
 
     public bool IsOrientationAligned()

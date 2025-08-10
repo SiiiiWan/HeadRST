@@ -8,8 +8,8 @@ public class ManipulationTechnique : MonoBehaviour
 {
     #region Manipulation Behaviors
 
-    public float MaxDepth { get; set; } = 10f;
-    public float MinDepth { get; set; } = 0.5f;
+    public float MaxDepth { get; set; } = 11f;
+    public float MinDepth { get; set; } = 1f;
 
     public ManipulatableObject GrabbedObject { get; private set; }
     public ManipulatableObject LastGrabbedObject { get; private set; }
