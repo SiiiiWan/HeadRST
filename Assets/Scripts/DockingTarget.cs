@@ -9,8 +9,8 @@ public class DockingTarget : MonoBehaviour
     public float PositionDifference;
     public float OrientationDifference;
     public List<Transform> Wedges = new List<Transform>();
-    public float PositionAlignmentThreshold {get; private set;} = 0.25f;
-    public float OrientationAlignmentThreshold {get; private set;} = 10f;
+    public float PositionAlignmentThreshold { get; private set; } = 0.25f;
+    public float OrientationAlignmentThreshold { get; private set; } = 10f;
 
     void Update()
     {
@@ -25,6 +25,8 @@ public class DockingTarget : MonoBehaviour
 
             // _poseAligned = DistanceToGrabbedObj < 0.05f && IsAxisAligned(grabbedObject.transform, 5f);
             // _poseAligned = DistanceToGrabbedObj < 0.015f && IsAxisAligned(grabbedObject.transform, 3.5f);
+
+            UpdateAlignmentHistory();
 
             studyControl.TargetLine.IsVisible = !IsPositionAligned();
             SetActiveWedges(!IsOrientationAligned());
@@ -46,9 +48,9 @@ public class DockingTarget : MonoBehaviour
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < PositionAlignmentThreshold* transform.localScale.x;
+        return PositionDifference < PositionAlignmentThreshold * transform.localScale.x;
     }
- 
+
     public bool IsPositionAligned_Double()
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
@@ -90,7 +92,7 @@ public class DockingTarget : MonoBehaviour
         return true;
     }
 
-    
+
     public void SetActiveWedges(bool isActive)
     {
         foreach (Transform wedge in Wedges)
@@ -99,6 +101,39 @@ public class DockingTarget : MonoBehaviour
             {
                 wedge.gameObject.SetActive(isActive);
             }
+        }
+    }
+    
+    public bool PoseAligned_200msAgo { get; private set; }
+    public bool PositionAligned_200msAgo { get; private set; }
+    public bool OrientationAligned_200msAgo { get; private set; }
+    
+    private Queue<(float timestamp, bool poseAligned, bool positionAligned, bool orientationAligned)> _alignmentHistory = new Queue<(float, bool, bool, bool)>();
+    private const float HISTORY_DURATION = 0.2f; // 200ms
+    private void UpdateAlignmentHistory()
+    {
+        _alignmentHistory.Enqueue((Time.time, IsPoseAligned(), IsPositionAligned(), IsOrientationAligned()));
+
+        // Remove entries older than 200ms
+        while (_alignmentHistory.Count > 0 && Time.time - _alignmentHistory.Peek().timestamp > HISTORY_DURATION)
+        {
+            _alignmentHistory.Dequeue();
+        }
+
+        // Get alignment state from 200ms ago (or earliest available if less than 200ms of history)
+        if (_alignmentHistory.Count > 0)
+        {
+            var oldestEntry = _alignmentHistory.Peek();
+            PoseAligned_200msAgo = oldestEntry.poseAligned;
+            PositionAligned_200msAgo = oldestEntry.positionAligned;
+            OrientationAligned_200msAgo = oldestEntry.orientationAligned;
+        }
+        else
+        {
+            // If no history available, use current state
+            PoseAligned_200msAgo = IsPoseAligned();
+            PositionAligned_200msAgo = IsPositionAligned();
+            OrientationAligned_200msAgo = IsOrientationAligned();
         }
     }
 }

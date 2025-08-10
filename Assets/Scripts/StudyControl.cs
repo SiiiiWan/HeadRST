@@ -53,8 +53,8 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    [HideInInspector] public List<float> Amplitudes_within = new List<float> { 15f, 30f, 60f };
+    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
+    public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
 
     
 
@@ -76,7 +76,7 @@ public class StudyControl : Singleton<StudyControl>
         // UpdateHandVisuals();
         TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
-        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+        if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
@@ -89,7 +89,7 @@ public class StudyControl : Singleton<StudyControl>
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
-            if (TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
+            if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo)
             {
                 Destroy(ObjectToBeManipulated);
                 Destroy(TargetIndicator);
@@ -168,6 +168,20 @@ public class StudyControl : Singleton<StudyControl>
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
     public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
     public Vector3 HeadPosition_OnTrialStart { get; private set; } = Vector3.zero;
+    public float TaskSpatialDistance { get { return Vector3.Distance(TrialStartPosition, TrialEndPosition); } }
+    public float ProjectedDistanceOnTaskAxis
+    {
+        get
+        {
+            if (ObjectToBeManipulated == null) return 0;
+
+            Vector3 taskVector = TrialEndPosition - TrialStartPosition;
+            Vector3 objectVector = ObjectToBeManipulated.transform.position - TrialStartPosition;
+
+            return Vector3.Project(objectVector, taskVector).magnitude * (Vector3.Dot(objectVector, taskVector) > 0 ? 1 : -1);
+        }
+    }
+    public float TaskProgress { get { return ProjectedDistanceOnTaskAxis / TaskSpatialDistance; } }
 
     private IEnumerator RunTrials_within()
     {
@@ -182,7 +196,7 @@ public class StudyControl : Singleton<StudyControl>
 
             TaskMinDepth = depthPair.depth_min;
             TaskMaxDepth = depthPair.depth_max;
-            TaskAmplitude = amplitude; 
+            TaskAmplitude = amplitude;
 
             CubePositions = GetCubePositions_Visual(
                 viewPoint: Camera.main.transform.position,
@@ -248,7 +262,7 @@ public class StudyControl : Singleton<StudyControl>
                 // Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
                 // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
                 GameObject obj = SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
-                obj.GetComponent<ManipulatableObject>().enabled = false; 
+                obj.GetComponent<ManipulatableObject>().enabled = false;
                 // SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
                 // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");
             }

@@ -32,12 +32,16 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             ("StudyFlag", () => StudyControl.GetInstance().StudyFlag.ToString()),
             ("TaskMinDepth", () => StudyControl.GetInstance().TaskMinDepth.ToString()),
             ("TaskMaxDepth", () => StudyControl.GetInstance().TaskMaxDepth.ToString()),
-            ("TaskDepthSet", () => StudyControl.GetInstance().TaskMinDepth.ToString() + " - " + StudyControl.GetInstance().TaskMaxDepth.ToString()),
+            ("TaskDepthSet", () => StudyControl.GetInstance().TaskMinDepth.ToString() + "_" + StudyControl.GetInstance().TaskMaxDepth.ToString()),
             ("TaskDepthDistance", () => (StudyControl.GetInstance().TaskMaxDepth - StudyControl.GetInstance().TaskMinDepth).ToString()),
             ("TaskAmplitude", () => StudyControl.GetInstance().TaskAmplitude.ToString()),
             ("StartPositionLabel", () => StudyControl.GetInstance().StartPositionLabel.ToString()),
             ("EndPositionLabel", () => StudyControl.GetInstance().GetDiagonalPositionLabel(StudyControl.GetInstance().StartPositionLabel).ToString()),
             ("IsPickedUpOnce", () => StudyControl.GetInstance().IsAfterFirstPickUpInTrial.ToString()),
+            
+            ("TaskProgress", () => StudyControl.GetInstance().TaskProgress.ToString("F10")),
+            ("ProjectedDistanceOnTaskAxis", () => StudyControl.GetInstance().ProjectedDistanceOnTaskAxis.ToString("F10")),
+            ("TaskSpatialDistance", () => StudyControl.GetInstance().TaskSpatialDistance.ToString("F10")),
 
             ("ObjectPosition", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Vector3.zero.ToString("F10") : StudyControl.GetInstance().ObjectToBeManipulated.transform.position.ToString("F10")),
             ("ObjectRotation", () => StudyControl.GetInstance().ObjectToBeManipulated == null ? Quaternion.identity.ToString("F10") : StudyControl.GetInstance().ObjectToBeManipulated.transform.rotation.ToString("F10")),

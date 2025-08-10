@@ -27501,12 +27501,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticipantID: TEST
+  ParticipantID: hp
   DominantHand: 1
   IsPractice: 0
-  ManipulationBehavior: {fileID: 1006584928}
+  ManipulationBehavior: {fileID: 1006584925}
   StudyFlag: 0
   TotalTrialCount: 0
+  IsAfterFirstPickUpInTrial: 0
   StartPositionLabel: 0
   TaskMinDepth: 0
   TaskMaxDepth: 0
@@ -27545,7 +27546,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63ef77b2b3219c94cbdcd6a70bbc0532, type: 3}
   m_Name: 
@@ -27583,7 +27584,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e36c962a3c54b04096d3a0d39f9fd54, type: 3}
   m_Name: 
