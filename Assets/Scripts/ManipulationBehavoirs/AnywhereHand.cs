@@ -119,6 +119,13 @@ public class AnywhereHand : ManipulationTechnique
             if (IsGazeFixating == false && Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin) > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
 
+        float objectDistance = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+        if (objectDistance < 0.2f)
+        {
+            // Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
+            GrabbedObject.transform.position = GazeOrigin + GazeDirection * 0.2f; // ensure the object is not too close to the gaze origin
+        }
+
         VirtualHandPosition = WristPosition;
     }
 
