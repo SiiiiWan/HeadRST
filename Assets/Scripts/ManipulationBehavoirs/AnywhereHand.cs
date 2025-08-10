@@ -131,7 +131,7 @@ public class AnywhereHand : ManipulationTechnique
 
 
     #region HeadDepth EdgeGain
-    public float MinHeadSpeed { get; protected set; } = 0.2f;
+    public float MinHeadSpeed { get; protected set; } = 0.12f;
     public float MaxHeadSpeed { get; protected set; } = 0.6f;
 
     public float MinGainDeg { get; protected set; } = 30;
@@ -146,7 +146,7 @@ public class AnywhereHand : ManipulationTechnique
         float max_gain = 0.8f;
 
         // float min_gain = (MaxDepth - MinDepth) / MinGainDeg;
-        float min_gain = 0.4f / 3;
+        float min_gain = 0;
 
 
         BaseGain = VitLerp(Math.Abs(HeadSpeed), min_gain, max_gain, MinHeadSpeed, MaxHeadSpeed);
