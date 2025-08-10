@@ -54,7 +54,10 @@ public class StudyControl : Singleton<StudyControl>
 
 
     public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
+    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
+
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
+    // public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
 
     
 
@@ -89,7 +92,7 @@ public class StudyControl : Singleton<StudyControl>
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
-            if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo)
+            if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo || TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
             {
                 Destroy(ObjectToBeManipulated);
                 Destroy(TargetIndicator);
