@@ -44,18 +44,23 @@ public class DockingTarget : MonoBehaviour
         return _poseAligned;
     }
 
+    public float GetPositionAlignmentThreshold()
+    {
+        return PositionAlignmentThreshold * transform.localScale.x;
+    }
+
     public bool IsPositionAligned()
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < PositionAlignmentThreshold * transform.localScale.x;
+        return PositionDifference < GetPositionAlignmentThreshold();
     }
 
     public bool IsPositionAligned_Double()
     {
         GameObject taskObject = StudyControl.GetInstance().ObjectToBeManipulated;
         PositionDifference = Vector3.Distance(transform.position, taskObject.transform.position);
-        return PositionDifference < PositionAlignmentThreshold * 2 * transform.localScale.x;
+        return PositionDifference < GetPositionAlignmentThreshold() * 2;
     }
 
     public bool IsOrientationAligned()

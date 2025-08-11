@@ -46,6 +46,7 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public GameObject ObjectToBeManipulated;
     [HideInInspector] public GameObject TargetIndicator;
     [HideInInspector] public Linescript TargetLine;
+    [HideInInspector] public Linescript Circle_static, Circle_dynamic;
 
     public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
     public List<(float depth, DockingDirections direction)> DepthDirectionCombinations = new List<(float, DockingDirections)>();
@@ -53,11 +54,11 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
+    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
+    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
 
-    public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
-    // public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
+    // public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
+    public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
 
     
 
@@ -65,6 +66,8 @@ public class StudyControl : Singleton<StudyControl>
     {
         base.Awake();
         TargetLine = new Linescript();
+        Circle_static = new Linescript(sampleNumberForCircle: 100, color: Color.gray);
+        Circle_dynamic = new Linescript(sampleNumberForCircle: 100, color: Color.yellow);
         TargetLine.IsVisible = false;
     }
 
@@ -84,11 +87,12 @@ public class StudyControl : Singleton<StudyControl>
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
             TargetLine.IsVisible = false;
+            Circle_static.IsVisible = false;
+            Circle_dynamic.IsVisible = false;
             return; // No target indicator to check
         }
 
-        
-        TargetLine.SetPosition(TargetIndicator.transform.position, ObjectToBeManipulated.transform.position);
+        UpdateTaskVisualFeedbacks();
 
         if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
@@ -121,6 +125,31 @@ public class StudyControl : Singleton<StudyControl>
             RightHandSynth_Virtual.SetActive(false);
             LeftHandSynth_Virtual.SetActive(true);
         }
+    }
+
+    void UpdateTaskVisualFeedbacks()
+    {
+
+        TargetLine.SetPosition(TargetIndicator.transform.position, ObjectToBeManipulated.transform.position);
+
+        float staticCircleRadius = TargetIndicator.transform.localScale.x * 1.2f;
+        Circle_static.DrawRing(TargetIndicator.transform.position, staticCircleRadius);
+
+        Vector3 camToObjectVector = ObjectToBeManipulated.transform.position - HeadPosition_OnTrialStart;
+        Vector3 camToTargetVector = TargetIndicator.transform.position - HeadPosition_OnTrialStart;
+        float projectedDistanceOnDepthAxis = Vector3.Project(camToObjectVector, camToTargetVector).magnitude;
+
+        float depthProgress = projectedDistanceOnDepthAxis / camToTargetVector.magnitude;
+        Circle_dynamic.DrawRing(TargetIndicator.transform.position, staticCircleRadius * depthProgress);
+
+        float circleLineWidth = MathFunctions.Deg2Meter(0.1f, camToTargetVector.magnitude);
+
+        Circle_dynamic.SetWidth(circleLineWidth);
+        Circle_static.SetWidth(circleLineWidth);
+
+        Circle_static.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+        Circle_dynamic.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+
     }
 
 
@@ -216,12 +245,6 @@ public class StudyControl : Singleton<StudyControl>
             {
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
-
-                if (depthPair.depth_min < 1f)
-                {
-                    TrialStartPosition += Vector3.down * 0.5f;
-                    TrialEndPosition += Vector3.down * 0.5f;
-                }
 
                 StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
 
