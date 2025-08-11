@@ -139,7 +139,7 @@ public class StudyControl : Singleton<StudyControl>
         Vector3 camToTargetVector = TargetIndicator.transform.position - HeadPosition_OnTrialStart;
         float projectedDistanceOnDepthAxis = Vector3.Project(camToObjectVector, camToTargetVector).magnitude;
 
-        float depthProgress = projectedDistanceOnDepthAxis / camToTargetVector.magnitude;
+        float depthProgress = Mathf.Max(0, (projectedDistanceOnDepthAxis / camToTargetVector.magnitude - 0.5f) * 2);
         Circle_dynamic.DrawRing(TargetIndicator.transform.position, staticCircleRadius * depthProgress);
 
         float circleLineWidth = MathFunctions.Deg2Meter(0.1f, camToTargetVector.magnitude);
