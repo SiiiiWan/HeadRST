@@ -99,6 +99,7 @@ public class StudyControl : Singleton<StudyControl>
 
                 ObjectToBeManipulated = null;
                 TargetIndicator = null;
+                AudioPlay.PlayClickSound();
             }
         }
 
