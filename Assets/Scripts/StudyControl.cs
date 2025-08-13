@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
+using NUnit.Framework;
 
 public enum CubePositionLabels
 {
@@ -36,7 +37,6 @@ public class StudyControl : Singleton<StudyControl>
     public float TaskMinDepth, TaskMaxDepth, TaskAmplitude;
 
     [Header("Bindings")]
-    public TextMeshPro TechniqueText;
     public TextMeshPro TaskText;
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
@@ -55,10 +55,10 @@ public class StudyControl : Singleton<StudyControl>
 
 
     public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
+    public List<(float min, float max)> DepthPairs_practice { get; private set; } = new List<(float, float)> {(2f, 6f)};
 
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
-    // public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
+    public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
 
     
 
@@ -80,6 +80,7 @@ public class StudyControl : Singleton<StudyControl>
     void Update()
     {
         // UpdateHandVisuals();
+        TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
         TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
         if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
@@ -223,7 +224,7 @@ public class StudyControl : Singleton<StudyControl>
         StudyFlag = true;
 
         HeadPosition_OnTaskStart = Camera.main.transform.position;
-        DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+        DepthAmplitudeCombinations = IsPractice? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice) : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
         {
@@ -479,42 +480,42 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
-    public void SwitchToAnywhereHandBase()
-    {
-        var techniques = GetComponents<ManipulationTechnique>();
-        foreach (var technique in techniques)
-        {
-            if (technique is AnywhereHand_Base)
-            {
-                technique.enabled = true;
-                ManipulationBehavior = GetComponent<AnywhereHand_Base>();
-            }
-            else
-            {
-                technique.enabled = false;
-            }
-        }
+    // public void SwitchToAnywhereHandBase()
+    // {
+    //     var techniques = GetComponents<ManipulationTechnique>();
+    //     foreach (var technique in techniques)
+    //     {
+    //         if (technique is AnywhereHand_Base)
+    //         {
+    //             technique.enabled = true;
+    //             ManipulationBehavior = GetComponent<AnywhereHand_Base>();
+    //         }
+    //         else
+    //         {
+    //             technique.enabled = false;
+    //         }
+    //     }
 
-        TechniqueText.text = "Current Technique: AnywhereHand- HeadPriority";
-    }
+    //     TechniqueText.text = "Current Technique: AnywhereHand- HeadPriority";
+    // }
 
-    public void SwitchToAnywhereHandAttenuated()
-    {
-        var techniques = GetComponents<ManipulationTechnique>();
-        foreach (var technique in techniques)
-        {
-            if (technique is AnywhereHand_Att)
-            {
-                technique.enabled = true;
-                ManipulationBehavior = GetComponent<AnywhereHand_Att>();
-            }
-            else
-            {
-                technique.enabled = false;
-            }
-        }
-        TechniqueText.text = "Current Technique: AnywhereHand - HandPriority";
-    }
+    // public void SwitchToAnywhereHandAttenuated()
+    // {
+    //     var techniques = GetComponents<ManipulationTechnique>();
+    //     foreach (var technique in techniques)
+    //     {
+    //         if (technique is AnywhereHand_Att)
+    //         {
+    //             technique.enabled = true;
+    //             ManipulationBehavior = GetComponent<AnywhereHand_Att>();
+    //         }
+    //         else
+    //         {
+    //             technique.enabled = false;
+    //         }
+    //     }
+    //     TechniqueText.text = "Current Technique: AnywhereHand - HandPriority";
+    // }
 
     // public void SwitchToContinuous2()
     // {
@@ -522,41 +523,41 @@ public class StudyControl : Singleton<StudyControl>
     //     TechniqueText.text = "Current Technique: AnywhereHand 2";
     // }
 
-    public void SwitchToGazeHand()
-    {
-        var techniques = GetComponents<ManipulationTechnique>();
-        foreach (var technique in techniques)
-        {
-            if (technique is GazeHand)
-            {
-                technique.enabled = true;
-                ManipulationBehavior = GetComponent<GazeHand>();
-            }
-            else
-            {
-                technique.enabled = false;
-            }
-        }
-        TechniqueText.text = "Current Technique: GazeHand2";
-    }
+    // public void SwitchToGazeHand()
+    // {
+    //     var techniques = GetComponents<ManipulationTechnique>();
+    //     foreach (var technique in techniques)
+    //     {
+    //         if (technique is GazeHand)
+    //         {
+    //             technique.enabled = true;
+    //             ManipulationBehavior = GetComponent<GazeHand>();
+    //         }
+    //         else
+    //         {
+    //             technique.enabled = false;
+    //         }
+    //     }
+    //     TechniqueText.text = "Current Technique: GazeHand2";
+    // }
 
-    public void SwitchToGazeNPinch()
-    {
-        var techniques = GetComponents<ManipulationTechnique>();
-        foreach (var technique in techniques)
-        {
-            if (technique is GazeNPinchOrigin)
-            {
-                technique.enabled = true;
-                ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-            }
-            else
-            {
-                technique.enabled = false;
-            }
-        }
-        TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
-    }
+    // public void SwitchToGazeNPinch()
+    // {
+    //     var techniques = GetComponents<ManipulationTechnique>();
+    //     foreach (var technique in techniques)
+    //     {
+    //         if (technique is GazeNPinchOrigin)
+    //         {
+    //             technique.enabled = true;
+    //             ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
+    //         }
+    //         else
+    //         {
+    //             technique.enabled = false;
+    //         }
+    //     }
+    //     TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
+    // }
 
     // public void SwitchTask_DepthOnly()
     // {

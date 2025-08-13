@@ -27645,7 +27645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ParticipantID: kt
   DominantHand: 1
-  IsPractice: 0
+  IsPractice: 1
   ManipulationBehavior: {fileID: 1006584928}
   StudyFlag: 0
   TotalTrialCount: 0
@@ -27654,8 +27654,7 @@ MonoBehaviour:
   TaskMinDepth: 0
   TaskMaxDepth: 0
   TaskAmplitude: 0
-  TechniqueText: {fileID: 373964267}
-  TaskText: {fileID: 1664126783}
+  TaskText: {fileID: 446766520}
   TargetPrefab: {fileID: 2676514430063476796, guid: acf565eedf6b18e47a5e2dcfde534009, type: 3}
   ObjectPrefab: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
   LeftHand_Virtual: {fileID: 478462430}
@@ -27703,7 +27702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 013cec37d8a328f4ea81bbf80aa76838, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LogData: 1
+  LogData: 0
 --- !u!114 &1006584927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33802,7 +33801,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1221040702
 Transform:
   m_ObjectHideFlags: 0
@@ -46252,7 +46251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1731488553
 Transform:
   m_ObjectHideFlags: 0
@@ -57323,7 +57322,7 @@ Transform:
   m_GameObject: {fileID: 4782408342753776788}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5251668, y: 0.47349736, z: 0.47349712, w: 0.52516717}
-  m_LocalPosition: {x: -2.869548, y: 0, z: 6.949884}
+  m_LocalPosition: {x: -2.858, y: -0, z: 7.883}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -58726,7 +58725,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1001 &4972668674090917688
 PrefabInstance:
   m_ObjectHideFlags: 0
