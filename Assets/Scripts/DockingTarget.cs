@@ -9,7 +9,7 @@ public class DockingTarget : MonoBehaviour
     public float PositionDifference;
     public float OrientationDifference;
     public List<Transform> Wedges = new List<Transform>();
-    public float PositionAlignmentThreshold { get; private set; } = 3f;
+    public float PositionAlignmentThreshold { get; private set; } = 1.5f;
     public float OrientationAlignmentThreshold { get; private set; } = 10f;
 
     void Update()
