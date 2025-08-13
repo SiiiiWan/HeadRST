@@ -54,11 +54,11 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
+    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
+    // public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> {(2f, 10f)};
 
-    // public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
-    public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
+    public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
+    // public List<float> Amplitudes_within { get; private set; } = new List<float> {60f };
 
     
 
@@ -243,6 +243,7 @@ public class StudyControl : Singleton<StudyControl>
 
             foreach (CubePositionLabels startPosition in StartPositionLabelsList)
             {
+                StartPositionLabel = startPosition;
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
 
