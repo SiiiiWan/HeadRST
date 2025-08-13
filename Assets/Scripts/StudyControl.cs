@@ -108,6 +108,15 @@ public class StudyControl : Singleton<StudyControl>
             }
         }
 
+        // if (ManipulationBehavior.GrabbedObject != null && TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
+        // {
+        //     Destroy(ObjectToBeManipulated);
+        //     Destroy(TargetIndicator);
+
+        //     ObjectToBeManipulated = null;
+        //     TargetIndicator = null;
+        //     AudioPlay.PlayClickSound();
+        // }
     }
 
     void UpdateHandVisuals()

@@ -9,7 +9,7 @@ public class DockingTarget : MonoBehaviour
     public float PositionDifference;
     public float OrientationDifference;
     public List<Transform> Wedges = new List<Transform>();
-    public float PositionAlignmentThreshold { get; private set; } = 0.25f;
+    public float PositionAlignmentThreshold { get; private set; } = 3f;
     public float OrientationAlignmentThreshold { get; private set; } = 10f;
 
     void Update()
@@ -46,7 +46,8 @@ public class DockingTarget : MonoBehaviour
 
     public float GetPositionAlignmentThreshold()
     {
-        return PositionAlignmentThreshold * transform.localScale.x;
+        return MathFunctions.Deg2Meter(PositionAlignmentThreshold, Vector3.Distance(StudyControl.GetInstance().HeadPosition_OnTrialStart, transform.position));
+        // return PositionAlignmentThreshold * transform.localScale.x;
     }
 
     public bool IsPositionAligned()
