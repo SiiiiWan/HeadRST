@@ -201,6 +201,8 @@ public class StudyControl : Singleton<StudyControl>
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
     public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
     public Vector3 HeadPosition_OnTrialStart { get; private set; } = Vector3.zero;
+    public Vector3 HeadPosition_OnTaskStart { get; private set; } = Vector3.zero;
+
     public float TaskSpatialDistance { get { return Vector3.Distance(TrialStartPosition, TrialEndPosition); } }
     public float ProjectedDistanceOnTaskAxis
     {
@@ -220,6 +222,7 @@ public class StudyControl : Singleton<StudyControl>
     {
         StudyFlag = true;
 
+        HeadPosition_OnTaskStart = Camera.main.transform.position;
         DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
@@ -232,7 +235,7 @@ public class StudyControl : Singleton<StudyControl>
             TaskAmplitude = amplitude;
 
             CubePositions = GetCubePositions_Visual(
-                viewPoint: Camera.main.transform.position,
+                viewPoint: HeadPosition_OnTaskStart,
                 forwardDir: Vector3.forward,
                 minDepth: TaskMinDepth,
                 maxDepth: TaskMaxDepth,

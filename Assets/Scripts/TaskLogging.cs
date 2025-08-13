@@ -57,6 +57,8 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             ("TrialStartPosition", () => StudyControl.GetInstance().TrialStartPosition.ToString("F10")),
             ("TrialEndPosition", () => StudyControl.GetInstance().TrialEndPosition.ToString("F10")),
             ("HeadPosition_OnTrialStart", () => StudyControl.GetInstance().HeadPosition_OnTrialStart.ToString("F10")),
+            ("HeadPosition_OnTaskStart", () => StudyControl.GetInstance().HeadPosition_OnTaskStart.ToString("F10")),
+            
 
             ("IsObjectHitbyGaze", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().ObjectToBeManipulated.GetComponent<ManipulatableObject>().IsHitbyGaze.ToString()),
             ("ObjectAngleToGaze", () => (StudyControl.GetInstance().TargetIndicator == null || StudyControl.GetInstance().TargetIndicator.GetComponent<DockingTarget>() == null) ? "Null Value" : StudyControl.GetInstance().ObjectToBeManipulated.GetComponent<ManipulatableObject>().AngleToGaze.ToString("F10")),
