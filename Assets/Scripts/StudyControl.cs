@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 public enum CubePositionLabels
 {
@@ -38,6 +39,7 @@ public class StudyControl : Singleton<StudyControl>
 
     [Header("Bindings")]
     public TextMeshPro TaskText;
+    public TextMeshPro TaskEndText;
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
     public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
@@ -60,7 +62,7 @@ public class StudyControl : Singleton<StudyControl>
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
     public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
 
-    
+    private Vector3 _startButtonPosition, _startTaskEndTextPosition;
 
     protected override void Awake()
     {
@@ -75,13 +77,16 @@ public class StudyControl : Singleton<StudyControl>
     {
         // UpdateHandVisuals();
         // SwitchToGazeNPinch();
+
+        _startButtonPosition = TaskButtonsFront.position;
+        _startTaskEndTextPosition = TaskEndText.transform.position;
+        TaskEndText.transform.position = Vector3.down * 1000;
     }
 
     void Update()
     {
         // UpdateHandVisuals();
         TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
-        TaskButtonsFront.gameObject.SetActive(!StudyFlag);
 
         if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
@@ -107,6 +112,7 @@ public class StudyControl : Singleton<StudyControl>
                 AudioPlay.PlayClickSound();
             }
         }
+
 
         // if (ManipulationBehavior.GrabbedObject != null && TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
         // {
@@ -203,9 +209,12 @@ public class StudyControl : Singleton<StudyControl>
 
         TotalTrialCount = 0;
 
+        TaskButtonsFront.position = Vector3.down * 1000;
+        TaskEndText.transform.position = Vector3.down * 1000;
+
         // if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
         // else
-        StartCoroutine(RunTrials_within());
+        StartCoroutine(RunTrials_within(OnStudyComplete));
     }
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
@@ -228,12 +237,12 @@ public class StudyControl : Singleton<StudyControl>
     }
     public float TaskProgress { get { return ProjectedDistanceOnTaskAxis / TaskSpatialDistance; } }
 
-    private IEnumerator RunTrials_within()
+    private IEnumerator RunTrials_within(System.Action onComplete = null)
     {
         StudyFlag = true;
 
         HeadPosition_OnTaskStart = Camera.main.transform.position;
-        DepthAmplitudeCombinations = IsPractice? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice) : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+        DepthAmplitudeCombinations = IsPractice ? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice) : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
         {
@@ -268,6 +277,13 @@ public class StudyControl : Singleton<StudyControl>
         }
 
         StudyFlag = false;
+        onComplete?.Invoke();
+    }
+
+    public void OnStudyComplete()
+    {
+        if (IsPractice) TaskButtonsFront.position = _startButtonPosition;
+        TaskEndText.transform.position = _startTaskEndTextPosition;
     }
 
     private void ShowTrials_within()
@@ -307,7 +323,7 @@ public class StudyControl : Singleton<StudyControl>
                 // SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
                 // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");
             }
-        }        
+        }
     }
 
     // private IEnumerator RunTrials_between()
