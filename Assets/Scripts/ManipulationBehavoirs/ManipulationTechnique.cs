@@ -327,7 +327,7 @@ public class ManipulationTechnique : MonoBehaviour
     public float DistanceToGazeAfterAddingHeadDepth { get; protected set; }
     public float AngleGazeDirectionToObject { get; protected set; }
 
-    public float MinHeadSpeed { get; protected set; } = 0.12f;
+    public float MinHeadSpeed { get; protected set; } = 0.1f;
     public float MaxHeadSpeed { get; protected set; } = 0.6f;
 
     public float MinGainDeg { get; protected set; } = 30;
