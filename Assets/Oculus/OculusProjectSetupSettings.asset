@@ -15,7 +15,9 @@ MonoBehaviour:
   boolProperties:
     keys:
     - Meta.XR.SDK.c5ad2ac8b06a338d8874d28a074a9d83.Ignored.Android
-    values: 01
+    - Meta.XR.SDK.c5ad2ac8b06a338d8874d28a074a9d83.Ignored.Standalone
+    - Meta.XR.SDK.4aeb0c4701b1dd860da35734cac3063a.Ignored.Standalone
+    values: 010101
   intProperties:
     keys: []
     values: 
