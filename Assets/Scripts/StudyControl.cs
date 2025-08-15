@@ -288,7 +288,7 @@ public class StudyControl : Singleton<StudyControl>
 
     private void ShowTrials_within()
     {
-        DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+        DepthAmplitudeCombinations = IsPractice ? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice) : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
         foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
         {
