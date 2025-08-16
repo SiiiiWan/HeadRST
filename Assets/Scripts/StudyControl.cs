@@ -117,7 +117,7 @@ public class StudyControl : Singleton<StudyControl>
 
         UpdateTaskVisualFeedbacks();
 
-        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
+        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinchingOrGrabbing && ManipulationBehavior.GrabbedObject != null)
         {
             if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo || TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
             {

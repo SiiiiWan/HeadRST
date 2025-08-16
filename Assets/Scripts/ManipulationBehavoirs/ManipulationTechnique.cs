@@ -209,7 +209,7 @@ public class ManipulationTechnique : MonoBehaviour
                 // {
                 //     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
                 // }
-                if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinching_LastFrame)
+                if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinchingOrGrabbing_LastFrame)
                 {
                     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
