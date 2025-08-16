@@ -9033,7 +9033,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchToAnywhereHandAttenuated
         m_Mode: 1
@@ -9045,7 +9045,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: StartTask
         m_Mode: 1
@@ -9206,7 +9206,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
-  Wedges: []
 --- !u!65 &346163902
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13235,7 +13234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &448756907
 Transform:
   m_ObjectHideFlags: 0
@@ -13965,7 +13964,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
-  Wedges: []
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17579,7 +17577,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchToGazeHand
         m_Mode: 1
@@ -17591,7 +17589,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: StartTask
         m_Mode: 1
@@ -21216,7 +21214,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchToGazeNPinch
         m_Mode: 1
@@ -21228,7 +21226,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: StartTask
         m_Mode: 1
@@ -25000,7 +24998,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchTask_DepthOnly
         m_Mode: 1
@@ -27938,12 +27936,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1006584912}
-  - component: {fileID: 1006584926}
-  - component: {fileID: 1006584915}
   - component: {fileID: 1006584927}
   - component: {fileID: 1006584928}
   - component: {fileID: 1006584923}
   - component: {fileID: 1006584925}
+  - component: {fileID: 1006584929}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -27966,41 +27963,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1006584915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ParticipantID: kt
-  DominantHand: 1
-  IsPractice: 1
-  ManipulationBehavior: {fileID: 1006584925}
-  StudyFlag: 0
-  TotalTrialCount: 0
-  IsAfterFirstPickUpInTrial: 0
-  StartPositionLabel: 0
-  TaskMinDepth: 0
-  TaskMaxDepth: 0
-  TaskAmplitude: 0
-  TaskText: {fileID: 446766520}
-  TaskEndText: {fileID: 1839769698}
-  TargetPrefab: {fileID: 2676514430063476796, guid: acf565eedf6b18e47a5e2dcfde534009, type: 3}
-  ObjectPrefab: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
-  LeftHand_Virtual: {fileID: 478462430}
-  RightHand_Virtual: {fileID: 1887473118}
-  LeftHandSynth_Virtual: {fileID: 1805206431}
-  RightHandSynth_Virtual: {fileID: 2145648252}
-  TaskButtonsFront: {fileID: 1074818979}
-  ObjectToBeManipulated: {fileID: 0}
-  TargetIndicator: {fileID: 0}
-  StartPositionLabelsList: 
 --- !u!114 &1006584923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28026,21 +27988,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHandSpeed: 0.1
---- !u!114 &1006584926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 013cec37d8a328f4ea81bbf80aa76838, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LogData: 0
-  pid: 
-  technique: 
 --- !u!114 &1006584927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28065,6 +28012,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e36c962a3c54b04096d3a0d39f9fd54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1006584929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DominantHand: 1
+  ManipulationBehavior: {fileID: 1006584925}
 --- !u!1 &1012108263
 GameObject:
   m_ObjectHideFlags: 0
@@ -39894,7 +39855,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: StartTask
         m_Mode: 1
@@ -40306,7 +40267,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchToAnywhereHandBase
         m_Mode: 1
@@ -40318,7 +40279,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: StartTask
         m_Mode: 1
@@ -40606,7 +40567,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
-  Wedges: []
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0
@@ -40924,7 +40884,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchTask_DepthOnly
         m_Mode: 1
@@ -43021,7 +42981,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1006584915}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: StudyControl, Assembly-CSharp
         m_MethodName: SwitchTask_AmpAndDepth
         m_Mode: 1
@@ -50738,7 +50698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1839769698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54917,6 +54877,63 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &1997307087
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_Name
+      value: Cube (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.15293086
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.877
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.303
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
 --- !u!1 &2002473213
 GameObject:
   m_ObjectHideFlags: 0
@@ -60590,3 +60607,4 @@ SceneRoots:
   - {fileID: 2146079648}
   - {fileID: 881284835}
   - {fileID: 1839769700}
+  - {fileID: 1997307087}

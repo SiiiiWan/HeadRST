@@ -49,7 +49,7 @@ public class PinchDetector : Singleton<PinchDetector>
                 PinchState = PinchState.BothHandsGrabbing;
         }
 
-        IsNoHandPinchingOrGrabbing_LastFrame = PinchState == PinchState.NotPinchingOrGrabbing;
+        // IsNoHandPinchingOrGrabbing_LastFrame = PinchState == PinchState.NotPinchingOrGrabbing;
     }
 
     private float GetDistance(GameObject obj1, GameObject obj2)

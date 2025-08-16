@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UIElements;
 
 
 public class ManipulationTechnique : MonoBehaviour
@@ -21,18 +22,26 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = obj;
         LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
-        StudyControl.GetInstance().IsAfterFirstPickUpInTrial = true;
 
         TriggerOnGazeFixation();
 
         VirtualHandPosition_OnGrab = VirtualHandPosition;
         ObjectPosition_OnGrab = GrabbedObject.transform.position;
+
+        print("Object Grabbed");
     }
 
     public virtual void ApplyIndirectGrabbedBehaviour() { }
     public virtual void ApplyDirectGrabbedBehaviour() { }
     public virtual void ApplyGazingButNotGrabbingBehaviour() { }
     public virtual void ApplyObjectFreeBehaviour() { }
+    public virtual void ApplyBothHandsPinchingBehaviour()
+    {
+        GrabbedObject.transform.position += (PinchTipPosition_Mid - PinchTipPosition_Mid_Last) * GetVisualGain(GrabbedObject.transform.position);
+
+        Vector3 currentScale = GrabbedObject.transform.localScale;
+        GrabbedObject.transform.localScale = currentScale * (1 + (PinchTipDistance - PinchTipDistance_Last) * 2);
+    }
 
     public virtual void TriggerOnHandReleased()
     {
@@ -76,7 +85,12 @@ public class ManipulationTechnique : MonoBehaviour
     public Vector3 VirtualHandPosition_OnGrab { get; private set; }
     public Vector3 ObjectPosition_OnGrab { get; private set; }
 
-
+    public Vector3 LeftPinchTipPosition { get; private set; }
+    public Vector3 RightPinchTipPosition { get; private set; }
+    public Vector3 PinchTipPosition_Mid { get; private set; }
+    public float PinchTipDistance { get; private set; }
+    public Vector3 PinchTipPosition_Mid_Last { get; private set; }
+    public float PinchTipDistance_Last { get; private set; }
 
     // Gaze
     public EyeGaze GazeData { get; private set; }
@@ -129,6 +143,12 @@ public class ManipulationTechnique : MonoBehaviour
         HandRotationSpeed = HandData.GetHandRotationSpeed(usePinchTip: true);
         HandFixationTracker.UpdateThrshould(HandStablizeDuration, HandStablizeThr);
         IsHandStablized = HandFixationTracker.GetIsFixating(PinchPosition);
+        LeftPinchTipPosition = HandData.LeftPinchTipPosition;
+        RightPinchTipPosition = HandData.RightPinchTipPosition;
+        PinchTipPosition_Mid = (LeftPinchTipPosition + RightPinchTipPosition) / 2;
+        PinchTipDistance = Vector3.Distance(LeftPinchTipPosition, RightPinchTipPosition);
+
+
 
         GazeData = EyeGaze.GetInstance();
         GazeOrigin = GazeData.GetGazeRay().origin;
@@ -166,6 +186,8 @@ public class ManipulationTechnique : MonoBehaviour
         IsGazeFixating_pre = IsGazeFixating;
         IsHeadFixating_pre = IsHeadFixating;
         Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
+        PinchTipDistance_Last = PinchTipDistance;
+        PinchTipPosition_Mid_Last = PinchTipPosition_Mid;
     }
 
     #endregion
@@ -209,7 +231,7 @@ public class ManipulationTechnique : MonoBehaviour
                 // {
                 //     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Direct);
                 // }
-                if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinchingOrGrabbing_LastFrame)
+                if (PinchDetector.IsOneHandPinching)
                 {
                     TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
@@ -243,6 +265,10 @@ public class ManipulationTechnique : MonoBehaviour
                 {
                     ApplyIndirectGrabbedBehaviour();
                 }
+                else if(PinchDetector.IsBothHandsPinching)
+                {
+                    ApplyBothHandsPinchingBehaviour();
+                }
                 else
                 {
                     TriggerOnHandReleased();
@@ -268,6 +294,10 @@ public class ManipulationTechnique : MonoBehaviour
         return k1 + (k2 - k1) / (v2 - v1) * (x - v1);
     }
 
+    public float GetVisualGain(Vector3 objectPosition)
+    {
+        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
+    }
 
     public void TriggerOnGazeFixation()
     {
