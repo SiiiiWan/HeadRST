@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -63,6 +62,7 @@ public class StudyControl : Singleton<StudyControl>
     public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
 
     private Vector3 _startButtonPosition, _startTaskEndTextPosition;
+    private GameObject practiceDemoObject;
 
     protected override void Awake()
     {
@@ -81,6 +81,23 @@ public class StudyControl : Singleton<StudyControl>
         _startButtonPosition = TaskButtonsFront.position;
         _startTaskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
+
+        if (IsPractice)
+        {
+            StartCoroutine(WaitAndSpawnPracticeObject());
+        }
+    }
+
+    private IEnumerator WaitAndSpawnPracticeObject()
+    {
+        // Wait until the main camera's position is not Vector3.zero
+        while (Camera.main.transform.position == Vector3.zero)
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        Vector3 spawnPosition = Camera.main.transform.position + (5 * Vector3.forward);
+        practiceDemoObject = SpawnPrefab(ObjectPrefab, spawnPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
     }
 
     void Update()
@@ -88,7 +105,7 @@ public class StudyControl : Singleton<StudyControl>
         // UpdateHandVisuals();
         TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
 
-        if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
 
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
@@ -214,6 +231,8 @@ public class StudyControl : Singleton<StudyControl>
 
         // if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
         // else
+
+        if(practiceDemoObject) Destroy(practiceDemoObject);
         StartCoroutine(RunTrials_within(OnStudyComplete));
     }
 
