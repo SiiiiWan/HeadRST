@@ -76,11 +76,12 @@ public class StudyControl : Singleton<StudyControl>
     void Start()
     {
         // UpdateHandVisuals();
-        // SwitchToGazeNPinch();
+        // SwitchToGazeNPinch(); 
 
         _startButtonPosition = TaskButtonsFront.position;
         _startTaskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
+        TaskButtonsFront.position = Vector3.down * 1000;
 
         if (IsPractice)
         {
@@ -105,7 +106,7 @@ public class StudyControl : Singleton<StudyControl>
         // UpdateHandVisuals();
         TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
 
-        // if (Input.GetKeyDown(KeyCode.Space)) ShowTrials_within();
+        if (Input.GetKeyDown(KeyCode.Space)) TaskButtonsFront.position = _startButtonPosition;
 
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
