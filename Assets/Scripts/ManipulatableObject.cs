@@ -28,7 +28,7 @@ public class ManipulatableObject : MonoBehaviour
         //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
         // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsHitbyGaze = AngleToGaze <= 10f;
+        IsHitbyGaze = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
 
         IsPinchTipWithinCube = IsPointWithinCube(ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
