@@ -202,8 +202,7 @@ public class StudyControl : Singleton<StudyControl>
         startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, ObjectPrefab.transform.localScale);
 
         // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
-        Quaternion randomRotationOffset = Quaternion.AngleAxis(20, Random.onUnitSphere);
-        target = SpawnPrefab(TargetPrefab, endPos, randomRotationOffset * startObj.transform.rotation, TargetPrefab.transform.localScale);
+        target = SpawnPrefab(TargetPrefab, endPos, startObj.transform.rotation, TargetPrefab.transform.localScale);
 
         // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
 
