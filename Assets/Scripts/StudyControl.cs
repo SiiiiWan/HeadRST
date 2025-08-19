@@ -28,6 +28,8 @@ public class StudyControl : Singleton<StudyControl>
     public Handedness DominantHand = Handedness.right;
     public bool IsPractice;
     public ManipulationTechnique ManipulationBehavior;
+    public bool IsDepthRingEnabled;
+
 
     [Header("Study States")]
     public bool StudyFlag = false; // Indicates if the study is currently running
@@ -43,6 +45,10 @@ public class StudyControl : Singleton<StudyControl>
     public GameObject ObjectPrefab;
     public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
     public Transform TaskButtonsFront;
+    public GazeNPinchOrigin GazeNPinchOrigin;
+    public GazeDirected GazeDirected;
+    public AnywhereHand_Base AnywhereHand_Base;
+    public AnywhereHand_Att AnywhereHand_Att;
 
     [HideInInspector] public GameObject ObjectToBeManipulated;
     [HideInInspector] public GameObject TargetIndicator;
@@ -55,11 +61,11 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
 
 
-    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    public List<(float min, float max)> DepthPairs_practice { get; private set; } = new List<(float, float)> {(2f, 6f)};
+    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f) };
+    public List<(float min, float max)> DepthPairs_practice { get; private set; } = new List<(float, float)> { (2f, 10f) };
 
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
-    public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
+    public List<float> Amplitudes_practice { get; private set; } = new List<float> { 60f };
 
     private Vector3 _startButtonPosition, _startTaskEndTextPosition;
     private GameObject practiceDemoObject;
@@ -81,7 +87,7 @@ public class StudyControl : Singleton<StudyControl>
         _startButtonPosition = TaskButtonsFront.position;
         _startTaskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
-        TaskButtonsFront.position = Vector3.down * 1000;
+        // TaskButtonsFront.position = Vector3.down * 1000;
 
         if (IsPractice)
         {
@@ -181,9 +187,16 @@ public class StudyControl : Singleton<StudyControl>
         Circle_dynamic.SetWidth(circleLineWidth);
         Circle_static.SetWidth(circleLineWidth);
 
-        Circle_static.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
-        Circle_dynamic.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
-
+        if (IsDepthRingEnabled == false)
+        {
+            Circle_static.IsVisible = false;
+            Circle_dynamic.IsVisible = false;
+        }
+        else
+        {
+            Circle_static.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+            Circle_dynamic.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+        }
     }
 
 
@@ -232,7 +245,7 @@ public class StudyControl : Singleton<StudyControl>
         // if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
         // else
 
-        if(practiceDemoObject) Destroy(practiceDemoObject);
+        if (practiceDemoObject) Destroy(practiceDemoObject);
         StartCoroutine(RunTrials_within(OnStudyComplete));
     }
 
@@ -390,7 +403,7 @@ public class StudyControl : Singleton<StudyControl>
     Dictionary<CubePositionLabels, Vector3> GetCubePositions_Visual(
         Vector3 viewPoint, Vector3 forwardDir, float minDepth, float maxDepth, float angularDeviation_horizontal, float angularDeviation_vertical)
     {
-        angularDeviation_vertical = angularDeviation_vertical / Mathf.Sqrt(2f); 
+        angularDeviation_vertical = angularDeviation_vertical / Mathf.Sqrt(2f);
         angularDeviation_horizontal = angularDeviation_horizontal / Mathf.Sqrt(2f);
 
         Dictionary<CubePositionLabels, Vector3> positions = new Dictionary<CubePositionLabels, Vector3>
@@ -524,115 +537,49 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
-    // public void SwitchToAnywhereHandBase()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is AnywhereHand_Base)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<AnywhereHand_Base>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
+    public void SwitchingRingVisibility()
+    {
+        IsDepthRingEnabled = !IsDepthRingEnabled;
+    }
 
-    //     TechniqueText.text = "Current Technique: AnywhereHand- HeadPriority";
-    // }
+    public void SwitchToGazeNPinch()
+    {
+        ManipulationBehavior = GazeNPinchOrigin;
 
-    // public void SwitchToAnywhereHandAttenuated()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is AnywhereHand_Att)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<AnywhereHand_Att>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: AnywhereHand - HandPriority";
-    // }
+        GazeNPinchOrigin.enabled = true;
+        GazeDirected.enabled = false;
+        AnywhereHand_Base.enabled = false;
+        AnywhereHand_Att.enabled = false;
+    }
 
-    // public void SwitchToContinuous2()
-    // {
-    //     ManipulationBehavior = GetComponent<Continuous2>();
-    //     TechniqueText.text = "Current Technique: AnywhereHand 2";
-    // }
+    public void SwitchToGazeDirected()
+    {
+        ManipulationBehavior = GazeDirected;
 
-    // public void SwitchToGazeHand()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is GazeHand)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<GazeHand>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: GazeHand2";
-    // }
+        GazeNPinchOrigin.enabled = false;
+        GazeDirected.enabled = true;
+        AnywhereHand_Base.enabled = false;
+        AnywhereHand_Att.enabled = false;
+    }
 
-    // public void SwitchToGazeNPinch()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is GazeNPinchOrigin)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
-    // }
+    public void SwitchToAnywhereHand_Base()
+    {
+        ManipulationBehavior = AnywhereHand_Base;
 
-    // public void SwitchTask_DepthOnly()
-    // {
-    //     TaskMode = TaskMode.depth_only;
-    //     TaskText.text = "Current Task: Far-Close Switching";
-    //     StartTask();
-    // }
+        GazeNPinchOrigin.enabled = false;
+        GazeDirected.enabled = false;
+        AnywhereHand_Base.enabled = true;
+        AnywhereHand_Att.enabled = false;
+    }
 
-    // public void SwitchTask_AmpAndDepth()
-    // {
-    //     TaskMode = TaskMode.amp_and_depth;
-    //     TaskText.text = "Current Task: Distance Manipulation";
-    //     StartTask();
-    // }
+    public void SwitchToAnywhereHand_Att()
+    {
+        ManipulationBehavior = AnywhereHand_Att;
 
-    // public void SwitchToScaledHOMER()
-    // {
-    //     ManipulationBehavior = GetComponent<ScaledHOMER>();
-    //     TechniqueText.text = "Current Technique: Scaled HOMER";
-    // }
-
-    // public void SwitchToGazeNPinchEyeHead()
-    // {
-    //     ManipulationBehavior = GetComponent<GazeNPinchEyeHead>();
-    //     TechniqueText.text = "Current Technique: Gaze and Pinch Eye Head";
-    // }
-
-    // public void SwitchToHomerEyeHead()
-    // {
-    //     ManipulationBehavior = GetComponent<HomerEyeHead>();
-    //     TechniqueText.text = "Current Technique: HOMER Eye Head";
-    // }
+        GazeNPinchOrigin.enabled = false;
+        GazeDirected.enabled = false;
+        AnywhereHand_Base.enabled = false;
+        AnywhereHand_Att.enabled = true;
+    }
 
 }
