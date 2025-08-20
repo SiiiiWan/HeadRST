@@ -173,7 +173,7 @@ public class StudyControl : Singleton<StudyControl>
         Vector3 camToTargetVector = TargetIndicator.transform.position - HeadPosition_OnTrialStart;
         float projectedDistanceOnDepthAxis = Vector3.Project(camToObjectVector, camToTargetVector).magnitude;
 
-        float depthProgress = Mathf.Max(0, (projectedDistanceOnDepthAxis / camToTargetVector.magnitude - 0.5f) * 2);
+        float depthProgress = Mathf.Max(0, 3 * (projectedDistanceOnDepthAxis / camToTargetVector.magnitude) - 2);
         Circle_dynamic.DrawRing(TargetIndicator.transform.position, staticCircleRadius * depthProgress);
 
         float circleLineWidth = MathFunctions.Deg2Meter(0.1f, camToTargetVector.magnitude);
@@ -181,8 +181,10 @@ public class StudyControl : Singleton<StudyControl>
         Circle_dynamic.SetWidth(circleLineWidth);
         Circle_static.SetWidth(circleLineWidth);
 
-        Circle_static.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
-        Circle_dynamic.IsVisible = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+        bool showRings = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold() && Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) < TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold() * 4;
+
+        Circle_static.IsVisible = showRings;
+        Circle_dynamic.IsVisible = showRings;
 
     }
 
