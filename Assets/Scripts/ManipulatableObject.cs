@@ -18,6 +18,40 @@ public class ManipulatableObject : MonoBehaviour
     public Grabbable Grabbable;
     public HandGrabInteractable HandGrabInteractable;
 
+    void Awake()
+    {
+        Transform handGrabChild = transform.Find("[BuildingBlock] HandGrab");
+        if (handGrabChild != null)
+        {
+            Grabbable = handGrabChild.GetComponent<Grabbable>();
+            HandGrabInteractable = handGrabChild.GetComponent<HandGrabInteractable>();
+            GrabInteractable grabInteractable = handGrabChild.GetComponent<GrabInteractable>();
+
+
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                if (Grabbable != null)
+                {
+                    Grabbable.InjectOptionalRigidbody(rb);
+                }
+                if (HandGrabInteractable != null)
+                {
+                    HandGrabInteractable.InjectRigidbody(rb);
+                }
+                if (grabInteractable != null)
+                {
+                    grabInteractable.InjectRigidbody(rb);
+                }
+            }
+
+        }
+        else
+        {
+            Debug.LogWarning($"Child '[BuildingBlock] HandGrab' not found under {gameObject.name}");
+        }
+    }
+
     void Update()
     {
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
