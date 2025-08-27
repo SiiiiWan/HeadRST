@@ -85,14 +85,14 @@ public class AnywhereHand : ManipulationTechnique
 
     // }
 
-    public override void ApplyIndirectGrabbedBehaviour()
+    public override void ApplyIndirectGrabbedBehaviour(bool isDoubleHand = true)
     {
         VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
         OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
-        GrabbedObject.transform.position += OffsetAddedByHand;
+        if (isDoubleHand == false) GrabbedObject.transform.position += OffsetAddedByHand;
 
         AngleRotatedByHand = Quaternion.Angle(PinchRotation_delta * GrabbedObject.transform.rotation, GrabbedObject.transform.rotation);
-        GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
+        if (isDoubleHand == false) GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
 
         CurrentDistanceToGaze = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
 
@@ -174,11 +174,6 @@ public class AnywhereHand : ManipulationTechnique
         float b = right.y - k * right.x;
 
         return k * x + b;
-    }
-
-    public float GetVisualGain(Vector3 objectPosition)
-    {
-        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
     }
 
     #endregion

@@ -16,7 +16,7 @@ public class GazeDirected : ManipulationTechnique
         VirtualHandPosition = WristPosition;
     }
 
-    public override void ApplyIndirectGrabbedBehaviour()
+    public override void ApplyIndirectGrabbedBehaviour(bool isDoubleHand = true)
     {
 
         VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
@@ -45,8 +45,4 @@ public class GazeDirected : ManipulationTechnique
     }
 
 
-    public float GetVisualGain(Vector3 objectPosition)
-    {
-        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
-    }
 }

@@ -7222,10 +7222,10 @@ PrefabInstance:
       addedObject: {fileID: 274523566}
     - targetCorrespondingSourceObject: {fileID: 8776073696967254665, guid: e8b14dde53114d242b5dcad7698a44a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 274523562}
+      addedObject: {fileID: 274523567}
     - targetCorrespondingSourceObject: {fileID: 8776073696967254665, guid: e8b14dde53114d242b5dcad7698a44a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 274523567}
+      addedObject: {fileID: 274523562}
     - targetCorrespondingSourceObject: {fileID: 8775538012139967674, guid: e8b14dde53114d242b5dcad7698a44a7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 274523561}
@@ -53294,13 +53294,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 197824264230722163, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_Name
       value: Cube (2)
       objectReference: {fileID: 0}
     - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -53341,6 +53345,10 @@ PrefabInstance:
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164923035355757094, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: instanceId
+      value: 72436c1e-d9e2-4401-8ed4-02710efb126c
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

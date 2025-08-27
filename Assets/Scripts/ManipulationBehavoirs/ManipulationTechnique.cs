@@ -27,20 +27,23 @@ public class ManipulationTechnique : MonoBehaviour
 
         VirtualHandPosition_OnGrab = VirtualHandPosition;
         ObjectPosition_OnGrab = GrabbedObject.transform.position;
-
-        print("Object Grabbed");
     }
 
-    public virtual void ApplyIndirectGrabbedBehaviour() { }
+    public virtual void ApplyIndirectGrabbedBehaviour(bool isDoubleHand = false) { }
     public virtual void ApplyDirectGrabbedBehaviour() { }
     public virtual void ApplyGazingButNotGrabbingBehaviour() { }
     public virtual void ApplyObjectFreeBehaviour() { }
     public virtual void ApplyBothHandsPinchingBehaviour()
     {
+        // GrabbedObject.transform.position += (PinchTipPosition_Mid - PinchTipPosition_Mid_Last) * GetVisualGain(GrabbedObject.transform.position);
+        ApplyIndirectGrabbedBehaviour(isDoubleHand: true);
+
         GrabbedObject.transform.position += (PinchTipPosition_Mid - PinchTipPosition_Mid_Last) * GetVisualGain(GrabbedObject.transform.position);
 
         Vector3 currentScale = GrabbedObject.transform.localScale;
         GrabbedObject.transform.localScale = currentScale * (1 + (PinchTipDistance - PinchTipDistance_Last) * 2);
+
+        GrabbedObject.transform.rotation = PinchTipMidOrientation * Quaternion.Inverse(PinchTipMidOrientation_Last) * GrabbedObject.transform.rotation;
     }
 
     public virtual void TriggerOnHandReleased()
@@ -91,6 +94,8 @@ public class ManipulationTechnique : MonoBehaviour
     public float PinchTipDistance { get; private set; }
     public Vector3 PinchTipPosition_Mid_Last { get; private set; }
     public float PinchTipDistance_Last { get; private set; }
+    public Quaternion PinchTipMidOrientation { get; private set; }
+    public Quaternion PinchTipMidOrientation_Last { get; private set; }
 
     // Gaze
     public EyeGaze GazeData { get; private set; }
@@ -147,7 +152,7 @@ public class ManipulationTechnique : MonoBehaviour
         RightPinchTipPosition = HandData.RightPinchTipPosition;
         PinchTipPosition_Mid = (LeftPinchTipPosition + RightPinchTipPosition) / 2;
         PinchTipDistance = Vector3.Distance(LeftPinchTipPosition, RightPinchTipPosition);
-
+        PinchTipMidOrientation = Quaternion.LookRotation(RightPinchTipPosition - LeftPinchTipPosition);
 
 
         GazeData = EyeGaze.GetInstance();
@@ -188,6 +193,7 @@ public class ManipulationTechnique : MonoBehaviour
         Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
         PinchTipDistance_Last = PinchTipDistance;
         PinchTipPosition_Mid_Last = PinchTipPosition_Mid;
+        PinchTipMidOrientation_Last = PinchTipMidOrientation;
     }
 
     #endregion
