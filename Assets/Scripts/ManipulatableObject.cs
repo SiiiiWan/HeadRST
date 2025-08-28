@@ -12,52 +12,30 @@ public enum GrabbedState
 
 public class ManipulatableObject : MonoBehaviour
 {
+
     public bool IsHitbyGaze { get; private set; }
     public float AngleToGaze { get; private set; }
     public GrabbedState GrabbedState { get; private set; } = GrabbedState.NotGrabbed;
     public Grabbable Grabbable;
     public HandGrabInteractable HandGrabInteractable;
+    public ManipulationTechnique ManipulationBehavior { get; private set; }
 
-    void Awake()
-    {
-        Transform handGrabChild = transform.Find("[BuildingBlock] HandGrab");
-        if (handGrabChild != null)
-        {
-            Grabbable = handGrabChild.GetComponent<Grabbable>();
-            HandGrabInteractable = handGrabChild.GetComponent<HandGrabInteractable>();
-            GrabInteractable grabInteractable = handGrabChild.GetComponent<GrabInteractable>();
-
-
-            Rigidbody rb = GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                if (Grabbable != null)
-                {
-                    Grabbable.InjectOptionalRigidbody(rb);
-                }
-                if (HandGrabInteractable != null)
-                {
-                    HandGrabInteractable.InjectRigidbody(rb);
-                }
-                if (grabInteractable != null)
-                {
-                    grabInteractable.InjectRigidbody(rb);
-                }
-            }
-
-        }
-        else
-        {
-            Debug.LogWarning($"Child '[BuildingBlock] HandGrab' not found under {gameObject.name}");
-        }
-    }
+    // public bool IsHand = false;
 
     void Update()
     {
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsHitbyGaze = AngleToGaze <= 10f;
+        IsHitbyGaze = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+        ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
 
         SetOutlineVisibility(IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed);
+        
+        // if (IsHand)
+        // {
+        //     AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
+        //     IsHitbyGaze = AngleToGaze <= 20f;
+        // } 
+
     }
 
     public void SetGrabbedState(GrabbedState state)
@@ -85,5 +63,16 @@ public class ManipulatableObject : MonoBehaviour
         }
     }
 
-
+    public bool DistanceToClosestPoint(Vector3 position, out float distance)
+    {
+        Collider col = GetComponent<Collider>();
+        if (col == null)
+        {
+            distance = -1f;
+            return false;
+        }
+        Vector3 closest = col.ClosestPoint(position);
+        distance = Vector3.Distance(closest, position);
+        return true;
+    }
 }

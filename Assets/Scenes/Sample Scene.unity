@@ -7259,6 +7259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!114 &274523562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7273,6 +7274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!54 &274523566
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -27485,7 +27487,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DominantHand: 1
   ManipulationBehavior: {fileID: 1006584925}
 --- !u!1 &1012108263
 GameObject:
@@ -39651,6 +39652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
+  Wedges: []
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0
@@ -53305,6 +53307,18 @@ PrefabInstance:
     - target: {fileID: 2676514430063476796, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: 6522297912498792456, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: m_LocalPosition.x
