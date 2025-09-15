@@ -27643,7 +27643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a643693ccf5cf84db396f47de674643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ParticipantID: test
+  ParticipantID: P26
   DominantHand: 1
   IsPractice: 1
   ManipulationBehavior: {fileID: 1006584927}
