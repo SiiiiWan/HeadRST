@@ -98,7 +98,7 @@ public class StudyControl : Singleton<StudyControl>
         }
 
         Vector3 spawnPosition = Camera.main.transform.position + (5 * Vector3.forward);
-        practiceDemoObject = SpawnPrefab(ObjectPrefab, spawnPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
+        // practiceDemoObject = SpawnPrefab(ObjectPrefab, spawnPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
     }
 
     void Update()
