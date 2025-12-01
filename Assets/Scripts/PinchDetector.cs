@@ -26,9 +26,9 @@ public class PinchDetector : Singleton<PinchDetector>
         IsRightPinching = Vector3.Distance(righHandPinchBall_thumb.transform.position, righHandPinchBall_index.transform.position) < PinchThreshold; // Adjust threshold as needed
         IsLeftPinching = Vector3.Distance(leftHandPinchBall_thumb.transform.position, leftHandPinchBall_index.transform.position) < PinchThreshold; // Adjust threshold as needed
 
-        StudyControl studyControl = StudyControl.GetInstance();
+        Settings settings = Settings.GetInstance();
 
-        if (studyControl.DominantHand == Handedness.right)
+        if (settings.DominantHand == DominantHand.right)
         {
             if (IsRightPinching)
             {

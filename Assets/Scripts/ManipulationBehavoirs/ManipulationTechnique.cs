@@ -21,7 +21,6 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = obj;
         LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
-        StudyControl.GetInstance().IsAfterFirstPickUpInTrial = true;
 
         TriggerOnGazeFixation();
 

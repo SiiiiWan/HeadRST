@@ -28,8 +28,8 @@ public class ManipulatableObject : MonoBehaviour
         //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
         // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsHitbyGaze = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-        ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
+        IsHitbyGaze = AngleToGaze <= 30f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+        ManipulationBehavior = Settings.GetInstance().ManipulationBehavior;
 
         IsPinchTipWithinCube = IsPointWithinCube(ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
         // if(ManipulationBehavior == GazeHand)
@@ -40,6 +40,7 @@ public class ManipulatableObject : MonoBehaviour
         else
         {
             SetOutlineVisibility(IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed);
+            SetFreezeObject(GrabbedState != GrabbedState.NotGrabbed);
         }
         // print(ManipulationBehavior.GetType().Name);
         //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
@@ -84,6 +85,29 @@ public class ManipulatableObject : MonoBehaviour
         {
             outline.enabled = isVisible;
         }
+    }
+
+    public void SetFreezeObject(bool isFreeze)
+    {
+        Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
+        if (rigidbody != null)
+        {
+            if (isFreeze)
+            {
+                rigidbody.isKinematic = true;
+                rigidbody.useGravity = false;
+                rigidbody.linearVelocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
+            }
+            else
+            {
+                rigidbody.isKinematic = false;
+                rigidbody.useGravity = true;
+                // rigidbody.linearVelocity = Vector3.zero; // or another initial value
+            }
+        }
+
+
     }
 
     public void DisableDirectGrab()

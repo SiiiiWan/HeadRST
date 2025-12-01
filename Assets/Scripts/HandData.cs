@@ -98,7 +98,7 @@ public class HandData : Singleton<HandData>
 
     public Vector3 GetHandPosition(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? LeftPinchTipPosition : LeftHandPosition;
         }
@@ -110,7 +110,7 @@ public class HandData : Singleton<HandData>
 
     public Vector3 GetDeltaHandPosition(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? LeftPinchTipPosition_delta : LeftHandPosition_delta;
         }
@@ -122,7 +122,7 @@ public class HandData : Singleton<HandData>
 
     public Quaternion GetHandRotation(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? LeftPinchTipRotation : LeftHandRotation;
         }
@@ -134,7 +134,7 @@ public class HandData : Singleton<HandData>
 
     public Quaternion GetDeltaHandRotation(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? LeftPinchTipRotation_delta : LeftHandRotation_delta;
         }
@@ -152,7 +152,7 @@ public class HandData : Singleton<HandData>
 
     public float GetHandSpeed(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? LeftHandSpeed_pinch : LeftHandSpeed_wrist;
         }
@@ -164,17 +164,17 @@ public class HandData : Singleton<HandData>
 
     public Vector3 GetHandDirection()
     {
-        return StudyControl.GetInstance().DominantHand == Handedness.left ? LeftHandDirection : RightHandDirection;
+        return Settings.GetInstance().DominantHand == DominantHand.left ? LeftHandDirection : RightHandDirection;
     }
 
     public Quaternion GetHandDirectionDelta()
     {
-        return StudyControl.GetInstance().DominantHand == Handedness.left ? LeftHandDirection_delta : RightHandDirection_delta;
+        return Settings.GetInstance().DominantHand == DominantHand.left ? LeftHandDirection_delta : RightHandDirection_delta;
     }
 
     public Transform GetHandTransform(bool usePinchTip)
     {
-        if (StudyControl.GetInstance().DominantHand == Handedness.left)
+        if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
             return usePinchTip ? GetPinchTipTransform(PinchDetector.GetInstance().LeftHand) : LeftHandAnchor;
         }
