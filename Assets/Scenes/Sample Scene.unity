@@ -62069,6 +62069,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CubeSolidMaterial: {fileID: 2100000, guid: 7f2cf43acf2513d408235021c6d83aa2, type: 2}
   CubeTransparentMaterial: {fileID: 2100000, guid: 4a5a5b364354b4147ad0534b0226f574, type: 2}
+  CubeHoverMaterial: {fileID: 2100000, guid: 1dd18de5f8645a24fa44a1a737d00bbd, type: 2}
   CubeStackingCursor: {fileID: 1821918885}
   CurrentFocusedCubes: []
   ClosestFocusedCube: {fileID: 0}

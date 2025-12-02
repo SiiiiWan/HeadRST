@@ -54,12 +54,42 @@ public class CubeStackingCursor : MonoBehaviour
         if (PinchDetector.IsOneHandPinching)
         {
 
+            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
+            if (_currentMode == StaticState.Gaze)
+            {
+                // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
+
+                // Set Position along Gaze Ray
+                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+
+                // Apply Head Depth Offset
+                Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+
+                float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+                float edgeGain = EyeHeadGain();
+
+                transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+
+                // Clamp Depth within Min and Max
+                transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+
+                // Check to switch to Head state
+                if (IsGazeFixating) _currentMode = StaticState.Head;
+            }
+            else
+            {
+
+                // Check to switch back to Gaze state
+                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+                if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            }
+            
         }
         else
         {
 
-    
+
             transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
             if (_currentMode == StaticState.Gaze)
