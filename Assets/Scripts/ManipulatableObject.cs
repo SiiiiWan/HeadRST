@@ -1,7 +1,6 @@
 using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
-using System.Collections.Generic;
 
 public enum GrabbedState
 {
@@ -12,123 +11,75 @@ public enum GrabbedState
 
 public class ManipulatableObject : MonoBehaviour
 {
-    public bool IsHitbyGaze { get; private set; }
+    public bool IsInGazeCone { get; private set; }
     public float AngleToGaze { get; private set; }
-    public GrabbedState GrabbedState { get; private set; } = GrabbedState.NotGrabbed;
+
+    public bool IsPickedUp { get; protected set; }
+    public bool UseGravity;
+    public bool IsObjectFrozen { get; private set; }
+
+    public GrabbedState GrabbedState { get; protected set; }
     public Grabbable Grabbable;
     public HandGrabInteractable HandGrabInteractable;
-    public ManipulationTechnique ManipulationBehavior { get; private set; }
-    public bool IsPinchTipWithinCube { get; private set; }
-    // public bool IsHand = false;
 
-    public List<Transform> Wedges = new List<Transform>();
-
+    // Update is called once per frame
     void Update()
     {
-        //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
-        // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+
+        if (IsPickedUp)
+        {
+            UpdatePosition(CubeManager.GetInstance().CubeStackingCursor.transform.position);
+
+            if (PinchDetector.GetInstance().IsNoHandPinching)
+            {
+                IsPickedUp = false;
+                SetCancelObjectGravity(false);
+            }
+            return;
+        }
+
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsHitbyGaze = AngleToGaze <= 30f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-        ManipulationBehavior = Settings.GetInstance().ManipulationBehavior;
+        IsInGazeCone = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
 
-        IsPinchTipWithinCube = IsPointWithinCube(ManipulationBehavior.VirtualHandPosition + (HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false)));
-        // if(ManipulationBehavior == GazeHand)
-        if (ManipulationBehavior is GazeHand)
-        {
-            SetOutlineVisibility(GrabbedState == GrabbedState.NotGrabbed && IsPinchTipWithinCube);
-        }
-        else
-        {
-            SetOutlineVisibility(IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed);
-            SetFreezeObject(GrabbedState != GrabbedState.NotGrabbed);
-        }
-        // print(ManipulationBehavior.GetType().Name);
-        //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
+        SpecialBehaviour();
+    }
 
-        // if (IsHand)
-        // {
-        //     AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
-        //     IsHitbyGaze = AngleToGaze <= 20f;
-        // } 
+    public virtual void SpecialBehaviour()
+    {
 
-        // transform.localScale = MathFunctions.Deg2Meter(StudyControl.GetInstance().TargetSize, Vector3.Distance(StudyControl.GetInstance().HeadPosition_OnTrialStart, transform.position)) * Vector3.one;
+    }
+
+    public void UpdatePosition(Vector3 newPosition)
+    {
+        transform.position = newPosition;
     }
 
     public void SetGrabbedState(GrabbedState state)
     {
         GrabbedState = state;
+        SpecialBehaviour();
     }
 
-    public bool IsPointWithinCube(Vector3 point, float tolerancePercentage = 0.9f)
-    {
-        Vector3 center = transform.position;
-        Vector3 halfSize = transform.localScale * 0.5f;
-
-        // Calculate tolerance based on percentage of each dimension
-        Vector3 tolerance = new Vector3(
-            halfSize.x * (1 - tolerancePercentage),
-            halfSize.y * (1 - tolerancePercentage),
-            halfSize.z * (1 - tolerancePercentage)
-        );
-
-        return
-            (point.x >= center.x - halfSize.x + tolerance.x && point.x <= center.x + halfSize.x - tolerance.x) &&
-            (point.y >= center.y - halfSize.y + tolerance.y && point.y <= center.y + halfSize.y - tolerance.y) &&
-            (point.z >= center.z - halfSize.z + tolerance.z && point.z <= center.z + halfSize.z - tolerance.z);
-    }
-
-
-
-    public void SetOutlineVisibility(bool isVisible)
-    {
-        if (transform.TryGetComponent<Outline>(out Outline outline))
-        {
-            outline.enabled = isVisible;
-        }
-    }
-
-    public void SetFreezeObject(bool isFreeze)
+    public void SetCancelObjectGravity(bool isFreeze)
     {
         Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
-        if (rigidbody != null)
+        Collider collider = transform.GetComponent<Collider>();
+        if (rigidbody != null && collider != null)
         {
-            if (isFreeze)
+            if (isFreeze || UseGravity == false)
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
-                rigidbody.linearVelocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
+                // rigidbody.linearVelocity = Vector3.zero;
+                // rigidbody.angularVelocity = Vector3.zero;
+                collider.enabled = false;
             }
             else
             {
                 rigidbody.isKinematic = false;
                 rigidbody.useGravity = true;
+                collider.enabled = true;
                 // rigidbody.linearVelocity = Vector3.zero; // or another initial value
-            }
-        }
-
-
-    }
-
-    public void DisableDirectGrab()
-    {
-        if (Grabbable != null)
-        {
-            Grabbable.enabled = false;
-        }
-        if (HandGrabInteractable != null)
-        {
-            HandGrabInteractable.enabled = false;
-        }
-    }
-
-    public void SetActiveWedges(bool isActive)
-    {
-        foreach (Transform wedge in Wedges)
-        {
-            if (wedge != null)
-            {
-                wedge.gameObject.SetActive(isActive);
             }
         }
     }

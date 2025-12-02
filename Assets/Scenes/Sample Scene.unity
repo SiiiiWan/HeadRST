@@ -1257,7 +1257,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 0cb9bdcf-add4-49f6-8355-bfa5e8f221d3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -1296,6 +1297,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 35019703}
 --- !u!1 &35173732
 GameObject:
@@ -1839,7 +1843,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: aefc511d-08c3-482f-bf2f-f0721a7bb132
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -1878,6 +1883,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 51950196}
 --- !u!1 &52463671
 GameObject:
@@ -2298,7 +2306,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 017bc20f-1f8b-41bd-89e7-c1e3655e92c7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -2337,6 +2346,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 67693534}
 --- !u!1001 &68864703
 PrefabInstance:
@@ -2442,7 +2454,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f33c3818-7064-4078-bf2c-ddbb943ec73b
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -2481,6 +2494,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 68864705}
 --- !u!1 &71457224
 GameObject:
@@ -2743,7 +2759,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 9625f592-1927-4370-bf84-6cc9b9940e34
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -2782,6 +2799,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 76026697}
 --- !u!1 &76049417
 GameObject:
@@ -2971,7 +2991,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 6dd209a6-aa3c-4988-aeb7-c72b5d670279
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -3010,6 +3031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 79153897}
 --- !u!1 &81440760
 GameObject:
@@ -4001,7 +4025,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f1d5937b-b6ac-440a-979d-7636ef89824c
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -4040,6 +4065,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 111145685}
 --- !u!1 &111969616
 GameObject:
@@ -4507,7 +4535,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: fb74989c-a424-40cd-80e7-e753f63356a7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -4546,6 +4575,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 116138956}
 --- !u!1 &117070917
 GameObject:
@@ -5093,7 +5125,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 0afda65a-d7b9-4f18-8552-1797691968c1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -5132,6 +5165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 134138471}
 --- !u!1 &135200352
 GameObject:
@@ -5700,7 +5736,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 13e706d4-a308-4e8f-8c3a-19a8623edd1f
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -5739,6 +5776,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 157971484}
 --- !u!1 &158022182
 GameObject:
@@ -5876,7 +5916,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 29aacad1-6cac-4fb9-b38b-55e23fbf7a85
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -5915,6 +5956,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 159239996}
 --- !u!1 &160117598
 GameObject:
@@ -7291,7 +7335,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 87e3802a-6dbc-4428-962d-5607761d00ba
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -7330,6 +7375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 201440864}
 --- !u!1 &201455331
 GameObject:
@@ -8544,7 +8592,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 006376f4-bc71-48e2-8ddb-73ffa6ba64a4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -8583,6 +8632,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 253007846}
 --- !u!1001 &253013149
 PrefabInstance:
@@ -8688,7 +8740,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: a958cb14-c596-4a81-b307-46cab1aa945c
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -8727,6 +8780,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 253013151}
 --- !u!1 &255122338
 GameObject:
@@ -9134,7 +9190,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 3ca65a41-a786-429c-a60f-d4400334fcde
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -9173,6 +9230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 261165808}
 --- !u!1 &261641857
 GameObject:
@@ -9310,7 +9370,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 6f4f0c44-41f2-456e-8a77-17f5efbe3bc1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -9349,6 +9410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 268206446}
 --- !u!1 &269167059
 GameObject:
@@ -9601,7 +9665,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 73a071be-96cc-46d1-9c97-c003097d3e62
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -9640,6 +9705,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 284573416}
 --- !u!1 &284916817
 GameObject:
@@ -9777,7 +9845,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: dcac8c58-3227-4af9-a097-7f3591a05b2f
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -9816,6 +9885,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 287702373}
 --- !u!1 &287969228
 GameObject:
@@ -10480,6 +10552,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 8c423426361b4b9438e00f93c8c36954, type: 2}
     - target: {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
       propertyPath: 'Wedges.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
@@ -10784,7 +10860,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 6c6aa2c8-c410-4e37-a849-a4c072f01e81
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -10823,6 +10900,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 309190964}
 --- !u!1 &309403045
 GameObject:
@@ -10959,7 +11039,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 41debb38-63f3-4433-a7e2-3b11c621872d
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -10998,6 +11079,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 311460746}
 --- !u!1 &314352185
 GameObject:
@@ -11366,7 +11450,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f1b0c87d-6dac-4e0f-8718-436babcdc6d5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -11405,6 +11490,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 324203467}
 --- !u!1 &324219612
 GameObject:
@@ -11830,7 +11918,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 3279b861-2af1-43fb-85b4-f2d67ae45c0d
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -11869,6 +11958,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 341325746}
 --- !u!1 &341465478
 GameObject:
@@ -13292,7 +13384,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 3861d704-8746-4128-89c0-49c32dc09fc7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -13331,6 +13424,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 382426613}
 --- !u!1001 &383700639
 PrefabInstance:
@@ -13436,7 +13532,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 77b144c0-f56e-46f4-8d88-8d172ccf4fde
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -13475,6 +13572,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 383700641}
 --- !u!1 &383716630
 GameObject:
@@ -13935,7 +14035,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 912d9403-0215-4f89-9d72-e5b4533cae79
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -13974,6 +14075,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 399029349}
 --- !u!1001 &400493472
 PrefabInstance:
@@ -14079,7 +14183,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 43665443-8feb-489d-94d0-fdeb3f24366e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -14118,6 +14223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 400493474}
 --- !u!1 &400841370
 GameObject:
@@ -14742,7 +14850,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 0a6cb398-fc4e-4c5d-8934-26ac7414a45e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -14781,6 +14890,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 417765412}
 --- !u!1 &417877507
 GameObject:
@@ -15439,7 +15551,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 36da8fcb-3660-4bc4-b104-1e353646e7e6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -15478,6 +15591,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 424900267}
 --- !u!1 &425732865
 GameObject:
@@ -15671,7 +15787,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 1fc0edbb-bb73-43dc-901f-db4d36f2cb77
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -15710,6 +15827,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 427831419}
 --- !u!1 &429250676
 GameObject:
@@ -16438,7 +16558,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ae4d08fc-f9e8-4131-9969-70ceabef9607
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -16477,6 +16598,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 438933470}
 --- !u!1 &439394330
 GameObject:
@@ -17943,9 +18067,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
-  Wedges: []
 --- !u!114 &481185123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18068,7 +18192,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: aee280e9-9a3c-4746-90d4-c96bd8df05c0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -18107,6 +18232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 481368931}
 --- !u!1 &482299598
 GameObject:
@@ -18450,7 +18578,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: b0d092d1-caea-40cc-93e9-0947dab970a4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -18489,6 +18618,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 495211880}
 --- !u!1 &496576932
 GameObject:
@@ -20192,7 +20324,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5d5e174d-1ee0-4df0-ba31-e04efde45d15
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -20231,6 +20364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 548085812}
 --- !u!1 &551072095
 GameObject:
@@ -21332,7 +21468,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -21594,7 +21731,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: bed6c2f2-21cd-406c-afc7-fd7b47fee354
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -21633,6 +21771,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 611100906}
 --- !u!1 &611356946
 GameObject:
@@ -22188,7 +22329,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 28a9d34e-bc77-44a8-a005-3b18d0fbd288
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -22227,6 +22369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 625682375}
 --- !u!1 &627479912
 GameObject:
@@ -22457,7 +22602,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e5401c38-1680-48ee-b293-58d7ede8de7a
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -22496,6 +22642,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 631722957}
 --- !u!1 &633783380
 GameObject:
@@ -23251,7 +23400,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ff1b47b3-776f-4548-aecf-69a29e040106
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -23290,6 +23440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 662812415}
 --- !u!1 &663003528
 GameObject:
@@ -23426,7 +23579,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f414124d-2ca1-4e36-9373-cb8374b514fc
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -23465,6 +23619,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 664303216}
 --- !u!1 &667818729
 GameObject:
@@ -23651,7 +23808,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e12f37d8-0e3e-4d29-87a3-c2d752847761
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -23690,6 +23848,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 669982794}
 --- !u!1 &677405590
 GameObject:
@@ -23923,7 +24084,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ae62f37a-dca2-4bd3-950f-e3e67f2b54f7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -23962,6 +24124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 684060756}
 --- !u!1 &684891936
 GameObject:
@@ -25498,7 +25663,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: cc4fcdea-65b7-4681-a088-afaf6f3558b9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -25537,6 +25703,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 737319633}
 --- !u!1001 &738076110
 PrefabInstance:
@@ -26854,7 +27023,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ef3cf8c9-ad53-49e8-a97b-2fc9d8d62867
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -26893,6 +27063,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 780284023}
 --- !u!1 &786736700
 GameObject:
@@ -27248,7 +27421,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 694e847f-5b32-43cd-8b61-089137650f08
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -27287,6 +27461,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 787217328}
 --- !u!1 &787831728
 GameObject:
@@ -27677,7 +27854,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 2b34b55e-ab02-45a0-a185-83e2db09cdc5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -27716,6 +27894,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 802730126}
 --- !u!1 &803692787
 GameObject:
@@ -27852,7 +28033,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5ad63f2a-1238-4b06-96ee-2c495f651c60
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -27891,6 +28073,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 805627774}
 --- !u!1 &805669823
 GameObject:
@@ -28510,7 +28695,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ee049150-3ab2-4ca5-950a-ca950ee25960
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -28549,6 +28735,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 814297432}
 --- !u!1001 &815558146
 PrefabInstance:
@@ -28654,7 +28843,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: a2f8a408-7883-4e45-93e2-b1575e1b6cc0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -28693,6 +28883,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 815558148}
 --- !u!1001 &817367407
 PrefabInstance:
@@ -28798,7 +28991,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 4abbd9b3-8bdf-47c0-956d-314255c20332
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -28837,6 +29031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 817367409}
 --- !u!1 &822418729
 GameObject:
@@ -29026,7 +29223,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5f07fdfd-822b-4a03-89ab-fa0a057ceb0a
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -29065,6 +29263,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 829310205}
 --- !u!1 &830783442
 GameObject:
@@ -29599,7 +29800,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 558b9c9e-8996-4adb-9523-35f549090ada
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -29638,6 +29840,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 845351705}
 --- !u!1001 &845424476
 PrefabInstance:
@@ -29743,7 +29948,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 193e85b4-49b9-4553-aab0-9ece08506179
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -29782,6 +29988,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 845424478}
 --- !u!1 &849629889
 GameObject:
@@ -29978,7 +30187,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: eda20b05-8f08-4b76-b625-f9670b6ebf48
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -30017,6 +30227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 855044607}
 --- !u!1 &857698713
 GameObject:
@@ -31778,7 +31991,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 8b879014-0403-48a9-800a-fc4b6377fc2b
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -31817,6 +32031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 883591791}
 --- !u!1 &884683984
 GameObject:
@@ -32478,7 +32695,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 04bdf414-0fee-469f-8cb4-9c8967dbc988
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -32517,6 +32735,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 911533141}
 --- !u!1 &912525636
 GameObject:
@@ -32873,7 +33094,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: b56160b3-24b4-491e-960d-a53f10c17c8d
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -32912,6 +33134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 923403802}
 --- !u!1 &923875259
 GameObject:
@@ -33625,7 +33850,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 979eab4a-4354-4e6a-add1-a476c6825610
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -33664,6 +33890,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 936077372}
 --- !u!1 &937010555
 GameObject:
@@ -34503,7 +34732,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 814fed0a-0444-45ca-8d9e-0e8dd3a3f938
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -34542,6 +34772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 974493088}
 --- !u!1 &975307707
 GameObject:
@@ -35353,7 +35586,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f20f1379cf72cdd4480714d22bb0be07, type: 3}
   m_Name: 
@@ -36111,7 +36344,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: fe223dac-4079-4ff2-944f-3e0cbf01c4c8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -36150,6 +36384,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1017965320}
 --- !u!1 &1020471090
 GameObject:
@@ -36542,7 +36779,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 0be6d720-a237-41ac-b845-a02e94917a6e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -36581,6 +36819,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1038649753}
 --- !u!1001 &1038678164
 PrefabInstance:
@@ -36686,7 +36927,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 9d839fab-d9dc-4450-814a-819bbfd40d92
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -36725,6 +36967,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1038678166}
 --- !u!1 &1040644455
 GameObject:
@@ -38622,7 +38867,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5807e7ed-84fa-4b21-8128-75a6540d0698
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -38661,6 +38907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1079669109}
 --- !u!1 &1081391053
 GameObject:
@@ -38829,7 +39078,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 3cee9fa6-09d4-4b12-bb6d-a418f9c72a24
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -38868,6 +39118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1088346797}
 --- !u!1 &1088932442
 GameObject:
@@ -39358,7 +39611,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: cd39a4d5-89c7-4246-9252-426d2d40f017
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -39397,6 +39651,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1105929838}
 --- !u!1 &1107548580
 GameObject:
@@ -39533,7 +39790,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 7bde537e-7b11-405f-8848-528827aafe14
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -39572,6 +39830,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1107941057}
 --- !u!1 &1108210365
 GameObject:
@@ -39772,7 +40033,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 663d1d61-517b-4c54-a472-465c58a576e4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -39811,6 +40073,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1115225645}
 --- !u!1001 &1115339681
 PrefabInstance:
@@ -39916,7 +40181,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: c94eb876-0928-4041-bbcd-7723418de8d2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -39955,6 +40221,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1115339683}
 --- !u!1 &1119651274
 GameObject:
@@ -40875,7 +41144,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 877bc489-d206-4576-8e28-05f617f8a6e9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -40914,6 +41184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1137292517}
 --- !u!1 &1137560884
 GameObject:
@@ -41210,7 +41483,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: fcc296ce-cce0-4aea-8bab-90f179f88b3b
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -41249,6 +41523,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1153742762}
 --- !u!1 &1155299702
 GameObject:
@@ -41483,6 +41760,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1811115932}
 --- !u!1 &1158592491
 GameObject:
@@ -41900,7 +42180,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: ba80a535-5729-4e53-b2bf-21155b00266e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -41939,6 +42220,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1173874944}
 --- !u!1 &1174559949
 GameObject:
@@ -42970,7 +43254,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: fd53839e-ba1a-480e-84e6-b17247ad6e2a
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -43009,6 +43294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1217862935}
 --- !u!1 &1221040701
 GameObject:
@@ -43366,7 +43654,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: acdf7e82-01bb-43d7-92e4-ee32bd3c6646
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -43405,6 +43694,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1230863127}
 --- !u!1 &1232277262
 GameObject:
@@ -43605,7 +43897,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 71b949b7-8f68-43cc-b224-c306c7b41cd4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -43644,6 +43937,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1236502042}
 --- !u!1 &1242170164
 GameObject:
@@ -43874,7 +44170,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 323ad3ba-6d8d-4fe8-82f8-fda00b412753
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -43913,6 +44210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1258888109}
 --- !u!1001 &1259748268
 PrefabInstance:
@@ -44018,7 +44318,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 2e551a19-2641-4102-b312-c6ddfcb1ae1e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -44057,6 +44358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1259748270}
 --- !u!1 &1260006161
 GameObject:
@@ -44539,7 +44843,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f8b4c026-6712-49a7-a2af-ab2212eaa8af
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -44578,6 +44883,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1269827547}
 --- !u!1 &1271169080
 GameObject:
@@ -45122,7 +45430,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: d43fa989-4205-449f-83e2-d6c42addfef8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -45161,6 +45470,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1278310949}
 --- !u!1 &1279647177
 GameObject:
@@ -45298,7 +45610,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 1a1bdf51-0bbd-4a8d-a1bb-f926910a79de
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -45337,6 +45650,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1280475792}
 --- !u!1 &1282067955
 GameObject:
@@ -45759,7 +46075,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 4a34a2b5-4fc8-43b3-8b1a-e7625e0b3005
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -45798,6 +46115,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1304603896}
 --- !u!1 &1305242344
 GameObject:
@@ -46069,7 +46389,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 0aa0787b-2c46-4f27-97cf-27e55009b2a2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -46108,6 +46429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1310761016}
 --- !u!1 &1313046817
 GameObject:
@@ -47407,7 +47731,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 593bd811-ffd4-4029-9b9b-4905a3ec88c2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -47446,6 +47771,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1374475665}
 --- !u!1 &1375076174
 GameObject:
@@ -48213,7 +48541,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 553ad13a-3a63-48ec-aca9-aebe4a74b9f5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -48252,6 +48581,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1405718522}
 --- !u!1 &1408405344
 GameObject:
@@ -48581,7 +48913,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 85b1ef0b-94f4-4fb4-a8bf-d2db63243104
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -48620,6 +48953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1415393365}
 --- !u!1 &1415614682
 GameObject:
@@ -49358,7 +49694,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5456bbba-2df7-4b4f-ae74-74ad8adb286b
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -49397,6 +49734,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1435426547}
 --- !u!1 &1435517017
 GameObject:
@@ -49953,7 +50293,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 918cc8f9-da70-4f04-8719-f5edbe0b564a
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -49992,6 +50333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1458622271}
 --- !u!1 &1459117477
 GameObject:
@@ -50159,7 +50503,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: a0857b8f-c447-49a4-8348-3d5952e4532e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -50198,6 +50543,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1459745388}
 --- !u!1 &1469563038
 GameObject:
@@ -50760,7 +51108,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 7594633a-8499-45f4-9478-859bcef7096f
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -50799,6 +51148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1477822589}
 --- !u!1 &1482850385
 GameObject:
@@ -51465,9 +51817,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
   Grabbable: {fileID: 0}
   HandGrabInteractable: {fileID: 0}
-  Wedges: []
 --- !u!1 &1499969052
 GameObject:
   m_ObjectHideFlags: 0
@@ -51666,7 +52018,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 87cd88a7-bb0d-4f38-aa76-65987631836f
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -51705,6 +52058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1504162628}
 --- !u!1001 &1505847966
 PrefabInstance:
@@ -51810,7 +52166,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: b2273932-a4fa-4c1c-a0d1-5555167f4ece
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -51849,6 +52206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1505847968}
 --- !u!1 &1506708763
 GameObject:
@@ -52282,7 +52642,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 2b8c56a4-3745-4314-b09c-228e43034e73
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -52321,6 +52682,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1519527534}
 --- !u!1001 &1524216036
 PrefabInstance:
@@ -52426,7 +52790,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 665e48ed-0e6e-4207-a794-a1dbee6ec17b
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -52465,6 +52830,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1524216038}
 --- !u!1 &1524257967
 GameObject:
@@ -52933,7 +53301,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 6f77d7d7-b769-46e0-8f69-27184bbed598
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -52972,6 +53341,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1532548046}
 --- !u!1001 &1533189616
 PrefabInstance:
@@ -53077,7 +53449,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 97973b51-3c32-41c9-a402-bbb87b1845d3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -53116,6 +53489,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1533189618}
 --- !u!1 &1536512835
 GameObject:
@@ -53284,7 +53660,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: c7de32c1-7fa6-41a9-aabf-16b4b113a12e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -53323,6 +53700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1539247375}
 --- !u!1 &1542165919
 GameObject:
@@ -54433,7 +54813,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f837bde9-ffd3-422f-8179-6f8c8f0ebef0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -54472,6 +54853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1585534590}
 --- !u!1 &1586832558
 GameObject:
@@ -54859,7 +55243,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: bea9d988-5cc9-4673-898a-65298b7d3d21
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -54898,6 +55283,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1597117471}
 --- !u!1 &1598031837
 GameObject:
@@ -55034,7 +55422,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 6e274014-8614-4214-aa5a-fc49936efa4e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -55073,6 +55462,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1601298876}
 --- !u!1 &1604515719
 GameObject:
@@ -55286,7 +55678,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 906e0990-f1b3-485d-94c9-8f8b94ae41ef
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -55325,6 +55718,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1607357727}
 --- !u!1 &1608355394
 GameObject:
@@ -55592,7 +55988,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f99e8d24-0b76-4f6a-bf54-70a8504d5e11
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -55631,6 +56028,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1619845680}
 --- !u!1 &1621051296
 GameObject:
@@ -56161,7 +56561,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: b5e94efb-3a91-42b2-82ff-f0d64afd074e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -56200,6 +56601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1626949328}
 --- !u!1 &1627300483
 GameObject:
@@ -56824,7 +57228,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 4847c056-b6a0-4a72-9a29-c28f0df9625e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -56863,6 +57268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1644919974}
 --- !u!1 &1645710815
 GameObject:
@@ -58134,7 +58542,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 7ee03be1-1cf9-474a-9651-4a502c272809
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -58173,6 +58582,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1666939353}
 --- !u!1001 &1668931061
 PrefabInstance:
@@ -58278,7 +58690,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e08eabf7-b740-47bf-b5f5-2a12a6b4d524
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -58317,6 +58730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1668931063}
 --- !u!1001 &1672588536
 PrefabInstance:
@@ -58422,7 +58838,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 29899604-2ffa-485d-936f-878227152162
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -58461,6 +58878,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1672588538}
 --- !u!1 &1675347483
 GameObject:
@@ -58795,7 +59215,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 28d00dfc-7cd4-47ad-b713-6911f155c1fb
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -58834,6 +59255,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1678589772}
 --- !u!1 &1681613748
 GameObject:
@@ -59434,7 +59858,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e0517cf0-17fb-4143-a051-9748382ce336
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -59473,6 +59898,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1716047158}
 --- !u!1 &1718478843
 GameObject:
@@ -60200,7 +60628,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 513e20a8-8ec3-47eb-9ddb-05bc1d1f8059
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -60239,6 +60668,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1733230130}
 --- !u!1 &1733524383
 GameObject:
@@ -60863,7 +61295,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 58851549-a304-4f1a-9dd7-ec8cb6073390
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -60902,6 +61335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1746928015}
 --- !u!1 &1748487493
 GameObject:
@@ -62444,7 +62880,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 67981a3e-56f6-4f38-8de3-428382ad24db
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -62483,6 +62920,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1782154666}
 --- !u!1 &1783412197
 GameObject:
@@ -63233,7 +63673,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 5edfbc9c-60e3-4123-b335-981054d3ba41
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -63272,6 +63713,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1805090457}
 --- !u!1 &1805206431
 GameObject:
@@ -63635,7 +64079,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 241cda37-78ac-40cd-b191-ddbdb8fa1c50
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -63674,6 +64119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1808598142}
 --- !u!1 &1810221565
 GameObject:
@@ -63846,7 +64294,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: b5bb42e2-32ce-4aed-acf5-4233f27c54f0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -63885,6 +64334,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1811823722}
 --- !u!1 &1812549190
 GameObject:
@@ -64114,7 +64566,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 53412c47-3cd4-48ba-bc04-50501958e09e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -64153,6 +64606,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1817298644}
 --- !u!1 &1818140884
 GameObject:
@@ -64645,7 +65101,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 39be8238-574f-461b-9d82-2b99c74d8232
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -64684,6 +65141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1824777693}
 --- !u!1 &1828483599
 GameObject:
@@ -64930,7 +65390,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 75093002-9882-49b2-99db-ffb82fa0b348
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -64969,6 +65430,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1839433557}
 --- !u!1 &1839702586
 GameObject:
@@ -65405,7 +65869,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e7d1020e-c7a9-413b-a80a-792865c8b622
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -65444,6 +65909,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1856589934}
 --- !u!1 &1856592533
 GameObject:
@@ -66032,7 +66500,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 9d884c6f-f3b4-4935-a576-2d34460ded97
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -66071,6 +66540,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1865508944}
 --- !u!1 &1866354222
 GameObject:
@@ -67945,7 +68417,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 46ee3584-d7aa-43a1-871c-c21e8361f702
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -67984,6 +68457,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1944409142}
 --- !u!1 &1944634184
 GameObject:
@@ -68391,7 +68867,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 95aaca52-9d4b-436e-8f79-93936fe3d3d4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -68430,6 +68907,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 1955922078}
 --- !u!1 &1956005079
 GameObject:
@@ -69810,7 +70290,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 25d0d8ab-25d1-4cfc-b279-a5d99cb60508
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -69849,6 +70330,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2009465558}
 --- !u!1 &2013779191
 GameObject:
@@ -70239,7 +70723,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: bf11fa6f-e44b-484a-8f86-01204717ae2e
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -70278,6 +70763,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2021847933}
 --- !u!1 &2022520444
 GameObject:
@@ -70986,7 +71474,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: e1b56e18-d259-4c22-a691-798f2b0d1826
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -71025,6 +71514,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2053912175}
 --- !u!1 &2056498321
 GameObject:
@@ -71563,7 +72055,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: d62f6613-8c43-4e09-8193-dd001ace7c90
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -71602,6 +72095,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2070292322}
 --- !u!1 &2070698326
 GameObject:
@@ -72103,7 +72599,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: f49e5264-20f1-47c0-a65f-518bbf74fbd6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -72142,6 +72639,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2084236430}
 --- !u!1 &2085128686
 GameObject:
@@ -72405,7 +72905,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: aedfc630-5f41-4db5-9b27-c4d75fb6c8b5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -72444,6 +72945,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2089448428}
 --- !u!1 &2091524269
 GameObject:
@@ -72908,7 +73412,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: c90edd2d-18c0-4815-9b9a-73d3cf408233
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -72947,6 +73452,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2110154880}
 --- !u!1 &2114484767
 GameObject:
@@ -73306,7 +73814,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 64c5d436-7da0-4f71-84d0-c42747ecee5c
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -73345,6 +73854,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2128318902}
 --- !u!1 &2130632455
 GameObject:
@@ -73565,7 +74077,8 @@ PrefabInstance:
       propertyPath: instanceId
       value: 92ed5b1c-66d8-4a15-9905-91ad5a65b705
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5412476403790121734, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     m_RemovedGameObjects:
     - {fileID: 771291416448247040, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
     - {fileID: 7529301352451056250, guid: 99e19b48b2ccf3743b70e934830030f7, type: 3}
@@ -73604,6 +74117,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff959a62929583439558518638b1c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UseGravity: 0
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
   CubeVisualTransform: {fileID: 2133136511}
 --- !u!1 &2133540497
 GameObject:

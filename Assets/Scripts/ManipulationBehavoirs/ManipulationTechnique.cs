@@ -305,7 +305,7 @@ public class ManipulationTechnique : MonoBehaviour
         if (anchors.Length != 0)
         {
             var sortedAnchors = anchors
-                .Where(anchor => anchor.IsHitbyGaze)
+                .Where(anchor => anchor.IsInGazeCone)
                 .OrderBy(anchor => anchor.AngleToGaze)
                 .ToList();
 

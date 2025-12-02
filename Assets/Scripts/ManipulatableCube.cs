@@ -1,59 +1,46 @@
 using UnityEngine;
 
-public class ManipulatableCube : MonoBehaviour
+public class ManipulatableCube : ManipulatableObject
 {
-    public bool IsInGazeCone { get; private set; }
-    public float AngleToGaze { get; private set; }
 
-    public bool IsPickedUp { get; private set; }
     public Transform CubeVisualTransform;
 
-    // Update is called once per frame
-    void Update()
+    public override void SpecialBehaviour()
     {
-        if (IsPickedUp)
-        {
-            UpdatePosition(CubeManager.GetInstance().CubeStackingCursor.transform.position);
-
-            if (PinchDetector.GetInstance().IsNoHandPinching)
-            {
-                IsPickedUp = false;
-            }
-            return;
-        }
-
-        AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsInGazeCone = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-
         if (IsInGazeCone)
         {
             CubeManager.GetInstance().RegisterFocusedCube(this);
-            UpdateMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
+            UpdateCubeMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
         }
         else
         {
             CubeManager.GetInstance().UnregisterFocusedCube(this);
-            UpdateMaterial(CubeManager.GetInstance().CubeSolidMaterial);
+            UpdateCubeMaterial(CubeManager.GetInstance().CubeSolidMaterial);
         }
 
         if (CubeManager.GetInstance().ClosestFocusedCube == this)
         {
-            UpdateMaterial(CubeManager.GetInstance().CubeHoverMaterial);
+            UpdateCubeMaterial(CubeManager.GetInstance().CubeHoverMaterial);
+            GetComponent<Outline>().enabled = true;
+
             if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
             {
                 IsPickedUp = true;
+                SetCancelObjectGravity(true);
+                GetComponent<Outline>().enabled = false;
+                UseGravity = true;
             }
+        }
+        else
+        {
+            GetComponent<Outline>().enabled = false;
         }
     }
 
-    public void UpdateMaterial(Material mat)
+    public void UpdateCubeMaterial(Material mat)
     {
         if (CubeVisualTransform.GetComponent<Renderer>().material != mat)
             CubeVisualTransform.GetComponent<Renderer>().material = mat;
     }
-    
-    public void UpdatePosition(Vector3 newPosition)
-    {
-        transform.position = newPosition;
-    }
+
 }
