@@ -9,55 +9,102 @@ public enum GrabbedState
     Grabbed_Direct
 }
 
-public class ManipulatableObject : MonoBehaviour
+public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
 {
-    public bool IsInGazeCone { get; private set; }
-    public float AngleToGaze { get; private set; }
 
-    public bool IsPickedUp { get; protected set; }
+    public bool IsPickedUp { get; private set; }
+    public virtual void OnPickup()
+    {
+        IsPickedUp = true;
+        SetCancelObjectGravity(true);
+        GetComponent<Outline>().enabled = false;
+    }
+    public virtual void HandlePickup()
+    {
+        // Update object position to follow the cursor
+        ApplyPickedUpBehaviour();
+
+        // Check for drop condition
+        if (PinchDetector.GetInstance().IsNoHandPinching)
+        {
+            OnDrop();
+        }
+    }
+    public virtual void OnDrop()
+    {
+        IsPickedUp = false;
+        SetCancelObjectGravity(false);
+    }
+
+    public bool IsHovering { get; private set; }
+    public virtual void OnHoverEnter()
+    {
+        IsHovering = true;
+        // Handle hover enter logic
+    }
+
+    public virtual void OnHoverExit()
+    {
+        IsHovering = false;
+        // Handle hover exit logic
+    }
+
+    public float AngleToGaze { get; private set; }
+    public bool IsInGazeCone { get; private set; }
+    public virtual void OnGazeConeEnter()
+    {
+        IsInGazeCone = true;
+    }
+    public virtual void OnGazeConeExit()
+    {
+        IsInGazeCone = false;
+    }
+
+
+
     public bool UseGravity;
     public bool IsObjectFrozen { get; private set; }
 
-    public GrabbedState GrabbedState { get; protected set; }
-    public Grabbable Grabbable;
-    public HandGrabInteractable HandGrabInteractable;
 
-    // Update is called once per frame
     void Update()
     {
-
         if (IsPickedUp)
         {
-            UpdatePosition(CubeManager.GetInstance().CubeStackingCursor.transform.position);
-
-            if (PinchDetector.GetInstance().IsNoHandPinching)
-            {
-                IsPickedUp = false;
-                SetCancelObjectGravity(false);
-            }
-            return;
+            HandlePickup();
         }
+        else
+        {
+            RefreshInGazeConeState();
 
-        AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsInGazeCone = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-
-        SpecialBehaviour();
+            if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
+            {
+                if(IsHovering) OnPickup();
+            }
+        }
     }
 
-    public virtual void SpecialBehaviour()
+    public virtual void ApplyPickedUpBehaviour()
     {
-
+        UpdatePositionTo(CubeManager.GetInstance().CubeStackingCursor.transform.position);
     }
 
-    public void UpdatePosition(Vector3 newPosition)
+    public void RefreshInGazeConeState()
+    {
+        AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
+        if (AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform)
+        {
+            OnGazeConeEnter();
+        }
+        else
+        {
+            OnGazeConeExit();
+        }
+    }
+
+
+    public void UpdatePositionTo(Vector3 newPosition)
     {
         transform.position = newPosition;
-    }
-
-    public void SetGrabbedState(GrabbedState state)
-    {
-        GrabbedState = state;
-        SpecialBehaviour();
     }
 
     public void SetCancelObjectGravity(bool isFreeze)
@@ -70,8 +117,6 @@ public class ManipulatableObject : MonoBehaviour
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
-                // rigidbody.linearVelocity = Vector3.zero;
-                // rigidbody.angularVelocity = Vector3.zero;
                 collider.enabled = false;
             }
             else
@@ -79,8 +124,20 @@ public class ManipulatableObject : MonoBehaviour
                 rigidbody.isKinematic = false;
                 rigidbody.useGravity = true;
                 collider.enabled = true;
-                // rigidbody.linearVelocity = Vector3.zero; // or another initial value
             }
         }
+    }
+
+
+
+
+    public GrabbedState GrabbedState { get; protected set; }
+    public Grabbable Grabbable;
+    public HandGrabInteractable HandGrabInteractable;
+
+    public void SetGrabbedState(GrabbedState state)
+    {
+        GrabbedState = state;
+        ApplyPickedUpBehaviour();
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Unity.Mathematics;
 
 public class CubeStackingCursor : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class CubeStackingCursor : MonoBehaviour
     public float DeltaHeadY { get; private set; }
 
     float _fixationStartDepth, _accumulatedDepthOffset;
+    float _eyeInHeadYOnFixation;
 
 
     private StaticState _currentMode = StaticState.Gaze;
@@ -58,34 +60,67 @@ public class CubeStackingCursor : MonoBehaviour
 
             transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
-            if (_currentMode == StaticState.Gaze)
-            {
-                // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
+            // if (_currentMode == StaticState.Gaze)
+            // {
+            //     // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
 
-                // Set Position along Gaze Ray
-                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+            //     // Set Position along Gaze Ray
+            //     transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
 
-                // Apply Head Depth Offset
-                Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + DeltaHeadY * 0.2f, 1f, 11f);
+            //     transform.position = GazeOrigin + directionFromGazeOrigin * _accumulatedDepthOffset;
 
-                float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-                float edgeGain = EyeHeadGain();
+            //     // // Apply Head Depth Offset
+            //     // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+            //     // float edgeGain = EyeHeadGain();
+            //     // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
 
-                transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+            //     // // Clamp Depth within Min and Max
+            //     // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
 
-                // Clamp Depth within Min and Max
-                transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+            //     // Check to switch to Head state
 
-                // Check to switch to Head state
-                if (IsGazeFixating) _currentMode = StaticState.Head;
-            }
-            else
-            {
+            //     _accumulatedDepthOffset += DeltaHeadY * 0.4f;
 
-                // Check to switch back to Gaze state
-                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-                if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-            }
+            //     if (IsGazeFixating)
+            //     {
+            //         _currentMode = StaticState.Head;
+            //         _eyeInHeadYOnFixation = EyeInHeadYAngle;
+            //     }
+            // }
+            // else
+            // {
+
+            //     // Apply Head Depth Offset
+            //     Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+            //     // float edgeGain = EyeHeadGain();
+
+            //     if (EyeInHeadYAngle - _eyeInHeadYOnFixation >= 5f)
+            //     {
+            //         _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
+            //         transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);                    
+            //     }
+
+            //     if (EyeInHeadYAngle - _eyeInHeadYOnFixation <= -5f)
+            //     {
+            //         _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
+            //         transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+            //     }
+
+
+            //     // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+
+            //         // Clamp Depth within Min and Max
+            //         // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+
+
+            //         // Check to switch back to Gaze state
+            //         float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+            //     if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            // }
 
     
             // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
@@ -136,36 +171,36 @@ public class CubeStackingCursor : MonoBehaviour
         {
 
 
-            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+            // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
-            if (_currentMode == StaticState.Gaze)
-            {
-                // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
+            // if (_currentMode == StaticState.Gaze)
+            // {
+            //     // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
 
-                // Set Position along Gaze Ray
-                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+            //     // Set Position along Gaze Ray
+            //     transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
 
-                // Apply Head Depth Offset
-                Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     // Apply Head Depth Offset
+            //     Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
 
-                float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-                float edgeGain = EyeHeadGain();
+            //     float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+            //     float edgeGain = EyeHeadGain();
 
-                transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+            //     transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
 
-                // Clamp Depth within Min and Max
-                transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+            //     // Clamp Depth within Min and Max
+            //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
 
-                // Check to switch to Head state
-                if (IsGazeFixating) _currentMode = StaticState.Head;
-            }
-            else
-            {
+            //     // Check to switch to Head state
+            //     if (IsGazeFixating) _currentMode = StaticState.Head;
+            // }
+            // else
+            // {
 
-                // Check to switch back to Gaze state
-                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-                if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-            }
+            //     // Check to switch back to Gaze state
+            //     float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+            //     if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            // }
         }
 
 

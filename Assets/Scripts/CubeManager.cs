@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +11,26 @@ public class CubeManager : Singleton<CubeManager>
     public CubeStackingCursor CubeStackingCursor;
 
     public List<ManipulatableCube> CurrentFocusedCubes = new List<ManipulatableCube>();
-    public ManipulatableCube ClosestFocusedCube;
+    public ManipulatableCube ClosestFocusedCube, ClosestFocusedCube_prev;
 
     void Update()
     {
         ClosestFocusedCube = GetClosestFocusedCube();
 
+        if (ClosestFocusedCube_prev != ClosestFocusedCube)
+        {
+            if (ClosestFocusedCube != null)
+            {
+                ClosestFocusedCube.OnHoverEnter();
+            }
+                
+            if (ClosestFocusedCube_prev != null)
+            {
+                ClosestFocusedCube_prev.OnHoverExit();
+            }
+        }
+        
+        ClosestFocusedCube_prev = ClosestFocusedCube;
     }
 
     public void RegisterFocusedCube(ManipulatableCube cube)

@@ -5,36 +5,39 @@ public class ManipulatableCube : ManipulatableObject
 
     public Transform CubeVisualTransform;
 
-    public override void SpecialBehaviour()
+    public override void OnGazeConeEnter()
     {
-        if (IsInGazeCone)
-        {
-            CubeManager.GetInstance().RegisterFocusedCube(this);
-            UpdateCubeMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
-        }
-        else
-        {
-            CubeManager.GetInstance().UnregisterFocusedCube(this);
-            UpdateCubeMaterial(CubeManager.GetInstance().CubeSolidMaterial);
-        }
+        base.OnGazeConeEnter();
+        CubeManager.GetInstance().RegisterFocusedCube(this);
+        UpdateCubeMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
+    }
 
-        if (CubeManager.GetInstance().ClosestFocusedCube == this)
-        {
-            UpdateCubeMaterial(CubeManager.GetInstance().CubeHoverMaterial);
-            GetComponent<Outline>().enabled = true;
+    public override void OnGazeConeExit()
+    {
+        base.OnGazeConeExit();
+        CubeManager.GetInstance().UnregisterFocusedCube(this);
+        UpdateCubeMaterial(CubeManager.GetInstance().CubeSolidMaterial);
+    }
 
-            if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
-            {
-                IsPickedUp = true;
-                SetCancelObjectGravity(true);
-                GetComponent<Outline>().enabled = false;
-                UseGravity = true;
-            }
-        }
-        else
-        {
-            GetComponent<Outline>().enabled = false;
-        }
+    public override void OnHoverEnter()
+    {
+        base.OnHoverEnter();
+
+        UpdateCubeMaterial(CubeManager.GetInstance().CubeHoverMaterial);
+        GetComponent<Outline>().enabled = true;
+    }
+
+    public override void OnHoverExit()
+    {
+        base.OnHoverExit();
+        GetComponent<Outline>().enabled = false;
+        RefreshInGazeConeState();
+    }
+
+    public override void OnPickup()
+    {
+        base.OnPickup();
+        UseGravity = true;
     }
 
     public void UpdateCubeMaterial(Material mat)
