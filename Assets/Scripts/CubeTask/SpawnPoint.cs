@@ -19,6 +19,7 @@ public class SpawnPoint : MonoBehaviour, IInGazeConeHandler
                 spawnObject.transform.SetParent(SpawnObjectParent);
 
                 ManipulatableCube manipulatableCube = spawnObject.GetComponent<ManipulatableCube>();
+                CubeManager.GetInstance().CubeStackingCursor.SetCursorPositionTo(transform.position);
                 manipulatableCube.OnPickup();
             }
         }

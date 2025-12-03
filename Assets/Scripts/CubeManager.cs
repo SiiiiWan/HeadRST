@@ -15,7 +15,7 @@ public class CubeManager : Singleton<CubeManager>
 
     void Update()
     {
-        ClosestFocusedCube = GetClosestFocusedCube();
+        ClosestFocusedCube = UpdateAndGetClosestFocusedCube();
 
         if (ClosestFocusedCube_prev != ClosestFocusedCube)
         {
@@ -49,7 +49,7 @@ public class CubeManager : Singleton<CubeManager>
         }
     }
 
-    public ManipulatableCube GetClosestFocusedCube()
+    public ManipulatableCube UpdateAndGetClosestFocusedCube()
     {
         if (CurrentFocusedCubes == null || CurrentFocusedCubes.Count == 0)
         {

@@ -57,7 +57,6 @@ public class CubeStackingCursor : MonoBehaviour
 
         if (PinchDetector.IsOneHandPinching)
         {
-
             transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
             // if (_currentMode == StaticState.Gaze)
@@ -122,7 +121,7 @@ public class CubeStackingCursor : MonoBehaviour
             //     if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
             // }
 
-    
+
             // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
             // float edgeGain = EyeHeadGain();
 
@@ -165,11 +164,38 @@ public class CubeStackingCursor : MonoBehaviour
             //     }
 
             // }
-            
+
         }
         else
         {
+            if (_currentMode == StaticState.Gaze)
+            {
+                // Set Position along Gaze Ray
+                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+                ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
+                if (closestCube != null) transform.position = closestCube.transform.position;
 
+
+                if (IsGazeFixating)
+                {
+                    _currentMode = StaticState.Head;
+                }
+            }
+            else
+            {
+
+                transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+
+                // ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
+                // if (closestCube != null) transform.position = closestCube.transform.position;
+
+                // Check to switch back to Gaze state
+                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+                if (IsGazeFixating == false)
+                {
+                    _currentMode = StaticState.Gaze;
+                }
+            }
 
             // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
@@ -253,5 +279,9 @@ public class CubeStackingCursor : MonoBehaviour
         return k * x + b;
     }
     
+    public void SetCursorPositionTo(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
 
 }
