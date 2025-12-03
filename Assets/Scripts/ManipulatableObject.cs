@@ -117,13 +117,13 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
-                collider.enabled = false;
+                // collider.enabled = false;
             }
             else
             {
                 rigidbody.isKinematic = false;
                 rigidbody.useGravity = true;
-                collider.enabled = true;
+                // collider.enabled = true;
             }
         }
     }
