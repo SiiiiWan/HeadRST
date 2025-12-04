@@ -66,10 +66,16 @@ public class PinchDetector : Singleton<PinchDetector>
 
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip) // Use Hand_IndexTip for OVR
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip)
+            {
                 righHandPinchBall_index.transform.position = bone.Transform.position;
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip) // Use Hand_ThumbTip for OVR
+                righHandPinchBall_index.transform.rotation = bone.Transform.rotation;
+            }
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip)
+            {
                 righHandPinchBall_thumb.transform.position = bone.Transform.position;
+                righHandPinchBall_thumb.transform.rotation = bone.Transform.rotation;
+            }
         }
 
         if (LeftHand == null) return;
@@ -77,10 +83,16 @@ public class PinchDetector : Singleton<PinchDetector>
         if (skeleton == null || skeleton.Bones == null) return;
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip) // Use Hand_IndexTip for OVR
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_IndexTip)
+            {
                 leftHandPinchBall_index.transform.position = bone.Transform.position;
+                leftHandPinchBall_index.transform.rotation = bone.Transform.rotation;
+            }
             if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip) // Use Hand_ThumbTip for OVR
+            {
                 leftHandPinchBall_thumb.transform.position = bone.Transform.position;
+                leftHandPinchBall_thumb.transform.rotation = bone.Transform.rotation;
+            }
         }
     }
 

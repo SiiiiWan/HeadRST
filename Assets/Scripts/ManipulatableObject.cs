@@ -109,11 +109,13 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     public void SetCancelObjectGravity(bool isFreeze)
     {
+        if(UseGravity == false) return;
+        
         Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
         Collider collider = transform.GetComponent<Collider>();
         if (rigidbody != null && collider != null)
         {
-            if (isFreeze || UseGravity == false)
+            if (isFreeze == true)
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;

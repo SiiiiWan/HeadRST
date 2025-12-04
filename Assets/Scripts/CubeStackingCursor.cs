@@ -25,7 +25,6 @@ public class CubeStackingCursor : MonoBehaviour
     public float DeltaHeadY { get; private set; }
 
     float _fixationStartDepth, _accumulatedDepthOffset;
-    float _eyeInHeadYOnFixation;
 
 
     private StaticState _currentMode = StaticState.Gaze;
@@ -86,28 +85,28 @@ public class CubeStackingCursor : MonoBehaviour
             //     if (IsGazeFixating)
             //     {
             //         _currentMode = StaticState.Head;
-            //         _eyeInHeadYOnFixation = EyeInHeadYAngle;
             //     }
             // }
             // else
             // {
 
             //     // Apply Head Depth Offset
-            //     Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-            //     // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-            //     // float edgeGain = EyeHeadGain();
+            //     // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+            //     // // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+            //     // // float edgeGain = EyeHeadGain();
+            //     // float angleHeadForwardToObjectDirection = MathFunctions.AngleAroundAxis(HeadForward, directionFromGazeOrigin, Camera.main.transform.right);
 
-            //     if (EyeInHeadYAngle - _eyeInHeadYOnFixation >= 5f)
-            //     {
-            //         _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
-            //         transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);                    
-            //     }
+            //     // if (angleHeadForwardToObjectDirection >= 5f)
+            //     // {
+            //     //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
+            //     //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+            //     // }
 
-            //     if (EyeInHeadYAngle - _eyeInHeadYOnFixation <= -5f)
-            //     {
-            //         _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
-            //         transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
-            //     }
+            //     // if (angleHeadForwardToObjectDirection <= -5f)
+            //     // {
+            //     //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
+            //     //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+            //     // }
 
 
             //     // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
@@ -168,34 +167,38 @@ public class CubeStackingCursor : MonoBehaviour
         }
         else
         {
-            if (_currentMode == StaticState.Gaze)
-            {
-                // Set Position along Gaze Ray
-                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-                ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
-                if (closestCube != null) transform.position = closestCube.transform.position;
+
+            ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
+            if (closestCube != null) transform.position = closestCube.transform.position;
+
+            // if (_currentMode == StaticState.Gaze)
+            // {
+            //     // Set Position along Gaze Ray
+            //     transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+            //     ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
+            //     if (closestCube != null) transform.position = closestCube.transform.position;
 
 
-                if (IsGazeFixating)
-                {
-                    _currentMode = StaticState.Head;
-                }
-            }
-            else
-            {
+            //     if (IsGazeFixating)
+            //     {
+            //         _currentMode = StaticState.Head;
+            //     }
+            // }
+            // else
+            // {
 
-                transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+            //     transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
-                // ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
-                // if (closestCube != null) transform.position = closestCube.transform.position;
+            //     // ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
+            //     // if (closestCube != null) transform.position = closestCube.transform.position;
 
-                // Check to switch back to Gaze state
-                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-                if (IsGazeFixating == false)
-                {
-                    _currentMode = StaticState.Gaze;
-                }
-            }
+            //     // Check to switch back to Gaze state
+            //     float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+            //     if (IsGazeFixating == false)
+            //     {
+            //         _currentMode = StaticState.Gaze;
+            //     }
+            // }
 
             // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 

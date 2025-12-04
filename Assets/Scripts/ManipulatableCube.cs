@@ -37,7 +37,7 @@ public class ManipulatableCube : ManipulatableObject
     public override void OnPickup()
     {
         base.OnPickup();
-        UseGravity = true;
+        if(Vector3.Distance(transform.position, Camera.main.transform.position) > 1f) UseGravity = true;
     }
 
     public void UpdateCubeMaterial(Material mat)
