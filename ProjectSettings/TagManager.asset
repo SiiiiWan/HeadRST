@@ -16,6 +16,9 @@ TagManager:
   - QDSUIToggleBorderlessButton
   - QDSUIIcon
   - QDSUITextSecondaryColor
+  - RealHand
+  - Anchor
+  - PinchBall
   layers:
   - Default
   - TransparentFX
