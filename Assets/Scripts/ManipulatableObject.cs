@@ -16,7 +16,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnPickup()
     {
         IsPickedUp = true;
-        SetCancelObjectGravity(true);
+        // SetCancelObjectGravity(true);
         GetComponent<Outline>().enabled = false;
     }
     public virtual void HandlePickup()
@@ -33,19 +33,21 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnDrop()
     {
         IsPickedUp = false;
-        SetCancelObjectGravity(false);
+        // SetCancelObjectGravity(false);
     }
 
     public bool IsHovering { get; private set; }
     public virtual void OnHoverEnter()
     {
         IsHovering = true;
+        GetComponent<Outline>().enabled = true;
         // Handle hover enter logic
     }
 
     public virtual void OnHoverExit()
     {
         IsHovering = false;
+        GetComponent<Outline>().enabled = false;
         // Handle hover exit logic
     }
 
@@ -54,17 +56,18 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnGazeConeEnter()
     {
         IsInGazeCone = true;
+        ObjectManager.GetInstance().RegisterFocusedObj(this);
     }
     public virtual void OnGazeConeExit()
     {
         IsInGazeCone = false;
+        ObjectManager.GetInstance().UnregisterFocusedObj(this);
     }
 
-
-
-    public bool UseGravity;
-    public bool IsObjectFrozen { get; private set; }
-
+    void Awake()
+    {
+        GetComponent<Outline>().enabled = false;
+    }
 
     void Update()
     {
@@ -85,7 +88,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     public virtual void ApplyPickedUpBehaviour()
     {
-        UpdatePositionTo(CubeManager.GetInstance().CubeStackingCursor.transform.position);
+        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position);
     }
 
     public void RefreshInGazeConeState()
@@ -107,35 +110,35 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         transform.position = newPosition;
     }
 
-    public void SetCancelObjectGravity(bool isFreeze)
-    {
-        if(UseGravity == false) return;
+    // public void SetCancelObjectGravity(bool isFreeze)
+    // {
+    //     if(UseGravity == false) return;
         
-        Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
-        Collider collider = transform.GetComponent<Collider>();
-        if (rigidbody != null && collider != null)
-        {
-            if (isFreeze == true)
-            {
-                rigidbody.isKinematic = true;
-                rigidbody.useGravity = false;
-                // collider.enabled = false;
-            }
-            else
-            {
-                rigidbody.isKinematic = false;
-                rigidbody.useGravity = true;
-                // collider.enabled = true;
-            }
-        }
-    }
+    //     Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
+    //     Collider collider = transform.GetComponent<Collider>();
+    //     if (rigidbody != null && collider != null)
+    //     {
+    //         if (isFreeze == true)
+    //         {
+    //             rigidbody.isKinematic = true;
+    //             rigidbody.useGravity = false;
+    //             // collider.enabled = false;
+    //         }
+    //         else
+    //         {
+    //             rigidbody.isKinematic = false;
+    //             rigidbody.useGravity = true;
+    //             // collider.enabled = true;
+    //         }
+    //     }
+    // }
 
 
 
 
     public GrabbedState GrabbedState { get; protected set; }
-    public Grabbable Grabbable;
-    public HandGrabInteractable HandGrabInteractable;
+    public Grabbable Grabbable { get; protected set; }
+    public HandGrabInteractable HandGrabInteractable { get; protected set; }
 
     public void SetGrabbedState(GrabbedState state)
     {

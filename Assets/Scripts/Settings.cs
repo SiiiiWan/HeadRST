@@ -6,6 +6,8 @@ public enum DominantHand
     right,
     left
 }
+
+
 public class Settings : Singleton<Settings>
 {
     public DominantHand DominantHand = DominantHand.right;

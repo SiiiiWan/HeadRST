@@ -3,27 +3,28 @@ using UnityEngine;
 public class ManipulatableCube : ManipulatableObject
 {
 
+    public bool UseGravity;
     public Transform CubeVisualTransform;
 
     public override void OnGazeConeEnter()
     {
         base.OnGazeConeEnter();
-        CubeManager.GetInstance().RegisterFocusedCube(this);
-        UpdateCubeMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
+        ObjectManager.GetInstance().RegisterFocusedObj(this);
+        // UpdateCubeMaterial(CubeManager.GetInstance().CubeTransparentMaterial);
     }
 
     public override void OnGazeConeExit()
     {
         base.OnGazeConeExit();
-        CubeManager.GetInstance().UnregisterFocusedCube(this);
-        UpdateCubeMaterial(CubeManager.GetInstance().CubeSolidMaterial);
+        ObjectManager.GetInstance().UnregisterFocusedObj(this);
+        // UpdateCubeMaterial(CubeManager.GetInstance().CubeSolidMaterial);
     }
 
     public override void OnHoverEnter()
     {
         base.OnHoverEnter();
 
-        UpdateCubeMaterial(CubeManager.GetInstance().CubeHoverMaterial);
+        // UpdateCubeMaterial(CubeManager.GetInstance().CubeHoverMaterial);
         GetComponent<Outline>().enabled = true;
     }
 

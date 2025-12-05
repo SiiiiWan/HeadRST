@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using Unity.Mathematics;
 
-public class CubeStackingCursor : MonoBehaviour
+public class TaskCursor : MonoBehaviour
 {
     public EyeGaze GazeData { get; private set; }
     public Vector3 GazeOrigin { get; private set; }
@@ -171,8 +171,8 @@ public class CubeStackingCursor : MonoBehaviour
             if (_currentMode == StaticState.Gaze)
             {
                 transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-                ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
-                if (closestCube != null) transform.position = closestCube.transform.position;
+                ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+                if (closestObject != null) transform.position = closestObject.transform.position;
 
                 if (IsGazeFixating)
                 {
