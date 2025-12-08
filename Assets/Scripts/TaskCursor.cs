@@ -56,7 +56,7 @@ public class TaskCursor : MonoBehaviour
 
         if (PinchDetector.IsOneHandPinching)
         {
-            // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
             // if (_currentMode == StaticState.Gaze)
             // {
@@ -167,28 +167,38 @@ public class TaskCursor : MonoBehaviour
         }
         else
         {
+            if(PinchDetector.IsOneHandPinching_LastFrame) _currentMode = StaticState.Gaze;
 
             if (_currentMode == StaticState.Gaze)
             {
-                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-                ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
-                if (closestObject != null) transform.position = closestObject.transform.position;
+                // // Enable to allow changing depth with hand during gaze shifts
+                // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+
+                // transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+
+                transform.position = GazeOrigin + GazeDirection * 1.5f;
+
 
                 if (IsGazeFixating)
                 {
                     _currentMode = StaticState.Head;
+                    // ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+                    // if (closestObject != null) transform.position = closestObject.transform.position;
                 }
             }
             else
             {
 
                 transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+                // transform.position += PinchPosition_delta;
+
 
                 // ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
                 // if (closestCube != null) transform.position = closestCube.transform.position;
 
                 // Check to switch back to Gaze state
-                // float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+                // if (GazeData.IsSaccading() == true)
                 if (IsGazeFixating == false)
                 {
                     _currentMode = StaticState.Gaze;

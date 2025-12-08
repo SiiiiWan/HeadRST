@@ -11,7 +11,7 @@ public class PinchDetector : Singleton<PinchDetector>
 {
     public OVRHand RightHand, LeftHand;
     public bool IsRightPinching, IsLeftPinching;
-    public bool IsBothHandsPinching, IsOneHandPinching, IsNoHandPinching, IsNoHandPinching_LastFrame;
+    public bool IsBothHandsPinching, IsOneHandPinching, IsNoHandPinching, IsNoHandPinching_LastFrame, IsOneHandPinching_LastFrame;
     public PinchState PinchState = PinchState.NotPinching;
     public float PinchThreshold = 0.01f; // Adjust this threshold as needed
 
@@ -55,6 +55,7 @@ public class PinchDetector : Singleton<PinchDetector>
         IsOneHandPinching = PinchState == PinchState.OneHandPinching;
 
         IsNoHandPinching_LastFrame = IsNoHandPinching;
+        IsOneHandPinching_LastFrame = IsOneHandPinching;
         IsNoHandPinching = PinchState == PinchState.NotPinching;
     }
 

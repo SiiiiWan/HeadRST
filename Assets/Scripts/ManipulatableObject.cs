@@ -11,13 +11,14 @@ public enum GrabbedState
 
 public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
 {
-
     public bool IsPickedUp { get; private set; }
+    public Vector3 PositionOffsetToCursor_OnPickup { get; private set; }
     public virtual void OnPickup()
     {
         IsPickedUp = true;
         // SetCancelObjectGravity(true);
-        GetComponent<Outline>().enabled = false;
+        UpdateOutlineState(false);
+        PositionOffsetToCursor_OnPickup = transform.position - ObjectManager.GetInstance().TaskCursor.transform.position;
     }
     public virtual void HandlePickup()
     {
@@ -34,21 +35,23 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     {
         IsPickedUp = false;
         // SetCancelObjectGravity(false);
+        if(IsHovering)
+        {
+            UpdateOutlineState(true);
+        }
     }
 
     public bool IsHovering { get; private set; }
     public virtual void OnHoverEnter()
     {
         IsHovering = true;
-        GetComponent<Outline>().enabled = true;
-        // Handle hover enter logic
+        UpdateOutlineState(true);
     }
 
     public virtual void OnHoverExit()
     {
         IsHovering = false;
-        GetComponent<Outline>().enabled = false;
-        // Handle hover exit logic
+        UpdateOutlineState(false);
     }
 
     public float AngleToGaze { get; private set; }
@@ -66,7 +69,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     void Awake()
     {
-        GetComponent<Outline>().enabled = false;
+        UpdateOutlineState(false);
     }
 
     void Update()
@@ -88,7 +91,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     public virtual void ApplyPickedUpBehaviour()
     {
-        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position);
+        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position + PositionOffsetToCursor_OnPickup);
     }
 
     public void RefreshInGazeConeState()
@@ -102,6 +105,11 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         {
             OnGazeConeExit();
         }
+    }
+
+    public void UpdateOutlineState(bool isEnabled)
+    {
+        GetComponent<Outline>().enabled = isEnabled;
     }
 
 
