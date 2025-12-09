@@ -56,69 +56,78 @@ public class TaskCursor : MonoBehaviour
 
         if (PinchDetector.IsOneHandPinching)
         {
+            if(PinchDetector.IsNoHandPinching_LastFrame)
+            {
+                SetCursorVisibility(false);
+                ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+                if (closestObject != null) transform.position = closestObject.transform.position;
+                _currentMode = StaticState.Gaze;
+            } 
+
             transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
-            // if (_currentMode == StaticState.Gaze)
-            // {
-            //     // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
+            if (_currentMode == StaticState.Gaze)
+            {
 
-            //     // Set Position along Gaze Ray
-            //     transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+                // Set Position along Gaze Ray
+                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
 
-            //     Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-            //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + DeltaHeadY * 0.2f, 1f, 11f);
-            //     transform.position = GazeOrigin + directionFromGazeOrigin * _accumulatedDepthOffset;
+                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+                // _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + DeltaHeadY * 0.2f, 1f, 11f);
+                // transform.position = GazeOrigin + directionFromGazeOrigin * _accumulatedDepthOffset;
 
-            //     // // Apply Head Depth Offset
-            //     // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-            //     // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-            //     // float edgeGain = EyeHeadGain();
-            //     // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+                // Apply Head Depth Offset
+                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+                // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+                // float edgeGain = EyeHeadGain();
+                // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
 
-            //     // // Clamp Depth within Min and Max
-            //     // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+                // // Clamp Depth within Min and Max
+                // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
 
-            //     // Check to switch to Head state
+                // Check to switch to Head state
 
-            //     _accumulatedDepthOffset += DeltaHeadY * 0.4f;
-
-            //     if (IsGazeFixating)
-            //     {
-            //         _currentMode = StaticState.Head;
-            //     }
-            // }
-            // else
-            // {
-
-            //     // Apply Head Depth Offset
-            //     // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-            //     // // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-            //     // // float edgeGain = EyeHeadGain();
-            //     // float angleHeadForwardToObjectDirection = MathFunctions.AngleAroundAxis(HeadForward, directionFromGazeOrigin, Camera.main.transform.right);
-
-            //     // if (angleHeadForwardToObjectDirection >= 5f)
-            //     // {
-            //     //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
-            //     //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
-            //     // }
-
-            //     // if (angleHeadForwardToObjectDirection <= -5f)
-            //     // {
-            //     //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
-            //     //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
-            //     // }
+                // _accumulatedDepthOffset += DeltaHeadY * 0.4f;
 
 
-            //     // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+                if (IsGazeFixating)
+                {
+                    _currentMode = StaticState.Head;
+                }
+            }
+            else
+            {
 
-            //         // Clamp Depth within Min and Max
-            //         // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+                // Apply Head Depth Offset
+                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+                // // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
+                // // float edgeGain = EyeHeadGain();
+                // float angleHeadForwardToObjectDirection = MathFunctions.AngleAroundAxis(HeadForward, directionFromGazeOrigin, Camera.main.transform.right);
+
+                // if (angleHeadForwardToObjectDirection >= 5f)
+                // {
+                //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
+                //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+                // }
+
+                // if (angleHeadForwardToObjectDirection <= -5f)
+                // {
+                //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
+                //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+                // }
 
 
-            //         // Check to switch back to Gaze state
-            //         float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-            //     if (IsGazeFixating == false && angleGazeDirectionToObject > 15f) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-            // }
+                // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
+
+                    // Clamp Depth within Min and Max
+                    // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
+
+                // _accumulatedDepthOffset += DeltaHeadY * 0.4f;
+
+                    // Check to switch back to Gaze state
+                    // float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
+                if (IsGazeFixating == false) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            }
 
 
             // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
@@ -167,29 +176,29 @@ public class TaskCursor : MonoBehaviour
         }
         else
         {
-            if(PinchDetector.IsOneHandPinching_LastFrame) _currentMode = StaticState.Gaze;
+            if(PinchDetector.IsOneHandPinching_LastFrame)
+            {
+                SetCursorVisibility(true);
+                _currentMode = StaticState.Gaze;
+            } 
+
+
+            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
             if (_currentMode == StaticState.Gaze)
             {
-                // // Enable to allow changing depth with hand during gaze shifts
-                // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
 
-                // transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-
-                transform.position = GazeOrigin + GazeDirection * 1.5f;
-
+               // transform.position = GazeOrigin + GazeDirection * 1.5f;
 
                 if (IsGazeFixating)
                 {
                     _currentMode = StaticState.Head;
-                    // ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
-                    // if (closestObject != null) transform.position = closestObject.transform.position;
+                    ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+                    if (closestObject != null) transform.position = closestObject.transform.position;
                 }
             }
             else
             {
-
-                transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
                 // transform.position += PinchPosition_delta;
 
 
@@ -261,4 +270,8 @@ public class TaskCursor : MonoBehaviour
         transform.position = newPosition;
     }
 
+    public void SetCursorVisibility(bool isVisible)
+    {
+        GetComponent<Renderer>().enabled = isVisible;
+    }
 }

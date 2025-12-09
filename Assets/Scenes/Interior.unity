@@ -1258,7 +1258,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9b6f0e2c21305f34ca48ac5a531ec71c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -48117,7 +48117,7 @@ MonoBehaviour:
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
   FilterBlink: 0
-  ShowGazeCursor: 1
+  ShowGazeCursor: 0
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 150
   CorrectGaze: 1
