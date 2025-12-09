@@ -24,11 +24,12 @@ public class TaskCursor : MonoBehaviour
     public float HeadSpeed { get; private set; }
     public float DeltaHeadY { get; private set; }
 
-    float _fixationStartDepth, _accumulatedDepthOffset;
-
+    float _fixationStartDepth, _accumulatedDepthOffset, _headPitchOnFixation;
+    float _pitchDiffFromFixation, _pitchDiffFromFixation_LastFrame;
 
     private StaticState _currentMode = StaticState.Gaze;
-
+    private float _depthUpdateTimer = 0f;
+    
     public virtual void Awake()
     {
         GazeFixationTracker = new FixationTracker(0.25f, 3f);
@@ -54,169 +55,114 @@ public class TaskCursor : MonoBehaviour
         DeltaHeadY = HeadData.DeltaHeadY;
         HeadForward = Camera.main.transform.forward;
 
-        if (PinchDetector.IsOneHandPinching)
+
+        _pitchDiffFromFixation = HeadData.HeadAngle_WorldY - _headPitchOnFixation;
+
+        if (PinchDetector.IsNoHandPinching)
         {
-            if(PinchDetector.IsNoHandPinching_LastFrame)
-            {
-                SetCursorVisibility(false);
-                ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
-                if (closestObject != null) transform.position = closestObject.transform.position;
-                _currentMode = StaticState.Gaze;
-            } 
 
             transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+            Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
+
 
             if (_currentMode == StaticState.Gaze)
             {
-
-                // Set Position along Gaze Ray
-                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-
-                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-                // _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + DeltaHeadY * 0.2f, 1f, 11f);
-                // transform.position = GazeOrigin + directionFromGazeOrigin * _accumulatedDepthOffset;
-
-                // Apply Head Depth Offset
-                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-                // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-                // float edgeGain = EyeHeadGain();
-                // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
-
-                // // Clamp Depth within Min and Max
-                // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
-
-                // Check to switch to Head state
-
-                // _accumulatedDepthOffset += DeltaHeadY * 0.4f;
-
+                // transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+                
+                transform.position += GazeDirection * DeltaHeadY * 0.4f;
+                transform.position = GazeOrigin + GazeDirection * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 10f);
 
                 if (IsGazeFixating)
                 {
                     _currentMode = StaticState.Head;
+                    _headPitchOnFixation = HeadData.HeadAngle_WorldY;
                 }
             }
             else
             {
 
-                // Apply Head Depth Offset
-                // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-                // // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-                // // float edgeGain = EyeHeadGain();
-                // float angleHeadForwardToObjectDirection = MathFunctions.AngleAroundAxis(HeadForward, directionFromGazeOrigin, Camera.main.transform.right);
-
-                // if (angleHeadForwardToObjectDirection >= 5f)
+                // if (_pitchDiffFromFixation >= 4f && _pitchDiffFromFixation - _pitchDiffFromFixation_LastFrame > 0f)
                 // {
                 //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * 8f, 1f, 11f);
                 //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
                 // }
 
-                // if (angleHeadForwardToObjectDirection <= -5f)
+                // if (_pitchDiffFromFixation <= -4f && _pitchDiffFromFixation - _pitchDiffFromFixation_LastFrame < 0f)
                 // {
                 //     _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + Time.deltaTime * -8f, 1f, 11f);
                 //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
                 // }
 
-
-                // transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
-
-                    // Clamp Depth within Min and Max
-                    // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
-
-                // _accumulatedDepthOffset += DeltaHeadY * 0.4f;
-
-                    // Check to switch back to Gaze state
-                    // float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-                if (IsGazeFixating == false) _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-            }
-
-
-            // float baseGain = VitLerp(Math.Abs(HeadSpeed), 0, 0.8f, 0.1f, 0.6f);
-            // float edgeGain = EyeHeadGain();
-
-            // transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
-            // Vector3 directionFromGazeOrigin = (transform.position - GazeOrigin).normalized;
-
-            // if (_currentMode == StaticState.Gaze)
-            // {
-            //     // transform.position = CubeManager.GetInstance().GetCenterOfFocusedCubes();
-
-            //     // Set Position along Gaze Ray
-            //     transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
-
-            //     // Apply Head Depth Offset
-            //     transform.position += directionFromGazeOrigin * DeltaHeadY * baseGain * edgeGain;
-
-            //     // Clamp Depth within Min and Max
-            //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
-
-            //     // Check to switch to Head state
-            //     if (IsGazeFixating)
-            //     {
-            //         _currentMode = StaticState.Head;
-            //         _fixationStartDepth = Vector3.Distance(transform.position, GazeOrigin);
-            //         _accumulatedDepthOffset = 0f;
-            //     }
-            // }
-            // else
-            // {
-            //     _accumulatedDepthOffset += DeltaHeadY * baseGain * edgeGain;
-            //     transform.position = GazeOrigin + directionFromGazeOrigin * (_fixationStartDepth + Mathf.Round(_accumulatedDepthOffset / 3f) * 3f);
-            //     // Clamp Depth within Min and Max
-            //     transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1f, 11f);
-
-            //     // Check to switch back to Gaze state
-            //     float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-            //     if (IsGazeFixating == false && angleGazeDirectionToObject > 15f)
-            //     {
-            //         _currentMode = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-            //     }
-
-            // }
-
-        }
-        else
-        {
-            if(PinchDetector.IsOneHandPinching_LastFrame)
-            {
-                SetCursorVisibility(true);
-                _currentMode = StaticState.Gaze;
-            } 
-
-
-            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
-
-            if (_currentMode == StaticState.Gaze)
-            {
-
-               // transform.position = GazeOrigin + GazeDirection * 1.5f;
-
-                if (IsGazeFixating)
+                bool isMoving = false;
+                if (_pitchDiffFromFixation >= 4f && _pitchDiffFromFixation - _pitchDiffFromFixation_LastFrame > 0f)
                 {
-                    _currentMode = StaticState.Head;
-                    ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
-                    if (closestObject != null) transform.position = closestObject.transform.position;
+                    isMoving = true;
+                    _depthUpdateTimer += Time.deltaTime;
+                    if (_depthUpdateTimer >= 0.375f)
+                    {
+                        _depthUpdateTimer = 0f; // Reset timer
+                        // The original rate was 8 units/sec. For a 0.375s interval, the step is 8 * 0.375 = 3.
+                        _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset + 3f, 1f, 11f);
+                        transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+                    }
                 }
-            }
-            else
-            {
-                // transform.position += PinchPosition_delta;
 
+                if (_pitchDiffFromFixation <= -4f && _pitchDiffFromFixation - _pitchDiffFromFixation_LastFrame < 0f)
+                {
+                    isMoving = true;
+                    _depthUpdateTimer += Time.deltaTime;
+                    if (_depthUpdateTimer >= 0.375f)
+                    {
+                        _depthUpdateTimer = 0f; // Reset timer
+                        _accumulatedDepthOffset = Mathf.Clamp(_accumulatedDepthOffset - 3f, 1f, 11f);
+                        transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Max(Mathf.Round(_accumulatedDepthOffset / 3f) * 3f, 1f);
+                    }
+                }
 
-                // ManipulatableCube closestCube = CubeManager.GetInstance().UpdateAndGetClosestFocusedCube();
-                // if (closestCube != null) transform.position = closestCube.transform.position;
+                // If head movement stops, reset the timer
+                if (!isMoving)
+                {
+                    _depthUpdateTimer = 0f;
+                }
 
-                // Check to switch back to Gaze state
-                float angleGazeDirectionToObject = Vector3.Angle(GazeDirection, transform.position - GazeOrigin);
-                // if (GazeData.IsSaccading() == true)
-                if (IsGazeFixating == false)
+                if (IsGazeFixating == false) // dont swtich back during small saccades assessing the big object correction; read the object hit box information 
                 {
                     _currentMode = StaticState.Gaze;
                 }
             }
         }
+        else // if hand is pinching
+        {
+
+            if(PinchDetector.IsNoHandPinching_LastFrame)
+            {
+                // SetCursorVisibility(false);
+                // ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+                // if (closestObject != null) transform.position = closestObject.transform.position;
+                _currentMode = StaticState.Gaze;
+            } 
+
+            transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(transform.position));
+
+            if (_currentMode == StaticState.Gaze)
+            {
+                transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
+
+                if (IsGazeFixating)
+                {
+                    _currentMode = StaticState.Head;
+                }
+            }
+            else
+            {
+                if (IsGazeFixating == false) _currentMode = StaticState.Gaze;
+            }
+
+        }
 
 
         Filtered_EyeInHeadAngle_Pre = GazeData.FilteredEyeInHeadAngle_Pre;
+        _pitchDiffFromFixation_LastFrame = _pitchDiffFromFixation;
     }
 
     private float GetVisualGain(Vector3 objectPosition)
@@ -273,5 +219,11 @@ public class TaskCursor : MonoBehaviour
     public void SetCursorVisibility(bool isVisible)
     {
         GetComponent<Renderer>().enabled = isVisible;
+    }
+
+    void PlaceSelfToClosestObject()
+    {
+        ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+        if (closestObject != null) transform.position = closestObject.transform.position;
     }
 }
