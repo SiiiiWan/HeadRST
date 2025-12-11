@@ -8,6 +8,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
     public List<ManipulatableObject> CurrentFocusedObjects = new List<ManipulatableObject>();
     public ManipulatableObject ClosestFocusedObject, ClosestFocusedObject_prev;
+    public ManipulatableObject PickedUpObject;
 
     void Update()
     {
@@ -43,6 +44,16 @@ public class ObjectManager : Singleton<ObjectManager>
         {
             CurrentFocusedObjects.Remove(obj);
         }
+    }
+
+    public void RegisterPickedUpObject(ManipulatableObject obj)
+    {
+        PickedUpObject = obj;
+    }
+
+    public void UnregisterPickedUpObject(ManipulatableObject obj)
+    {
+        if(PickedUpObject == obj) PickedUpObject = null;
     }
 
     public ManipulatableObject UpdateAndGetClosestFocusedObject()

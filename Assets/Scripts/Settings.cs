@@ -20,6 +20,8 @@ public class Settings : Singleton<Settings>
         {
             if (DominantHand == DominantHand.right)
             {
+                // return ObjectManager.GetInstance().TaskCursor.transform.position;
+
                 return ManipulationBehavior.VirtualHandPosition;
             }
             else

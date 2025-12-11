@@ -12,13 +12,18 @@ public enum GrabbedState
 public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
 {
     public bool IsPickedUp { get; private set; }
-    public Vector3 PositionOffsetToCursor_OnPickup { get; private set; }
+
+    private float _pinchStartTime;
+    private const float PinchTapThreshold = 0.3f; // A pinch shorter than this is considered a "tap"
+
     public virtual void OnPickup()
     {
         IsPickedUp = true;
         // SetCancelObjectGravity(true);
         UpdateOutlineState(false);
-        PositionOffsetToCursor_OnPickup = transform.position - ObjectManager.GetInstance().TaskCursor.transform.position;
+        ObjectManager.GetInstance().TaskCursor.transform.position = transform.position;
+        ObjectManager.GetInstance().RegisterPickedUpObject(this);
+        _pinchStartTime = Time.time; // Record the time when the pinch starts
     }
     public virtual void HandlePickup()
     {
@@ -28,7 +33,16 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         // Check for drop condition
         if (PinchDetector.GetInstance().IsNoHandPinching)
         {
-            OnDrop();
+            float pinchDuration = Time.time - _pinchStartTime;
+            if (pinchDuration > PinchTapThreshold)
+            {
+                print("Dropping object after pinch duration: " + pinchDuration);
+                OnDrop();
+            }
+            else
+            {
+                _pinchStartTime = Time.time; // Record the time when the pinch starts
+            }
         }
     }
     public virtual void OnDrop()
@@ -39,6 +53,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         {
             UpdateOutlineState(true);
         }
+        ObjectManager.GetInstance().UnregisterPickedUpObject(this);
     }
 
     public bool IsHovering { get; private set; }
@@ -91,7 +106,8 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     public virtual void ApplyPickedUpBehaviour()
     {
-        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position + PositionOffsetToCursor_OnPickup);
+        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position);
+        UpdateRotationTo(ObjectManager.GetInstance().TaskCursor.transform.rotation);
     }
 
     public void RefreshInGazeConeState()
@@ -116,6 +132,11 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public void UpdatePositionTo(Vector3 newPosition)
     {
         transform.position = newPosition;
+    }
+
+    public void UpdateRotationTo(Quaternion newRotation)
+    {
+        transform.rotation = newRotation;
     }
 
     // public void SetCancelObjectGravity(bool isFreeze)
