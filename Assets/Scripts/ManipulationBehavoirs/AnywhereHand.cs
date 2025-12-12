@@ -85,44 +85,91 @@ public class AnywhereHand : ManipulationTechnique
 
     // }
 
+    float _headPitchOnFixation;
+
     public override void ApplyIndirectGrabbedBehaviour()
     {
-        // Apply Hand Translation
-        VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
-        OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
-        GrabbedObject.transform.position += OffsetAddedByHand;
 
-        // // Apply Hand Rotation
-        // AngleRotatedByHand = Quaternion.Angle(PinchRotation_delta * GrabbedObject.transform.rotation, GrabbedObject.transform.rotation);
-        // GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
+            GrabbedObject.transform.position += PinchPosition_delta * Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+            Vector3 directionFromGazeOrigin = (GrabbedObject.transform.position - GazeOrigin).normalized;
 
-        CurrentDistanceToGaze = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
+            // transform.position += directionFromGazeOrigin * DeltaHeadY * 0.4f;
+            // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 10f);
 
-        if (CurrentState == StaticState.Gaze)
-        {
-            // Set Position along Gaze Ray
-            GrabbedObject.transform.position = GazeOrigin + GazeDirection * CurrentDistanceToGaze;
 
-            // Apply Head Depth Offset
-            Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
-            HeadDepthOffset = GetHeadDepthOffset(objectDirection);
-            GrabbedObject.transform.position += HeadDepthOffset;
+            if (CurrentState == StaticState.Gaze)
+            {
+                GrabbedObject.transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, GrabbedObject.transform.position + directionFromGazeOrigin * DeltaHeadY * 0.4f);
+                GrabbedObject.transform.position = GazeOrigin + GazeDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), 1, 100f);
 
-            // Clamp Depth within Min and Max
-            DistanceToGazeAfterAddingHeadDepth = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
-            GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(DistanceToGazeAfterAddingHeadDepth, MinDepth, MaxDepth);
+
+
+                if (IsGazeFixating)
+                {
+                    CurrentState = StaticState.Head;
+                    _headPitchOnFixation = HeadData.HeadAngle_WorldY;
+                }
+            }
+            else
+            {
+                
+                if(HeadData.HeadAngle_WorldY - _headPitchOnFixation >= 5f)
+                {
+                    GrabbedObject.transform.position += directionFromGazeOrigin * (HeadData.HeadAngle_WorldY - _headPitchOnFixation - 5f) * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin)) * 10;                    
+                }
+
+                if(HeadData.HeadAngle_WorldY - _headPitchOnFixation <= -3f)
+                {
+                    GrabbedObject.transform.position -= directionFromGazeOrigin * (-HeadData.HeadAngle_WorldY + _headPitchOnFixation - 3f) * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(GrabbedObject.transform.position, GazeOrigin)) * 10;                   
+                }
+
+                GrabbedObject.transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), 1, 100f);
+
+                
+
+
+                if (IsGazeFixating == false) // dont swtich back during small saccades assessing the big object correction; read the object hit box information 
+                {
+                    CurrentState = StaticState.Gaze;
+                }
+            }
+
+        // // Apply Hand Translation
+        // VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+        // OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
+        // GrabbedObject.transform.position += OffsetAddedByHand;
+
+        // // // Apply Hand Rotation
+        // // AngleRotatedByHand = Quaternion.Angle(PinchRotation_delta * GrabbedObject.transform.rotation, GrabbedObject.transform.rotation);
+        // // GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
+
+        // CurrentDistanceToGaze = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
+
+        // if (CurrentState == StaticState.Gaze)
+        // {
+        //     // Set Position along Gaze Ray
+        //     GrabbedObject.transform.position = GazeOrigin + GazeDirection * CurrentDistanceToGaze;
+
+        //     // Apply Head Depth Offset
+        //     Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
+        //     HeadDepthOffset = GetHeadDepthOffset(objectDirection);
+        //     GrabbedObject.transform.position += HeadDepthOffset;
+
+        //     // Clamp Depth within Min and Max
+        //     DistanceToGazeAfterAddingHeadDepth = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+        //     GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(DistanceToGazeAfterAddingHeadDepth, MinDepth, MaxDepth);
             
-            // Check to switch to Head state
-            if (IsGazeFixating) CurrentState = StaticState.Head;
-        }
-        else
-        {
+        //     // Check to switch to Head state
+        //     if (IsGazeFixating) CurrentState = StaticState.Head;
+        // }
+        // else
+        // {
 
 
-            // Check to switch back to Gaze state
-            AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
-            if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
-        }
+        //     // Check to switch back to Gaze state
+        //     AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
+        //     if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+        // }
 
         VirtualHandPosition = WristPosition;
     }

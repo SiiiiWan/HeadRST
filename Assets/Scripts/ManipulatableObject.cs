@@ -33,6 +33,8 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         // Check for drop condition
         if (PinchDetector.GetInstance().IsNoHandPinching)
         {
+            // OnDrop();
+
             float pinchDuration = Time.time - _pinchStartTime;
             if (pinchDuration > PinchTapThreshold)
             {
