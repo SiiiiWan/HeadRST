@@ -19,6 +19,9 @@ TagManager:
   - RealHand
   - Anchor
   - PinchBall
+  - SamplesInfoPanel
+  - QDSUISection
+  - Fireball
   layers:
   - Default
   - TransparentFX
