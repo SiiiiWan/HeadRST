@@ -26,7 +26,13 @@ public class EyeGaze : Singleton<EyeGaze>
     
     [Header("Gaze Correction")]
     public bool CorrectGaze;
-    public int FramOffset = 7;
+    public int FrameOffset = 7;
+
+    [Header("Gaze Correction")]
+    private FixationTracker _gazeFixationTracker;
+    private bool _isGazeFixating_DT;
+    public float Duration_SetOnAwake = 0.25f;
+    public float Dispersion_SetOnAwake = 3f;
 
     [Header("One Euro Filter")]
 
@@ -52,6 +58,8 @@ public class EyeGaze : Singleton<EyeGaze>
         _eyeInHeadAngleFilter = new OneEuroFilter(FilterFrequency);
 
         _headRotationBuffer = new List<Quaternion>();
+
+        _gazeFixationTracker = new FixationTracker(Duration_SetOnAwake, Dispersion_SetOnAwake);
     }
 
     public float EyeInHeadAngle
@@ -70,22 +78,6 @@ public class EyeGaze : Singleton<EyeGaze>
 
     void Update()
     {
-
-        // OVRPlugin.EyeGazesState _eyeGazesState = new OVRPlugin.EyeGazesState();
-        // if (!OVRPlugin.GetEyeGazesState(OVRPlugin.Step.Render, -1, ref _eyeGazesState))
-        // {
-        //     Debug.Log("Failed to get eye gaze state from OVR");
-        // }
-
-        // OVRPlugin.EyeGazeState _leftEyeGazeState = _eyeGazesState.EyeGazes[(int)Eye.Left];
-        // OVRPlugin.EyeGazeState _rightEyeGazeState = _eyeGazesState.EyeGazes[(int)Eye.Right];
-
-        // OVRPose _leftEyePose = _leftEyeGazeState.Pose.ToOVRPose().ToHeadSpacePose();
-        // OVRPose _rightEyePose = _rightEyeGazeState.Pose.ToOVRPose().ToHeadSpacePose();
-
-        // _combinedGazeOrigin = Vector3.Lerp(_leftEyePose.position, _rightEyePose.position, 0.5f);
-        // _combinedGazeDir = Vector3.Scale(Quaternion.Slerp(_leftEyePose.orientation, _rightEyePose.orientation, 0.5f).normalized * Vector3.forward, new Vector3(-1,1,-1));
-
         if (FilterBlink)
         {
             if (EyesOpen) _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
@@ -109,7 +101,7 @@ public class EyeGaze : Singleton<EyeGaze>
             _combinedGazeOrigin = _gazePosFilter.Filter(_combinedGazeOrigin);
         }
 
-        if (CorrectGaze && _headRotationBuffer.Count == FramOffset)
+        if (CorrectGaze && _headRotationBuffer.Count == FrameOffset)
         {
             Quaternion headRotOffset = _headRotationBuffer[0] * Quaternion.Inverse(_headRotationBuffer[_headRotationBuffer.Count - 1]);
             _combinedGazeDir = headRotOffset * _combinedGazeDir;
@@ -121,6 +113,8 @@ public class EyeGaze : Singleton<EyeGaze>
         _gazeSpeed = Vector3.Angle(_combinedGazeDir, _combinedGazeDir_pre) / Time.deltaTime;
         FilteredEyeInHeadAngle_Pre = FilteredEyeInHeadAngle;
         FilteredEyeInHeadAngle = _eyeInHeadAngleFilter.Filter(Vector3.Angle(Camera.main.transform.forward, _combinedGazeDir));
+        
+        _isGazeFixating_DT = _gazeFixationTracker.GetIsFixating(_combinedGazeDir);
 
         _combinedGazeDir_pre = _combinedGazeDir;
         UpdateHeadRotationBuffer();
@@ -130,7 +124,7 @@ public class EyeGaze : Singleton<EyeGaze>
     {
         Quaternion currentHeadRotation = Camera.main.transform.rotation;
         _headRotationBuffer.Add(currentHeadRotation);
-        if (_headRotationBuffer.Count > FramOffset)
+        if (_headRotationBuffer.Count > FrameOffset)
         {
             _headRotationBuffer.RemoveAt(0); // Remove oldest
         }
@@ -158,6 +152,15 @@ public class EyeGaze : Singleton<EyeGaze>
         return new Ray(_combinedGazeOrigin, _combinedGazeDir);
     }
 
+    public Vector3 GetGazeOrigin()
+    {
+        return _combinedGazeOrigin;
+    }
+    public Vector3 GetGazeDirection()
+    {
+        return _combinedGazeDir.normalized;
+    }
+
     public Vector3 GetRawGazeOrigin()
     {
         return _rawGazeOrigin;
@@ -177,8 +180,13 @@ public class EyeGaze : Singleton<EyeGaze>
         return null;
     }
 
-    public bool IsSaccading()
+    public bool IsSaccading_VT()
     {
         return _gazeSpeed >= SaccadeThr;
+    }
+
+    public bool IsFixating_DT()
+    {
+        return _isGazeFixating_DT;
     }
 }

@@ -28,17 +28,17 @@ public class GazeDirected : ManipulationTechnique
 
         CurrentDistanceToGaze = Vector3.Distance(GazeOrigin, GrabbedObject.transform.position);
 
-        if (CurrentState == StaticState.Gaze)
+        if (CurrentState == AH_ControlMode.Gaze)
         {
             GrabbedObject.transform.position = GazeOrigin + GazeDirection * CurrentDistanceToGaze;
 
-            if (IsGazeFixating) CurrentState = StaticState.Head; // switch to Head state if gaze is fixating
+            if (IsGazeFixating) CurrentState = AH_ControlMode.Head; // switch to Head state if gaze is fixating
         }
         else
         {
             
             AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
-            if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
+            if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = AH_ControlMode.Gaze; // 15 degrees threshold catches gaze little saccade during hand correction with distance gain
         }
 
         VirtualHandPosition = WristPosition;

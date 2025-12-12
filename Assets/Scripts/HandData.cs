@@ -96,7 +96,7 @@ public class HandData : Singleton<HandData>
     }
 
 
-    public Vector3 GetHandPosition(bool usePinchTip)
+    public Vector3 GetHandPosition(bool usePinchTip = true)
     {
         if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
@@ -108,7 +108,7 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public Vector3 GetDeltaHandPosition(bool usePinchTip)
+    public Vector3 GetDeltaHandPosition(bool usePinchTip = true)
     {
         if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
@@ -132,7 +132,7 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public Quaternion GetDeltaHandRotation(bool usePinchTip)
+    public Quaternion GetDeltaHandRotation(bool usePinchTip = true)
     {
         if (Settings.GetInstance().DominantHand == DominantHand.left)
         {

@@ -22,7 +22,7 @@ public class Settings : Singleton<Settings>
             {
                 // return ObjectManager.GetInstance().TaskCursor.transform.position;
 
-                return ManipulationBehavior.VirtualHandPosition;
+                return HandData.GetInstance().RightHandPosition;
             }
             else
             {

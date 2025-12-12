@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObjectManager : Singleton<ObjectManager>
 {
     public TaskCursor TaskCursor;
+    public PositionRotationProvider PositionRotationProvider_Global;
 
     public List<ManipulatableObject> CurrentFocusedObjects = new List<ManipulatableObject>();
     public ManipulatableObject ClosestFocusedObject, ClosestFocusedObject_prev;
@@ -12,7 +13,8 @@ public class ObjectManager : Singleton<ObjectManager>
 
     void Update()
     {
-        ClosestFocusedObject = UpdateAndGetClosestFocusedObject();
+        // ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Cursor();
+        ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Ray(EyeGaze.GetInstance().GetGazeRay());
 
         if (ClosestFocusedObject_prev != ClosestFocusedObject)
         {
@@ -56,7 +58,7 @@ public class ObjectManager : Singleton<ObjectManager>
         if(PickedUpObject == obj) PickedUpObject = null;
     }
 
-    public ManipulatableObject UpdateAndGetClosestFocusedObject()
+    public ManipulatableObject UpdateAndGetClosestFocusedObject_Cursor()
     {
         if (CurrentFocusedObjects == null || CurrentFocusedObjects.Count == 0)
         {
@@ -72,6 +74,31 @@ public class ObjectManager : Singleton<ObjectManager>
             if (obj == null) continue;
 
             float distance = Vector3.Distance(obj.transform.position, cursorPosition);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestObject = obj;
+            }
+        }
+
+        return closestObject;
+    }
+
+    public ManipulatableObject UpdateAndGetClosestFocusedObject_Ray(Ray ray)
+    {
+        if (CurrentFocusedObjects == null || CurrentFocusedObjects.Count == 0)
+        {
+            return null;
+        }
+
+        ManipulatableObject closestObject = null;
+        float minDistance = float.MaxValue;
+
+        foreach (var obj in CurrentFocusedObjects)
+        {
+            if (obj == null) continue;
+
+            float distance = Vector3.Angle(ray.direction, obj.transform.position - ray.origin);
             if (distance < minDistance)
             {
                 minDistance = distance;

@@ -132,7 +132,7 @@ public class ManipulationTechnique : MonoBehaviour
         GazeData = EyeGaze.GetInstance();
         GazeOrigin = GazeData.GetGazeRay().origin;
         GazeDirection = GazeData.GetGazeRay().direction.normalized;
-        IsGazeSaccading = GazeData.IsSaccading();
+        IsGazeSaccading = GazeData.IsSaccading_VT();
         GazeFixationTracker.UpdateThrshould(GazeFixationDuration, GazeFixationAngle);
         IsGazeFixating = GazeFixationTracker.GetIsFixating(GazeDirection);
         if (IsGazeFixating_pre == false && IsGazeFixating == true) TriggerOnGazeFixation();
@@ -316,7 +316,7 @@ public class ManipulationTechnique : MonoBehaviour
     #endregion
 
     // Special Technique Variables
-    public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
+    public AH_ControlMode CurrentState { get; protected set; } = AH_ControlMode.Gaze;
 
     public float VisualGainValue { get; protected set; }
     public Vector3 OffsetAddedByHand { get; protected set; }

@@ -29,7 +29,7 @@ public class Pen : MonoBehaviour
     float _pitchDiffFromFixation, _pitchDiffFromFixation_LastFrame;
     private float _depthUpdateTimer = 0f;
 
-    private StaticState _currentMode = StaticState.Gaze;
+    private AH_ControlMode _currentMode = AH_ControlMode.Gaze;
 
     public virtual void Awake()
     {
@@ -103,7 +103,7 @@ public class Pen : MonoBehaviour
             transform.position += directionFromGazeOrigin * DeltaHeadY * 0.4f;
             transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 10f);
 
-            if (_currentMode == StaticState.Gaze)
+            if (_currentMode == AH_ControlMode.Gaze)
             {
                 // transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position);
                 
@@ -112,7 +112,7 @@ public class Pen : MonoBehaviour
 
                 if (IsGazeFixating)
                 {
-                    _currentMode = StaticState.Head;
+                    _currentMode = AH_ControlMode.Head;
                     _headPitchOnFixation = HeadData.HeadAngle_WorldY;
                 }
             }
@@ -165,7 +165,7 @@ public class Pen : MonoBehaviour
 
                 if (IsGazeFixating == false) // dont swtich back during small saccades assessing the big object correction; read the object hit box information 
                 {
-                    _currentMode = StaticState.Gaze;
+                    _currentMode = AH_ControlMode.Gaze;
                 }
             }
 

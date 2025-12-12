@@ -33,7 +33,7 @@ public class TaskCursor : MonoBehaviour
 
     Vector3 _headPositionOnFixation;
 
-    private StaticState _currentMode = StaticState.Gaze;
+    private AH_ControlMode _currentMode = AH_ControlMode.Gaze;
     private float _depthUpdateTimer = 0f;
 
     public virtual void Awake()
@@ -75,7 +75,7 @@ public class TaskCursor : MonoBehaviour
             // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 10f);
 
 
-            if (_currentMode == StaticState.Gaze)
+            if (_currentMode == AH_ControlMode.Gaze)
             {
                 transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, transform.position + directionFromGazeOrigin * DeltaHeadY * 0.4f);
                 transform.position = GazeOrigin + GazeDirection * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 100f);
@@ -84,7 +84,7 @@ public class TaskCursor : MonoBehaviour
 
                 if (IsGazeFixating)
                 {
-                    _currentMode = StaticState.Head;
+                    _currentMode = AH_ControlMode.Head;
                     _headPitchOnFixation = HeadData.HeadAngle_WorldY;
                     _pinchPositionOnFixation = PinchPosition;
                 }
@@ -110,7 +110,7 @@ public class TaskCursor : MonoBehaviour
 
                 if (IsGazeFixating == false) // dont swtich back during small saccades assessing the big object correction; read the object hit box information 
                 {
-                    _currentMode = StaticState.Gaze;
+                    _currentMode = AH_ControlMode.Gaze;
                 }
             }
         }
@@ -235,7 +235,7 @@ public class TaskCursor : MonoBehaviour
 
     void PlaceSelfToClosestObject()
     {
-        ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject();
+        ManipulatableObject closestObject = ObjectManager.GetInstance().UpdateAndGetClosestFocusedObject_Cursor();
         if (closestObject != null) transform.position = closestObject.transform.position;
     }
 }

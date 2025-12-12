@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum StaticState
+public enum AH_ControlMode
 {
     Gaze,
     Head
@@ -97,7 +97,7 @@ public class AnywhereHand : ManipulationTechnique
             // transform.position = GazeOrigin + directionFromGazeOrigin * Mathf.Clamp(Vector3.Distance(transform.position, GazeOrigin), 1, 10f);
 
 
-            if (CurrentState == StaticState.Gaze)
+            if (CurrentState == AH_ControlMode.Gaze)
             {
                 GrabbedObject.transform.position = GazeOrigin + GazeDirection * Vector3.Distance(GazeOrigin, GrabbedObject.transform.position + directionFromGazeOrigin * DeltaHeadY * 0.4f);
                 GrabbedObject.transform.position = GazeOrigin + GazeDirection * Mathf.Clamp(Vector3.Distance(GrabbedObject.transform.position, GazeOrigin), 1, 100f);
@@ -106,7 +106,7 @@ public class AnywhereHand : ManipulationTechnique
 
                 if (IsGazeFixating)
                 {
-                    CurrentState = StaticState.Head;
+                    CurrentState = AH_ControlMode.Head;
                     _headPitchOnFixation = HeadData.HeadAngle_WorldY;
                 }
             }
@@ -130,7 +130,7 @@ public class AnywhereHand : ManipulationTechnique
 
                 if (IsGazeFixating == false) // dont swtich back during small saccades assessing the big object correction; read the object hit box information 
                 {
-                    CurrentState = StaticState.Gaze;
+                    CurrentState = AH_ControlMode.Gaze;
                 }
             }
 

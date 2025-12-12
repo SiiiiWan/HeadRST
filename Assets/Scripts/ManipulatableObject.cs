@@ -13,17 +13,13 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 {
     public bool IsPickedUp { get; private set; }
 
-    private float _pinchStartTime;
-    private const float PinchTapThreshold = 0.3f; // A pinch shorter than this is considered a "tap"
-
     public virtual void OnPickup()
     {
         IsPickedUp = true;
         // SetCancelObjectGravity(true);
         UpdateOutlineState(false);
-        ObjectManager.GetInstance().TaskCursor.transform.position = transform.position;
         ObjectManager.GetInstance().RegisterPickedUpObject(this);
-        _pinchStartTime = Time.time; // Record the time when the pinch starts
+        PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
     }
     public virtual void HandlePickup()
     {
@@ -33,18 +29,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         // Check for drop condition
         if (PinchDetector.GetInstance().IsNoHandPinching)
         {
-            // OnDrop();
-
-            float pinchDuration = Time.time - _pinchStartTime;
-            if (pinchDuration > PinchTapThreshold)
-            {
-                print("Dropping object after pinch duration: " + pinchDuration);
-                OnDrop();
-            }
-            else
-            {
-                _pinchStartTime = Time.time; // Record the time when the pinch starts
-            }
+            OnDrop();
         }
     }
     public virtual void OnDrop()
@@ -106,10 +91,11 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         }
     }
 
+    public PositionRotationProvider PositionRotationProvider {get; set; }
     public virtual void ApplyPickedUpBehaviour()
     {
-        UpdatePositionTo(ObjectManager.GetInstance().TaskCursor.transform.position);
-        UpdateRotationTo(ObjectManager.GetInstance().TaskCursor.transform.rotation);
+        UpdatePositionTo(PositionRotationProvider.GetPositionOutput(transform.position));
+        UpdateRotationTo(PositionRotationProvider.GetRotationOutput(transform.rotation));
     }
 
     public void RefreshInGazeConeState()
@@ -165,8 +151,6 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     // }
 
 
-
-
     public GrabbedState GrabbedState { get; protected set; }
     public Grabbable Grabbable { get; protected set; }
     public HandGrabInteractable HandGrabInteractable { get; protected set; }
@@ -177,3 +161,4 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         ApplyPickedUpBehaviour();
     }
 }
+

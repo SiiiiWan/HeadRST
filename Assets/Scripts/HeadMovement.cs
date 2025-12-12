@@ -37,27 +37,31 @@ public class HeadMovement : Singleton<HeadMovement>
         UpdateHeadAcc();
         UpdateHeadRoll();
 
-        PreCamPos = CamPos;
-        CamPos = Camera.main.transform.position;
+        HeadPosition_Pre = HeadPosition;
+        HeadPosition = Camera.main.transform.position;
 
-        PreCamDir = CamDir;
-        CamDir = Camera.main.transform.forward;
+        HeadForward_Pre = HeadForward;
+        HeadForward = Camera.main.transform.forward;
 
-        PreCamRotation = CamRotation;
-        CamRotation = Camera.main.transform.rotation;
+        HeadRotation_Pre = HeadRotation;
+        HeadRotation = Camera.main.transform.rotation;
 
         Pre_HeadAngle_WorldY = HeadAngle_WorldY;
-        HeadAngle_WorldY = _headAngleYFilter.Filter(MathFunctions.AngleFrom_XZ_Plane(CamDir));
+        HeadAngle_WorldY = _headAngleYFilter.Filter(MathFunctions.AngleFrom_XZ_Plane(HeadForward));
     }
 
-    public Quaternion CamRotation {get; private set;}
-    public Quaternion PreCamRotation {get; private set;}
+    public Quaternion HeadRotation {get; private set;}
+    public Quaternion HeadRotation_Pre {get; private set;}
 
-    public Vector3 CamPos {get; private set;}
-    public Vector3 PreCamPos {get; private set;}
+    public Vector3 HeadPosition {get; private set;}
+    public Vector3 HeadPosition_Pre {get; private set;}
+    public Vector3 DeltaHeadPosition
+    {
+        get {return HeadPosition - HeadPosition_Pre;}
+    }
 
-    public Vector3 CamDir  {get; private set;}
-    public Vector3 PreCamDir {get; private set;}
+    public Vector3 HeadForward  {get; private set;}
+    public Vector3 HeadForward_Pre {get; private set;}
 
     private OneEuroFilter _headAngleYFilter;
     public float HeadAngle_WorldY { get; private set; }
@@ -70,7 +74,7 @@ public class HeadMovement : Singleton<HeadMovement>
     }
     public Ray HeadRay
     {
-        get { return new Ray(CamPos, CamDir); }
+        get { return new Ray(HeadPosition, HeadForward); }
     }
 
     public Vector3 HeadDirXZ
@@ -85,7 +89,7 @@ public class HeadMovement : Singleton<HeadMovement>
 
     public float DeltaHeadRotation
     {
-        get {return Vector3.Angle(CamDir, PreCamDir);}
+        get {return Vector3.Angle(HeadForward, HeadForward_Pre);}
         // get {return Quaternion.Angle(CamRotation, PreCamRotation);} // including head roll
     }
 
@@ -101,7 +105,7 @@ public class HeadMovement : Singleton<HeadMovement>
 
     void UpdateHeadRoll()
     {
-        HeadRollAngle = MathFunctions.AngleAroundAxis(Camera.main.transform.up, Vector3.up, CamDir); // right positive; left negtive
+        HeadRollAngle = MathFunctions.AngleAroundAxis(Camera.main.transform.up, Vector3.up, HeadForward); // right positive; left negtive
         RawHeadRollSpeed = (HeadRollAngle - Pre_HeadRollAngle) / Time.deltaTime; // positive = rolling right; negative = rolling left
         FilteredHeadRollSpeed = _rollSpdFilter.Filter(RawHeadRollSpeed);
 
