@@ -113,6 +113,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
     public void UpdateOutlineState(bool isEnabled)
     {
+        if(GetComponent<Outline>() == null) return;
         GetComponent<Outline>().enabled = isEnabled;
     }
 
