@@ -8,15 +8,18 @@ public enum GrabbedState
     Grabbed_Indirect,
     Grabbed_Direct
 }
-
+    
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Outline))]
 public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
 {
+    public bool ApplyGravityByDefault = true;
     public bool IsPickedUp { get; private set; }
 
     public virtual void OnPickup()
     {
         IsPickedUp = true;
-        // SetCancelObjectGravity(true);
+        SetCancelObjectGravity(true);
         UpdateOutlineState(false);
         ObjectManager.GetInstance().RegisterPickedUpObject(this);
         PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
@@ -35,7 +38,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnDrop()
     {
         IsPickedUp = false;
-        // SetCancelObjectGravity(false);
+        SetCancelObjectGravity(false);
         if(IsHovering)
         {
             UpdateOutlineState(true);
@@ -74,7 +77,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         UpdateOutlineState(false);
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (IsPickedUp)
         {
@@ -128,28 +131,28 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         transform.rotation = newRotation;
     }
 
-    // public void SetCancelObjectGravity(bool isFreeze)
-    // {
-    //     if(UseGravity == false) return;
+    public void SetCancelObjectGravity(bool isFreeze)
+    {
+        if(ApplyGravityByDefault == false) return;
         
-    //     Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
-    //     Collider collider = transform.GetComponent<Collider>();
-    //     if (rigidbody != null && collider != null)
-    //     {
-    //         if (isFreeze == true)
-    //         {
-    //             rigidbody.isKinematic = true;
-    //             rigidbody.useGravity = false;
-    //             // collider.enabled = false;
-    //         }
-    //         else
-    //         {
-    //             rigidbody.isKinematic = false;
-    //             rigidbody.useGravity = true;
-    //             // collider.enabled = true;
-    //         }
-    //     }
-    // }
+        Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
+        Collider collider = transform.GetComponent<Collider>();
+        if (rigidbody != null && collider != null)
+        {
+            if (isFreeze == true)
+            {
+                rigidbody.isKinematic = true;
+                rigidbody.useGravity = false;
+                // collider.enabled = false;
+            }
+            else
+            {
+                rigidbody.isKinematic = false;
+                rigidbody.useGravity = true;
+                // collider.enabled = true;
+            }
+        }
+    }
 
 
     public GrabbedState GrabbedState { get; protected set; }
