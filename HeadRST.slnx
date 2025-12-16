@@ -36,8 +36,8 @@
   <Project Path="UnityEditor.TestRunner.csproj" />
   <Project Path="Unity.VisualScripting.Core.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.Runtime.csproj" />
-  <Project Path="Oculus.Interaction.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Oculus.Interaction.Editor.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
   <Project Path="Oculus.Interaction.OVR.csproj" />
   <Project Path="Unity.VisualScripting.State.Editor.csproj" />
