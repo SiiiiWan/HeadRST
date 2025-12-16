@@ -1,6 +1,8 @@
 using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
+using System.Collections.Generic;
+using System.Linq;
 
 public enum GrabbedState
 {
@@ -15,6 +17,9 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 {
     public bool ApplyGravityByDefault = true;
     
+    private readonly List<(Vector3 position, Quaternion rotation, float time)> _movementHistory = new List<(Vector3, Quaternion, float)>();
+    private const float ThrowVelocityTimeWindow = 0.15f; // Use 150ms of history for calculation
+
     public bool IsPickedUp { get; protected set; }
     public virtual void OnPickup()
     {
@@ -39,6 +44,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     {
         IsPickedUp = false;
         SetCancelObjectGravity(false);
+        _movementHistory.Clear();
         if(IsHovering)
         {
             UpdateOutlineState(true);
@@ -99,6 +105,9 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     {
         UpdatePositionTo(PositionRotationProvider.GetPositionOutput(transform.position));
         UpdateRotationTo(PositionRotationProvider.GetRotationOutput(transform.rotation));
+
+        _movementHistory.Add((transform.position, transform.rotation, Time.time));
+        _movementHistory.RemoveAll(p => Time.time - p.time > ThrowVelocityTimeWindow);
     }
 
     public void RefreshInGazeConeState()
@@ -143,15 +152,32 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
+                // rigidbody.linearVelocity = Vector3.zero;
                 // collider.enabled = false;
             }
             else
             {
                 rigidbody.isKinematic = false;
                 rigidbody.useGravity = true;
+                rigidbody.linearVelocity = GetLinearVelocity() / 2;
                 // collider.enabled = true;
             }
         }
+    }
+
+    public Vector3 GetLinearVelocity()
+    {
+            var first = _movementHistory.First();
+            var last = _movementHistory.Last();
+            float timeDelta = last.time - first.time;
+
+            if (timeDelta > 0)
+            {
+                // Calculate linear velocity
+                return (last.position - first.position) / timeDelta;
+            }
+
+            return Vector3.zero;
     }
 
 
