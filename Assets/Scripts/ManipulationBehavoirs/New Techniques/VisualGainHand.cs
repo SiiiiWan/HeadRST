@@ -11,10 +11,4 @@ public class VisualGainHand : PositionRotationProvider
         return currentPosition;
     }
 
-    public override Quaternion GetRotationOutput(Quaternion currentRotation)
-    {
-        UpdateDataSource();
-
-        return HandData.GetDeltaHandRotation() * currentRotation;
-    }
 }

@@ -14,8 +14,8 @@ public enum GrabbedState
 public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
 {
     public bool ApplyGravityByDefault = true;
+    
     public bool IsPickedUp { get; private set; }
-
     public virtual void OnPickup()
     {
         IsPickedUp = true;

@@ -23,7 +23,9 @@ public class PositionRotationProvider : MonoBehaviour
 
     public virtual Quaternion GetRotationOutput(Quaternion currentRotation)
     {
-        return currentRotation;
+        UpdateDataSource();
+
+        return HandData.GetDeltaHandRotation() * currentRotation;
     }
 
     public float GetVisualGain(Vector3 objectPosition)

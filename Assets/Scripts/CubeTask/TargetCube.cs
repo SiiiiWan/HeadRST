@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(Outline))]
@@ -11,6 +13,8 @@ public class TargetCube : MonoBehaviour
     public Material SolidColor, TransparentColor;
     private Coroutine _moveCoroutine;
     private float _moveDuration = 0.5f;
+    private ManipulatableCube _currentCollidedCube;
+
 
     private void Awake()
     {
@@ -21,13 +25,21 @@ public class TargetCube : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
+    private void Update()
+    {
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        ManipulatableCube cube = other.gameObject.GetComponent<ManipulatableCube>();
+
         // Check if the object that entered has a BoxCollider.
-        if (other is BoxCollider && other.gameObject.GetComponent<ManipulatableCube>() != null)
+        if (other is BoxCollider && cube != null)
         {
             GetComponent<Outline>().enabled = true;
             SetTransparency(0.5f);
+            _currentCollidedCube = cube;
         }
     }
 
@@ -43,23 +55,35 @@ public class TargetCube : MonoBehaviour
 
                 Destroy(cube.gameObject);  
                 AudioPlay.PlayClickSound();
-                
-                float newX = Random.Range(-2f, 2f);
-                float newY = Random.Range(0.5f, 2f);
-                float newZ = Random.Range(1f, 10f);
-                _moveCoroutine = StartCoroutine(MoveToPosition(new Vector3(newX, newY, newZ)));
+                ProceedToNextPosition();
             } 
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        ManipulatableCube cube = other.gameObject.GetComponent<ManipulatableCube>();
+
         // Check if the object that exited has a BoxCollider.
-        if (other is BoxCollider && other.gameObject.GetComponent<ManipulatableCube>() != null)
+        if (other is BoxCollider && cube != null)
         {
             GetComponent<Outline>().enabled = false;
             SetTransparency(1.0f);
+            _currentCollidedCube = null;
         }
+    }
+
+    void ProceedToNextPosition()
+    {
+        float newX = Random.Range(-2f, 2f);
+        
+        // float newY = Random.Range(0.5f, 2f);
+        float newY = transform.position.y;
+        
+        float newZ = transform.position.z;
+        
+        
+        _moveCoroutine = StartCoroutine(MoveToPosition(new Vector3(newX, newY, newZ)));
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition)
@@ -104,5 +128,6 @@ public class TargetCube : MonoBehaviour
             // Debug.Log("TargetCube Renderer: component not found.");
         }
     }
+
 
 }

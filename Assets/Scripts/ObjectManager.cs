@@ -13,6 +13,10 @@ public class ObjectManager : Singleton<ObjectManager>
 
     void Update()
     {
+        if(PickedUpObject != null)
+        {
+            return; // Skip updating focused objects when an object is picked up
+        }
         // ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Cursor();
         ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Ray(EyeGaze.GetInstance().GetGazeRay());
 
