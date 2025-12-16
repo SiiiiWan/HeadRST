@@ -15,7 +15,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 {
     public bool ApplyGravityByDefault = true;
     
-    public bool IsPickedUp { get; private set; }
+    public bool IsPickedUp { get; protected set; }
     public virtual void OnPickup()
     {
         IsPickedUp = true;
@@ -72,7 +72,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         ObjectManager.GetInstance().UnregisterFocusedObj(this);
     }
 
-    void Awake()
+    protected virtual void Awake()
     {
         UpdateOutlineState(false);
     }
