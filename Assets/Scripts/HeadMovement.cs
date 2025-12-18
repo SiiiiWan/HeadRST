@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.XR;
-using UnityEngine.Experimental.GlobalIllumination;
-
+using System.Linq;
 public class HeadMovement : Singleton<HeadMovement>
 {
     protected override void Awake()
@@ -72,6 +71,39 @@ public class HeadMovement : Singleton<HeadMovement>
     {
         get {return Mathf.Abs(FilteredHeadVel.magnitude); }
     }
+    private readonly List<(float time, float speed)> _headSpeedHistory = new List<(float, float)>();
+    private const float HeadStableTimeWindow = 0.7f; // 700ms
+
+    public bool IsHeadStable(float speedThreshold = 0.2f)
+    {
+        // Ensure enough time has passed to have a meaningful average over the window.
+        if (Time.time < HeadStableTimeWindow)
+        {
+            return false;
+        }
+
+        // If there's no history, we can't determine stability.
+        if (!_headSpeedHistory.Any())
+        {
+            return false;
+        }
+
+        float historyTimeSpan = _headSpeedHistory.Last().time - _headSpeedHistory.First().time;
+        if (historyTimeSpan < HeadStableTimeWindow * 0.9f)
+        {
+            return false;
+        }
+
+        // Calculate the average speed from the recorded history.
+        float averageSpeed = _headSpeedHistory.Average(entry => entry.speed);
+
+        return averageSpeed < speedThreshold;
+    }
+    public void ResetHeadStabilityHistory()
+    {
+        _headSpeedHistory.Clear();
+    }
+
     public Ray HeadRay
     {
         get { return new Ray(HeadPosition, HeadForward); }
@@ -136,6 +168,10 @@ public class HeadMovement : Singleton<HeadMovement>
         FilteredHeadVel = _headVelFilter.Filter(headAngularVel);
         RawHeadSpeed = headAngularVel.magnitude;
 
+        // Record head speed history for stability check
+        _headSpeedHistory.Add((Time.time, HeadSpeed));
+        // Clean up old entries to keep the list from growing indefinitely
+        _headSpeedHistory.RemoveAll(entry => Time.time - entry.time > HeadStableTimeWindow);
     }
 
     [HideInInspector] public float HeadAcc, FilteredHeadAcc;

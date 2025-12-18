@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 
 public class EyeGaze : Singleton<EyeGaze>
@@ -178,6 +179,19 @@ public class EyeGaze : Singleton<EyeGaze>
             return hit.transform;
         }
         return null;
+    }
+
+    public bool GetGazeHitPoint(out Vector3 hitPoint)
+    {
+        hitPoint = Vector3.zero;
+
+        if (Physics.Raycast(GetGazeRay(), out RaycastHit hit, 100f))
+        {
+            hitPoint = hit.point;
+            return true;
+        }
+
+        return false;
     }
 
     public bool IsSaccading_VT()

@@ -81,6 +81,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     protected virtual void Awake()
     {
         UpdateOutlineState(false);
+        SetCancelObjectGravity(!ApplyGravityByDefault);
     }
 
     protected virtual void Update()
@@ -141,14 +142,12 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     }
 
     public void SetCancelObjectGravity(bool isFreeze)
-    {
-        if(ApplyGravityByDefault == false) return;
-        
+    {        
         Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
         Collider collider = transform.GetComponent<Collider>();
         if (rigidbody != null && collider != null)
         {
-            if (isFreeze == true)
+            if (isFreeze == true || ApplyGravityByDefault == false)
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;

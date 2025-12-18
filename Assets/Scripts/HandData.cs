@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public enum Hand
 {
@@ -8,6 +10,10 @@ public enum Hand
 
 public class HandData : Singleton<HandData>
 {
+
+    [Tooltip("The time window (in seconds) over which to average hand speed for stability checks.")]
+    [SerializeField] private float _movementTimeWindow = 0.3f; // 300ms
+    private readonly List<(float time, float speed)> _handSpeedHistory = new List<(float, float)>();
 
     public Transform RightHandAnchor, LeftHandAnchor;
 
@@ -79,6 +85,10 @@ public class HandData : Singleton<HandData>
 
         RightHandDirection = RightHandAnchor.forward;
         LeftHandDirection = LeftHandAnchor.forward;
+
+        // Update speed history
+        _handSpeedHistory.Add((Time.time, GetHandSpeed()));
+        _handSpeedHistory.RemoveAll(entry => Time.time - entry.time > _movementTimeWindow);
     }
 
     private Transform GetPinchTipTransform(OVRHand hand)
@@ -144,13 +154,13 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public float GetHandRotationSpeed(bool usePinchTip)
+    public float GetHandRotationSpeed(bool usePinchTip = true)
     {
         GetDeltaHandRotation(usePinchTip).ToAngleAxis(out float rotationAngle, out Vector3 axis);
         return rotationAngle / Time.deltaTime;
     }
 
-    public float GetHandSpeed(bool usePinchTip)
+    public float GetHandSpeed(bool usePinchTip = true)
     {
         if (Settings.GetInstance().DominantHand == DominantHand.left)
         {
@@ -160,6 +170,24 @@ public class HandData : Singleton<HandData>
         {
             return usePinchTip ? RightHandSpeed_pinch : RightHandSpeed_wrist;
         }
+    }
+
+    public bool IsHandActivelyMoving(float movementSpeedThreshold = 0.05f)
+    {
+        if (_handSpeedHistory.Count == 0)
+        {
+            return false;
+        }
+
+        // To be robust, ensure the history buffer is reasonably full
+        float historyTimeSpan = _handSpeedHistory.Last().time - _handSpeedHistory.First().time;
+        if (historyTimeSpan < _movementTimeWindow * 0.8f)
+        {
+            return false; // Not enough data for a reliable average yet
+        }
+
+        float averageSpeed = _handSpeedHistory.Average(entry => entry.speed);
+        return averageSpeed > movementSpeedThreshold;
     }
 
     public Vector3 GetHandDirection()
