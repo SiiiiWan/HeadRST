@@ -6,10 +6,12 @@ public class ObjectManager : Singleton<ObjectManager>
 {
     public TaskCursor TaskCursor;
     public PositionRotationProvider PositionRotationProvider_Global;
+    public bool AllowDirectGrab = true;
+    public bool AllowIndirectGrab = true;
 
-    public List<ManipulatableObject> CurrentFocusedObjects = new List<ManipulatableObject>();
-    public ManipulatableObject ClosestFocusedObject, ClosestFocusedObject_prev;
-    public ManipulatableObject PickedUpObject;
+    [HideInInspector] public List<ManipulatableObject> CurrentFocusedObjects = new List<ManipulatableObject>();
+    [HideInInspector] public ManipulatableObject ClosestFocusedObject, ClosestFocusedObject_prev;
+    [HideInInspector] public ManipulatableObject PickedUpObject;
 
     void Update()
     {

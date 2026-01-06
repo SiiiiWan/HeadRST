@@ -26,19 +26,27 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         IsPickedUp = true;
         if(Grabbable == null)
         {
-            SetGrabbedState(GrabbedState.Grabbed_Indirect);
+            if(ObjectManager.GetInstance().AllowIndirectGrab) SetGrabbedState(GrabbedState.Grabbed_Indirect);
+            else return;
         }
         else
         {
-            SetGrabbedState(Grabbable.SelectingPointsCount > 0 ? GrabbedState.Grabbed_Direct : GrabbedState.Grabbed_Indirect); 
+            if(Grabbable.SelectingPointsCount > 0)
+            {
+                if(ObjectManager.GetInstance().AllowDirectGrab) SetGrabbedState(GrabbedState.Grabbed_Direct);
+                else return;
+            }
+            else
+            {
+                if(ObjectManager.GetInstance().AllowIndirectGrab) SetGrabbedState(GrabbedState.Grabbed_Indirect);
+                else return;
+            }
         }
 
         SetCancelObjectGravity(true);
         UpdateOutlineState(false);
         ObjectManager.GetInstance().RegisterPickedUpObject(this);
         PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
-        print("Print:" + PositionRotationProvider);
-        print("Print:" + ObjectManager.GetInstance().PositionRotationProvider_Global);
     }
     public virtual void HandlePickup()
     {
