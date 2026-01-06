@@ -12,7 +12,8 @@ public class Settings : Singleton<Settings>
 {
     public DominantHand DominantHand = DominantHand.right;
     public ManipulationTechnique ManipulationBehavior;
-    public IVirtualHandProvider VirtualHandProvider;
+    public VirtualHandProvider VirtualHandProvider;
+    
     public Vector3 GetVirtualHandPosition(bool isRightHand)
     {
         if(VirtualHandProvider != null)
@@ -48,14 +49,6 @@ public class Settings : Singleton<Settings>
     }
 }
 
-
-
-
-public interface IVirtualHandProvider
-{
-    Vector3 GetVirtualHandPosition(bool isRightHand);
-    Quaternion GetVirtualHandRotation(bool isRightHand);
-}
 
 /// <summary>
 /// Defines the contract for objects that react to entering or exiting the user's gaze cone.

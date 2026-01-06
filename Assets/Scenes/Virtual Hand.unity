@@ -15566,6 +15566,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584929}
+  - component: {fileID: 1006584930}
+  - component: {fileID: 1006584931}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -15602,6 +15604,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DominantHand: 0
   ManipulationBehavior: {fileID: 0}
+  VirtualHandProvider: {fileID: 1006584930}
+--- !u!114 &1006584930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15008e346956014ca99b1b23de18955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1006584931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bdd11f051801bc4b8d87fc5ab9adf3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  D: 0.346
+  k: 0.01
 --- !u!1 &1014960979
 GameObject:
   m_ObjectHideFlags: 0
