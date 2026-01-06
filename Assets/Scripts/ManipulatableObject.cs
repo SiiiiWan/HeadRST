@@ -24,15 +24,26 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnPickup()
     {
         IsPickedUp = true;
+        if(Grabbable == null)
+        {
+            SetGrabbedState(GrabbedState.Grabbed_Indirect);
+        }
+        else
+        {
+            SetGrabbedState(Grabbable.SelectingPointsCount > 0 ? GrabbedState.Grabbed_Direct : GrabbedState.Grabbed_Indirect); 
+        }
+
         SetCancelObjectGravity(true);
         UpdateOutlineState(false);
         ObjectManager.GetInstance().RegisterPickedUpObject(this);
         PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
+        print("Print:" + PositionRotationProvider);
+        print("Print:" + ObjectManager.GetInstance().PositionRotationProvider_Global);
     }
     public virtual void HandlePickup()
     {
         // Update object position to follow the cursor
-        ApplyPickedUpBehaviour();
+        if(GrabbedState == GrabbedState.Grabbed_Indirect) ApplyPickedUpBehaviour();
 
         // Check for drop condition
         if (PinchDetector.GetInstance().IsNoHandPinching)
@@ -43,6 +54,8 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public virtual void OnDrop()
     {
         IsPickedUp = false;
+        SetGrabbedState(GrabbedState.NotGrabbed);
+
         SetCancelObjectGravity(false);
         _movementHistory.Clear();
         if(IsHovering)
@@ -82,6 +95,11 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     {
         UpdateOutlineState(false);
         SetCancelObjectGravity(!ApplyGravityByDefault);
+
+        if(Grabbable == null)
+        {
+            Grabbable = GetComponentInChildren<Grabbable>();
+        }
     }
 
     protected virtual void Update()
@@ -96,7 +114,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
 
             if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
             {
-                if(IsHovering) OnPickup();
+                if(IsHovering || Grabbable.SelectingPointsCount > 0) OnPickup();
             }
         }
     }
@@ -187,7 +205,6 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public void SetGrabbedState(GrabbedState state)
     {
         GrabbedState = state;
-        ApplyPickedUpBehaviour();
     }
 }
 
