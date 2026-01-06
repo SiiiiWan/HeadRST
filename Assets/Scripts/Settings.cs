@@ -12,35 +12,49 @@ public class Settings : Singleton<Settings>
 {
     public DominantHand DominantHand = DominantHand.right;
     public ManipulationTechnique ManipulationBehavior;
-
-
+    public IVirtualHandProvider VirtualHandProvider;
     public Vector3 GetVirtualHandPosition(bool isRightHand)
     {
+        if(VirtualHandProvider != null)
+        {
+            return VirtualHandProvider.GetVirtualHandPosition(isRightHand);
+        }
+
         if (isRightHand)
         {
-            if (DominantHand == DominantHand.right)
-            {
-                // return ObjectManager.GetInstance().TaskCursor.transform.position;
-
-                return HandData.GetInstance().RightHandPosition;
-            }
-            else
-            {
-                return HandData.GetInstance().RightHandPosition;
-            }
+            return HandData.GetInstance().RightHandPosition;
         }
         else
         {
-            if (DominantHand == DominantHand.left)
-            {
-                return ManipulationBehavior.VirtualHandPosition;
-            }
-            else
-            {
-                return HandData.GetInstance().LeftHandPosition;
-            }
+            return HandData.GetInstance().LeftHandPosition;
         }
     }
+
+    public Quaternion GetVirtualHandRotation(bool isRightHand)
+    {
+        if(VirtualHandProvider != null)
+        {
+            return VirtualHandProvider.GetVirtualHandRotation(isRightHand);
+        }
+
+        if (isRightHand)
+        {
+            return HandData.GetInstance().RightHandRotation;
+        }
+        else
+        {
+            return HandData.GetInstance().LeftHandRotation;
+        }
+    }
+}
+
+
+
+
+public interface IVirtualHandProvider
+{
+    Vector3 GetVirtualHandPosition(bool isRightHand);
+    Quaternion GetVirtualHandRotation(bool isRightHand);
 }
 
 /// <summary>
