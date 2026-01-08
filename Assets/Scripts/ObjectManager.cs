@@ -26,7 +26,7 @@ public class ObjectManager : Singleton<ObjectManager>
         {
             if (ClosestFocusedObject != null)
             {
-                ClosestFocusedObject.OnHoverEnter();
+                if(AllowIndirectGrab) ClosestFocusedObject.OnHoverEnter();
             }
                 
             if (ClosestFocusedObject_prev != null)

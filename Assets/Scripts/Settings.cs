@@ -16,7 +16,7 @@ public class Settings : Singleton<Settings>
     
     public Vector3 GetVirtualHandPosition(bool isRightHand)
     {
-        if(VirtualHandProvider != null)
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
         {
             return VirtualHandProvider.GetVirtualHandPosition(isRightHand);
         }
