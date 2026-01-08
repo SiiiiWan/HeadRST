@@ -1,11 +1,16 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
-public class VirtualHandInteraction : MonoBehaviour
+public class MultiSelectionCubeVolume : MonoBehaviour
 {
     public GameObject SelectionCubePrefab;
 
     private GameObject _selectionCubeInstance;
+    private BoxCollider _selectionCubeCollider;
     private Vector3 _pinchStartPosition;
+
+    public List<Transform> SelectedTransforms { get; private set; } = new List<Transform>();
 
     void Update()
     {
@@ -21,6 +26,9 @@ public class VirtualHandInteraction : MonoBehaviour
                 // Instantiate the prefab
                 _selectionCubeInstance = Instantiate(SelectionCubePrefab);
                 _selectionCubeInstance.name = "SelectionCubeInstance";
+                _selectionCubeInstance.transform.parent = transform;
+                _selectionCubeInstance.tag = "MultiselectVolume";
+                _selectionCubeCollider = _selectionCubeInstance.GetComponent<BoxCollider>();
             }
             else
             {
@@ -49,15 +57,64 @@ public class VirtualHandInteraction : MonoBehaviour
                 // Update the cube's position and scale
                 _selectionCubeInstance.transform.position = center;
                 _selectionCubeInstance.transform.localScale = size;
+
+
+                // Detect and add objects within the resized cube
+                UpdateSelectedObjects();
             }
         }
 
+        // pinch released
         if (PinchDetector.GetInstance().IsNoHandPinching && _selectionCubeInstance != null)
         {
             Destroy(_selectionCubeInstance);
             _selectionCubeInstance = null;
-            
+            _selectionCubeCollider = null;
         }
     }
-    
+
+    private void UpdateSelectedObjects()
+    {
+        if (_selectionCubeInstance == null) return;
+
+        var previouslySelected = new List<Transform>(SelectedTransforms);
+
+        SelectedTransforms.Clear();
+
+        // Use OverlapBox to find all colliders intersecting with the selection cube
+        Collider[] hitColliders = Physics.OverlapBox(
+            _selectionCubeInstance.transform.position,
+            _selectionCubeInstance.transform.localScale / 2f,
+            _selectionCubeInstance.transform.rotation
+        );
+
+        // Add the transform of each hit object to the list
+        foreach (var hitCollider in hitColliders)
+        {
+            // Ensure we don't add the selection cube itself
+            if (hitCollider.gameObject != _selectionCubeInstance)
+            {
+                SelectedTransforms.Add(hitCollider.transform);
+            }
+        }
+
+        var newlySelected = SelectedTransforms.Except(previouslySelected);
+        foreach (Transform trans in newlySelected)
+        {
+            if (trans.TryGetComponent<Outline>(out var outline))
+            {
+                outline.enabled = true;
+            }
+        }
+
+        // Find deselected items (in previous but not in current) and disable their outline
+        var deselected = previouslySelected.Except(SelectedTransforms);
+        foreach (Transform trans in deselected)
+        {
+            if (trans.TryGetComponent<Outline>(out var outline))
+            {
+                outline.enabled = false;
+            }
+        }
+    }
 }

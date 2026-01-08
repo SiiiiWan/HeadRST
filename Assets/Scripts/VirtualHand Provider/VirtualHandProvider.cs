@@ -55,5 +55,10 @@ public class VirtualHandProvider : MonoBehaviour
         // TODO: Get hand position here use pinch 
     }
 
+    public virtual bool IsGazeRedirecting()
+    {
+        return false;
+    }
+
 }
 

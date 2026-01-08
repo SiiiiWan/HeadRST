@@ -59,6 +59,9 @@ public class DR_v2 : VirtualHandProvider
         return _virtualHandPosition_OnFixation + realHandOffset * Mathf.Max(1f, Vector3.Distance(_virtualHandPosition_OnFixation, GazeData.GetGazeOrigin()) / Vector3.Distance(_handPosition_OnFixation, GazeData.GetGazeOrigin()));
     }
 
-
+    public override bool IsGazeRedirecting()
+    {
+        return _currentMode == DR_States.Gaze;
+    }
 
 }
