@@ -144,6 +144,11 @@ public static class MathFunctions
         return vector - Vector3.Dot(vector, planeNormal) * planeNormal;
     }
 
+    public static Vector3 ProjectOntoXZPlane(Vector3 vector)
+    {
+        return new Vector3(vector.x, 0, vector.z);
+    }
+
     public static float Slop(Vector2 v1, Vector2 v2)
     {
         return (v2.y - v1.y) / (v2.x - v1.x);

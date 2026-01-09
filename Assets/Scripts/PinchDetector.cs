@@ -15,7 +15,7 @@ public class PinchDetector : Singleton<PinchDetector>
     public PinchState PinchState = PinchState.NotPinching;
     public float PinchThreshold = 0.01f; // Adjust this threshold as needed
 
-    public GameObject righHandPinchBall_index, righHandPinchBall_thumb, leftHandPinchBall_index, leftHandPinchBall_thumb;
+    public GameObject righHandPinchBall_index, righHandPinchBall_thumb, leftHandPinchBall_index, leftHandPinchBall_thumb, lefthandPinchBall_hand, righthandPinchBall_hand;
     void Update()
     {
         UpdatePinchBalls();
@@ -95,6 +95,9 @@ public class PinchDetector : Singleton<PinchDetector>
                 leftHandPinchBall_thumb.transform.rotation = bone.Transform.rotation;
             }
         }
+
+        lefthandPinchBall_hand.transform.position = HandData.GetInstance().LeftHandPosition;
+        righthandPinchBall_hand.transform.position = HandData.GetInstance().RightHandPosition;
     }
 
 }
