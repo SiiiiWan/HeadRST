@@ -18,6 +18,7 @@ public class AdjustableCube : MonoBehaviour
         _mesh = new Mesh();
         _mesh.name = "AdjustableCubeMesh";
         GetComponent<MeshFilter>().mesh = _mesh;
+        GetComponent<MeshCollider>().sharedMesh = _mesh;
 
         // Initialize the LineRenderer for edges
         _edgeLines = new GameObject("EdgeLines").AddComponent<LineRenderer>();

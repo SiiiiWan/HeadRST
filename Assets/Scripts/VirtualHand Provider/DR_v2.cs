@@ -33,7 +33,6 @@ public class DR_v2 : VirtualHandProvider
             _currentMode = DR_States.Gaze;
         }
 
-        ;
 
         currentPosition = _currentMode switch
         {
