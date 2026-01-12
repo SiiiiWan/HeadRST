@@ -1,5 +1,7 @@
+using System;
 using UltimateProceduralPrimitivesFREE;
 using Unity.Android.Gradle.Manifest;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -25,6 +27,8 @@ public class DR_v2 : VirtualHandProvider
         float headPitchAngle = HeadData.HeadAngle_WorldY;
         bool isHeadPitchInceasing = (headPitchAngle - HeadData.Pre_HeadAngle_WorldY) > 0.01f;
         bool isHeadPitchDecreasing = (headPitchAngle - HeadData.Pre_HeadAngle_WorldY) < -0.01f;
+        bool isEyeInHeadAngleIncreasing = (Math.Abs(GazeData.EyeInHeadYAngle) - Math.Abs(GazeData.FilteredEyeInHeadAngle_Pre)) > 0.01f;
+        bool isEyeInHeadAngleDecreasing = (GazeData.EyeInHeadYAngle - GazeData.FilteredEyeInHeadAngle_Pre) < -0.01f;
 
         if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
         {
@@ -57,7 +61,7 @@ public class DR_v2 : VirtualHandProvider
         } 
         if(GazeData.IsFixating_DT() == false) _headPitch_neutral = HeadData.HeadAngle_WorldY;
 
-        ShowCurrentMode();
+        // ShowCurrentMode();
 
         switch (_currentMode)
         {
@@ -103,6 +107,7 @@ public class DR_v2 : VirtualHandProvider
         Vector3 vec_gazeToRightHand = HandData.RightHandPosition - gazeOrigin;
         Vector3 vec_gazeToLeftHand = HandData.LeftHandPosition - gazeOrigin;
         Vector3 vec_gazeToHandMidpoint = _handMidpointPosition_OnRedirection - gazeOrigin;
+        Vector3 vec_gazeToHandMidpoing_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f - gazeOrigin;
 
         Quaternion rightHandOffset_theta = Quaternion.LookRotation(vec_gazeToRightHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
         Quaternion leftHandOffset_theta = Quaternion.LookRotation(vec_gazeToLeftHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
@@ -121,6 +126,7 @@ public class DR_v2 : VirtualHandProvider
         Quaternion rightVirtualHandRotation = handRotationOffset * HandData.RightHandRotation;
         Quaternion leftVirtualHandRotation = handRotationOffset * HandData.LeftHandRotation;
 
+        float handScaleFactor = vec_gazeToPivot.magnitude;
         Vector3 rightVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.RightHandPosition - _handMidpointPosition_OnRedirection);
         Vector3 leftVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.LeftHandPosition - _handMidpointPosition_OnRedirection);
 
