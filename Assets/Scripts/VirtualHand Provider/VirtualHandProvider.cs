@@ -22,29 +22,17 @@ public class VirtualHandProvider : MonoBehaviour
         return currentPivot;
     }
 
-    public virtual Vector3 GetVirtualHandPosition(bool isRightHand)
+    public virtual Pose GetVirtualHandPose(bool isRightHand)
     {
         _currentPivotPoint = UpdatePivot(_currentPivotPoint);
         
         if(isRightHand)
         {
-            return HandData.GetInstance().RightHandPosition;
+            return new Pose(HandData.GetInstance().RightHandPosition, HandData.GetInstance().RightHandRotation);
         }
         else
         {
-            return HandData.GetInstance().LeftHandPosition;
-        }
-    }
-
-    public virtual Quaternion GetVirtualHandRotation(bool isRightHand)
-    {
-        if(isRightHand)
-        {
-            return HandData.GetInstance().RightHandRotation;
-        }
-        else
-        {
-            return HandData.GetInstance().LeftHandRotation;
+            return new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation);
         }
     }
 

@@ -14,41 +14,23 @@ public class Settings : Singleton<Settings>
     public ManipulationTechnique ManipulationBehavior;
     public VirtualHandProvider VirtualHandProvider;
     
-    public Vector3 GetVirtualHandPosition(bool isRightHand)
+    public Pose GetVirtualHandPose(bool isRightHand)
     {
         if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
         {
-            return VirtualHandProvider.GetVirtualHandPosition(isRightHand);
+            return VirtualHandProvider.GetVirtualHandPose(isRightHand);
         }
 
         if (isRightHand)
         {
-            return HandData.GetInstance().RightHandPosition;
+            return new Pose(HandData.GetInstance().RightHandPosition, HandData.GetInstance().RightHandRotation);
         }
         else
         {
-            return HandData.GetInstance().LeftHandPosition;
-        }
-    }
-
-    public Quaternion GetVirtualHandRotation(bool isRightHand)
-    {
-        if(VirtualHandProvider != null)
-        {
-            return VirtualHandProvider.GetVirtualHandRotation(isRightHand);
-        }
-
-        if (isRightHand)
-        {
-            return HandData.GetInstance().RightHandRotation;
-        }
-        else
-        {
-            return HandData.GetInstance().LeftHandRotation;
+            return new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation);
         }
     }
 }
-
 
 /// <summary>
 /// Defines the contract for objects that react to entering or exiting the user's gaze cone.
