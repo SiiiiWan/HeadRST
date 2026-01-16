@@ -19,6 +19,9 @@ public class DR_v2 : VirtualHandProvider
     private bool _isGazeFixation_prev;
     private float _headPitch_neutral;
 
+    [Header("Visualizations")]
+    public GameObject AnchorPoint;
+
     public override Vector3 UpdatePivot(Vector3 currentPosition)
     {
         UpdateDataSource();
@@ -101,34 +104,39 @@ public class DR_v2 : VirtualHandProvider
     public override Pose GetVirtualHandPose(bool isRightHand)
     {
         _currentPivotPoint = UpdatePivot(_currentPivotPoint);
-        Vector3 gazeOrigin = GazeData.GetGazeOrigin();
-        Vector3 vec_gazeToPivot = _currentPivotPoint - gazeOrigin;
 
-        Vector3 vec_gazeToRightHand = HandData.RightHandPosition - gazeOrigin;
-        Vector3 vec_gazeToLeftHand = HandData.LeftHandPosition - gazeOrigin;
-        Vector3 vec_gazeToHandMidpoint = _handMidpointPosition_OnRedirection - gazeOrigin;
-        Vector3 vec_gazeToHandMidpoing_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f - gazeOrigin;
+        Vector3 headOrigin = HeadData.HeadPosition;
+        Vector3 vec_headToPivot = _currentPivotPoint - headOrigin;
+
+        Vector3 vec_gazeToRightHand = HandData.RightHandPosition - headOrigin;
+        Vector3 vec_gazeToLeftHand = HandData.LeftHandPosition - headOrigin;
+        Vector3 vec_gazeToHandMidpoint = _handMidpointPosition_OnRedirection - headOrigin;
+        Vector3 vec_gazeToHandMidpoing_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f - headOrigin;
 
         Quaternion rightHandOffset_theta = Quaternion.LookRotation(vec_gazeToRightHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
         Quaternion leftHandOffset_theta = Quaternion.LookRotation(vec_gazeToLeftHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
-        Vector3 rightVirtualHandForward = (rightHandOffset_theta * vec_gazeToPivot).normalized;
-        Vector3 leftVirtualHandForward = (leftHandOffset_theta * vec_gazeToPivot).normalized;
+        Vector3 rightVirtualHandForward = (rightHandOffset_theta * vec_headToPivot).normalized;
+        Vector3 leftVirtualHandForward = (leftHandOffset_theta * vec_headToPivot).normalized;
 
         float rightHandOffset_r = vec_gazeToRightHand.magnitude - vec_gazeToHandMidpoint.magnitude;
         float leftHandOffset_r = vec_gazeToLeftHand.magnitude - vec_gazeToHandMidpoint.magnitude;
-        float rightHandOffset_virtual_r = vec_gazeToPivot.magnitude + rightHandOffset_r;
-        float leftHandOffset_virtual_r = vec_gazeToPivot.magnitude + leftHandOffset_r;
+        float rightHandOffset_virtual_r = vec_headToPivot.magnitude + rightHandOffset_r;
+        float leftHandOffset_virtual_r = vec_headToPivot.magnitude + leftHandOffset_r;
 
         // Vector3 rightVirtualHandPosition = gazeOrigin + rightVirtualHandForward * rightHandOffset_virtual_r;
         // Vector3 leftVirtualHandPosition = gazeOrigin + leftVirtualHandForward * leftHandOffset_virtual_r;
 
-        Quaternion handRotationOffset = Quaternion.LookRotation(vec_gazeToPivot) * Quaternion.Inverse(Quaternion.LookRotation(MathFunctions.ProjectOntoXZPlane(vec_gazeToHandMidpoint)));
+        Quaternion handRotationOffset = Quaternion.LookRotation(vec_headToPivot) * Quaternion.Inverse(Quaternion.LookRotation(MathFunctions.ProjectOntoXZPlane(vec_gazeToHandMidpoint)));
         Quaternion rightVirtualHandRotation = handRotationOffset * HandData.RightHandRotation;
         Quaternion leftVirtualHandRotation = handRotationOffset * HandData.LeftHandRotation;
 
-        float handScaleFactor = vec_gazeToPivot.magnitude;
+        float handScaleFactor = vec_headToPivot.magnitude;
         Vector3 rightVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.RightHandPosition - _handMidpointPosition_OnRedirection);
         Vector3 leftVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.LeftHandPosition - _handMidpointPosition_OnRedirection);
+
+
+        // Visulaizations
+        AnchorPoint.transform.position = _currentPivotPoint;
 
         if(isRightHand)
         {
