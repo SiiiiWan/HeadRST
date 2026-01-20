@@ -1,9 +1,11 @@
 using System;
+using Oculus.Interaction.Body.Input;
 using UltimateProceduralPrimitivesFREE;
 using Unity.Android.Gradle.Manifest;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using static OVRPlugin;
 
 public class DR_v2 : VirtualHandProvider
 {
@@ -21,6 +23,7 @@ public class DR_v2 : VirtualHandProvider
 
     public bool TestMode;
     public float TestGain = 2f;
+    public float TorsoRotationOffset = 0f;
     public Transform TestOrigin;
     public bool UseTestOrigin = false;
 
@@ -30,13 +33,14 @@ public class DR_v2 : VirtualHandProvider
     public GameObject RealHand_Right_Visual1, RealHand_Left_Visual1, RealHand_Right_Visual2, RealHand_Left_Visual2;
 
     Linescript _rightRealHandLine, _leftRealHandLine, _rightVirtualHandLine, _leftVirtualHandLine, _originToPivotLine, _originToHandMidRefLine, _originToHandMidRefLine_Proj, _originToHand_project;
-    Linescript _twoHandConncectionLine, _twoVirutalHandConncectionLine;
+    Linescript _twoHandConncectionLine, _twoVirutalHandConncectionLine, _torsoLine, _torsoLeftHandLine, _torsoRightHandLine;
 
     public override Vector3 UpdatePivot(Vector3 currentPosition)
     {
         UpdateDataSource();
         Vector3 gazeOrigin = GazeData.GetGazeOrigin();
         Vector3 gazeDirection = GazeData.GetGazeDirection();
+
         float headPitchAngle = HeadData.HeadAngle_WorldY;
         bool isHeadPitchInceasing = (headPitchAngle - HeadData.Pre_HeadAngle_WorldY) > 0.01f;
         bool isHeadPitchDecreasing = (headPitchAngle - HeadData.Pre_HeadAngle_WorldY) < -0.01f;
@@ -131,8 +135,14 @@ public class DR_v2 : VirtualHandProvider
     public override Pose GetVirtualHandPose(bool isRightHand)
     {
         _pivot_redirected = UpdatePivot(_pivot_redirected);
+        Posef torsoPose = BodyData.BodyState?.JointLocations[5].Pose ?? default;
+        Vector3 torsoPosition = new Vector3(torsoPose.Position.x, torsoPose.Position.y, -torsoPose.Position.z);
+
         Vector3 handMidpoint_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f;
-        Vector3 pivot_local = handMidpoint_realTime;
+
+        Vector3 vec_torsoToHandMidOnRedir = _handMidpointPosition_OnRedirection - torsoPosition;
+
+        Vector3 pivot_local = _handMidpointPosition_OnRedirection;
 
         Vector3 viewPoint = UseTestOrigin && TestMode ? TestOrigin.position : HeadData.HeadPosition;
         
@@ -201,6 +211,16 @@ public class DR_v2 : VirtualHandProvider
 
             if (_twoVirutalHandConncectionLine == null) _twoVirutalHandConncectionLine = new Linescript(0.01f, transform);
             _twoVirutalHandConncectionLine.SetPosition(rightVirtualHandPosition, leftVirtualHandPosition); 
+
+            // if (_torsoLine == null) _torsoLine = new Linescript(0.01f, transform, Color.red);
+            // _torsoLine.SetPosition(torsoPosition, torsoPosition + torso_forward*radialDistance); 
+
+            if (_torsoLeftHandLine == null) _torsoLeftHandLine = new Linescript(0.01f, transform, Color.red);
+            _torsoLeftHandLine.SetPosition(torsoPosition, HandData.LeftHandPosition);
+
+            if (_torsoRightHandLine == null) _torsoRightHandLine = new Linescript(0.01f, transform, Color.red);
+            _torsoRightHandLine.SetPosition(torsoPosition, HandData.RightHandPosition); 
+
 
             ShowText(ref _pinchDistance, (rightPinchPosition + leftPinchPosition) / 2f, Vector3.Distance(rightPinchPosition, leftPinchPosition).ToString("F2") + " m");
         }
@@ -277,6 +297,11 @@ public class DR_v2 : VirtualHandProvider
             textMesh.transform.Rotate(0, 180, 0);
         }
     }
-
+        // Quaternion torsoRotation = new Quaternion(torsoPose.Orientation.x, torsoPose.Orientation.y, torsoPose.Orientation.z, torsoPose.Orientation.w);
+        // torsoRotation = Quaternion.Euler(
+        //     torsoRotation.eulerAngles.x,
+        //     -torsoRotation.eulerAngles.y + 90,
+        //     torsoRotation.eulerAngles.z);
+        // Vector3 torso_forward = (torsoRotation * Vector3.forward).normalized;
 
 }

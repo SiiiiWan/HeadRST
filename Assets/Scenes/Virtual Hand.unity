@@ -44498,6 +44498,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 318775097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &664395241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 664395243}
+  - component: {fileID: 664395242}
+  m_Layer: 0
+  m_Name: Body Tracking
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &664395242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664395241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 274835e4e2feae04b87f0d000555f8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _providedSkeletonType: 0
+--- !u!4 &664395243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664395241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &664714861
 GameObject:
   m_ObjectHideFlags: 0
@@ -65393,6 +65438,7 @@ MonoBehaviour:
   DominantHand: 0
   ManipulationBehavior: {fileID: 0}
   VirtualHandProvider: {fileID: 1006584934}
+  BodyTracking: {fileID: 664395242}
 --- !u!114 &1006584930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65466,6 +65512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TestMode: 1
   TestGain: 1
+  TorsoRotationOffset: 0
   TestOrigin: {fileID: 133798324}
   UseTestOrigin: 1
   RedirectedPivotPoint: {fileID: 894074986}
@@ -133897,6 +133944,7 @@ SceneRoots:
   - {fileID: 1858936034}
   - {fileID: 1992211211}
   - {fileID: 94030551}
+  - {fileID: 664395243}
   - {fileID: 1006584912}
   - {fileID: 1524257970}
   - {fileID: 2146079648}

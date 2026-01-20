@@ -13,6 +13,7 @@ public class Settings : Singleton<Settings>
     public DominantHand DominantHand = DominantHand.right;
     public ManipulationTechnique ManipulationBehavior;
     public VirtualHandProvider VirtualHandProvider;
+    public OVRBody BodyTracking;
     
     public Pose GetVirtualHandPose(bool isRightHand)
     {

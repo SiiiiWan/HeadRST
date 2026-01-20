@@ -5,6 +5,7 @@ public class VirtualHandProvider : MonoBehaviour
     public EyeGaze GazeData { get; private set; }
     public HandData HandData { get; private set; }
     public HeadMovement HeadData { get; private set; }
+    public OVRBody BodyData { get; private set; }
     public PinchDetector PinchDetector { get; private set; }
 
     protected Vector3 _pivot_redirected;
@@ -14,6 +15,7 @@ public class VirtualHandProvider : MonoBehaviour
         GazeData = EyeGaze.GetInstance();
         HeadData = HeadMovement.GetInstance();
         HandData = HandData.GetInstance();
+        BodyData = Settings.GetInstance().BodyTracking;
         PinchDetector = PinchDetector.GetInstance();
     }
 
