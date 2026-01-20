@@ -19,8 +19,18 @@ public class DR_v2 : VirtualHandProvider
     private bool _isGazeFixation_prev;
     private float _headPitch_neutral;
 
+    public bool TestMode;
+    public float TestGain = 2f;
+    public Transform TestOrigin;
+    public bool UseTestOrigin = false;
+
     [Header("Visualizations")]
-    public GameObject AnchorPoint;
+    public GameObject RedirectedPivotPoint;
+    public GameObject MidPoint_OnRedirection, MidPoint_RealTime, LocalPivotPoint;
+    public GameObject RealHand_Right_Visual1, RealHand_Left_Visual1, RealHand_Right_Visual2, RealHand_Left_Visual2;
+
+    Linescript _rightRealHandLine, _leftRealHandLine, _rightVirtualHandLine, _leftVirtualHandLine, _originToPivotLine, _originToHandMidRefLine, _originToHandMidRefLine_Proj, _originToHand_project;
+    Linescript _twoHandConncectionLine, _twoVirutalHandConncectionLine;
 
     public override Vector3 UpdatePivot(Vector3 currentPosition)
     {
@@ -33,27 +43,44 @@ public class DR_v2 : VirtualHandProvider
         bool isEyeInHeadAngleIncreasing = (Math.Abs(GazeData.EyeInHeadYAngle) - Math.Abs(GazeData.FilteredEyeInHeadAngle_Pre)) > 0.01f;
         bool isEyeInHeadAngleDecreasing = (GazeData.EyeInHeadYAngle - GazeData.FilteredEyeInHeadAngle_Pre) < -0.01f;
 
-        if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
+        if(TestMode)
         {
-            _currentMode = DR_States.Hand;
-        }
-
-        if(Vector3.Angle(gazeDirection, (currentPosition - gazeOrigin).normalized) > 15f && GazeData.IsFixating_DT() && _isGazeFixation_prev == false)
-        {
-            _currentMode = DR_States.Gaze;
-        }
-
-        if(_currentMode != DR_States.Gaze)
-        {
-            if((headPitchAngle - _headPitch_neutral >= 5f && isHeadPitchInceasing) || (headPitchAngle - _headPitch_neutral <= -3f && isHeadPitchDecreasing))
-            {
-                _currentMode = DR_States.Head;
-            }
-            else
+            if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
             {
                 _currentMode = DR_States.Hand;
             }
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                _currentMode = DR_States.Gaze;
+            }
         }
+        else
+        {
+            if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
+            {
+                _currentMode = DR_States.Hand;
+            }
+
+            if(Vector3.Angle(gazeDirection, (currentPosition - gazeOrigin).normalized) > 15f && GazeData.IsFixating_DT() && _isGazeFixation_prev == false)
+            {
+                _currentMode = DR_States.Gaze;
+            }
+
+            if(_currentMode != DR_States.Gaze)
+            {
+                if((headPitchAngle - _headPitch_neutral >= 5f && isHeadPitchInceasing) || (headPitchAngle - _headPitch_neutral <= -3f && isHeadPitchDecreasing))
+                {
+                    _currentMode = DR_States.Head;
+                }
+                else
+                {
+                    _currentMode = DR_States.Hand;
+                }
+            }            
+        }
+
+
 
         // TODO: change 15 deg to hand distance
 
@@ -103,40 +130,81 @@ public class DR_v2 : VirtualHandProvider
 
     public override Pose GetVirtualHandPose(bool isRightHand)
     {
-        _currentPivotPoint = UpdatePivot(_currentPivotPoint);
+        _pivot_redirected = UpdatePivot(_pivot_redirected);
+        Vector3 handMidpoint_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f;
+        Vector3 pivot_local = handMidpoint_realTime;
 
-        Vector3 headOrigin = HeadData.HeadPosition;
-        Vector3 vec_headToPivot = _currentPivotPoint - headOrigin;
+        Vector3 viewPoint = UseTestOrigin && TestMode ? TestOrigin.position : HeadData.HeadPosition;
+        
+        Vector3 vec_gazeToLocalPivot = pivot_local - viewPoint;
+        Vector3 vec_gazeToRedirectedPivot = _pivot_redirected - viewPoint;
 
-        Vector3 vec_gazeToRightHand = HandData.RightHandPosition - headOrigin;
-        Vector3 vec_gazeToLeftHand = HandData.LeftHandPosition - headOrigin;
-        Vector3 vec_gazeToHandMidpoint = _handMidpointPosition_OnRedirection - headOrigin;
-        Vector3 vec_gazeToHandMidpoing_realTime = (HandData.RightHandPosition + HandData.LeftHandPosition) / 2f - headOrigin;
+        Quaternion redirectionOffset = Quaternion.LookRotation(vec_gazeToRedirectedPivot) * Quaternion.Inverse(Quaternion.LookRotation(MathFunctions.ProjectOntoXZPlane(vec_gazeToLocalPivot)));
+        
+        Quaternion rightVirtualHandRotation = redirectionOffset * HandData.RightHandRotation;
+        Quaternion leftVirtualHandRotation = redirectionOffset * HandData.LeftHandRotation;
 
-        Quaternion rightHandOffset_theta = Quaternion.LookRotation(vec_gazeToRightHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
-        Quaternion leftHandOffset_theta = Quaternion.LookRotation(vec_gazeToLeftHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
-        Vector3 rightVirtualHandForward = (rightHandOffset_theta * vec_headToPivot).normalized;
-        Vector3 leftVirtualHandForward = (leftHandOffset_theta * vec_headToPivot).normalized;
+        float handScaleFactor = 1f;
+        if(TestMode)
+        {
+            handScaleFactor = TestGain;
+        }
 
-        float rightHandOffset_r = vec_gazeToRightHand.magnitude - vec_gazeToHandMidpoint.magnitude;
-        float leftHandOffset_r = vec_gazeToLeftHand.magnitude - vec_gazeToHandMidpoint.magnitude;
-        float rightHandOffset_virtual_r = vec_headToPivot.magnitude + rightHandOffset_r;
-        float leftHandOffset_virtual_r = vec_headToPivot.magnitude + leftHandOffset_r;
+        Vector3 rightPinchPosition = HandData.RightPinchTipPosition;
+        Vector3 leftPinchPosition = HandData.LeftPinchTipPosition;
+        float pinchDistance = Vector3.Distance(rightPinchPosition, leftPinchPosition);
+        float t = Mathf.InverseLerp(0.01f, 0.15f, pinchDistance);
+        float regulatedGainFactor = Mathf.Lerp(1f, handScaleFactor, t);
 
-        // Vector3 rightVirtualHandPosition = gazeOrigin + rightVirtualHandForward * rightHandOffset_virtual_r;
-        // Vector3 leftVirtualHandPosition = gazeOrigin + leftVirtualHandForward * leftHandOffset_virtual_r;
+        Vector3 rightVirtualHandPosition = _pivot_redirected + redirectionOffset * (HandData.RightHandPosition - pivot_local) * regulatedGainFactor;
+        Vector3 leftVirtualHandPosition = _pivot_redirected + redirectionOffset * (HandData.LeftHandPosition - pivot_local) * regulatedGainFactor;
 
-        Quaternion handRotationOffset = Quaternion.LookRotation(vec_headToPivot) * Quaternion.Inverse(Quaternion.LookRotation(MathFunctions.ProjectOntoXZPlane(vec_gazeToHandMidpoint)));
-        Quaternion rightVirtualHandRotation = handRotationOffset * HandData.RightHandRotation;
-        Quaternion leftVirtualHandRotation = handRotationOffset * HandData.LeftHandRotation;
+        if(TestMode)
+        {
+            RealHand_Left_Visual1.SetActive(true);
+            RealHand_Left_Visual2.SetActive(true);
+            RealHand_Right_Visual1.SetActive(true);
+            RealHand_Right_Visual2.SetActive(true);
 
-        float handScaleFactor = vec_headToPivot.magnitude;
-        Vector3 rightVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.RightHandPosition - _handMidpointPosition_OnRedirection);
-        Vector3 leftVirtualHandPosition = _currentPivotPoint + handRotationOffset * (HandData.LeftHandPosition - _handMidpointPosition_OnRedirection);
+            // Visulaizations
+            RedirectedPivotPoint.transform.position = _pivot_redirected;
+            LocalPivotPoint.transform.position = pivot_local;
+            MidPoint_OnRedirection.transform.position = _handMidpointPosition_OnRedirection;
+            MidPoint_RealTime.transform.position = handMidpoint_realTime;
 
+            if (_rightRealHandLine == null) _rightRealHandLine = new Linescript(0.01f, transform);
+            _rightRealHandLine.SetPosition(pivot_local, HandData.RightHandPosition);
 
-        // Visulaizations
-        AnchorPoint.transform.position = _currentPivotPoint;
+            if (_leftRealHandLine == null) _leftRealHandLine = new Linescript(0.01f, transform);
+            _leftRealHandLine.SetPosition(pivot_local, HandData.LeftHandPosition);
+
+            if (_rightVirtualHandLine == null) _rightVirtualHandLine = new Linescript(0.01f, transform);
+            _rightVirtualHandLine.SetPosition(_pivot_redirected, rightVirtualHandPosition);
+
+            if (_leftVirtualHandLine == null) _leftVirtualHandLine = new Linescript(0.01f, transform);
+            _leftVirtualHandLine.SetPosition(_pivot_redirected, leftVirtualHandPosition);
+
+            if (_originToPivotLine == null) _originToPivotLine = new Linescript(0.01f, transform, Color.blue);
+            _originToPivotLine.SetPosition(viewPoint, _pivot_redirected);
+
+            if (_originToHandMidRefLine == null) _originToHandMidRefLine = new Linescript(0.01f, transform);
+            _originToHandMidRefLine.SetPosition(viewPoint, pivot_local);
+
+            if (_originToHandMidRefLine_Proj == null) _originToHandMidRefLine_Proj = new Linescript(0.01f, transform, Color.blue);
+            _originToHandMidRefLine_Proj.SetPosition(viewPoint, viewPoint + MathFunctions.ProjectOntoXZPlane(vec_gazeToLocalPivot));
+
+            if (_originToHand_project == null) _originToHand_project = new Linescript(0.01f, transform);
+            _originToHand_project.SetPosition(pivot_local, viewPoint + MathFunctions.ProjectOntoXZPlane(vec_gazeToLocalPivot));
+
+            if (_twoHandConncectionLine == null) _twoHandConncectionLine = new Linescript(0.01f, transform, Color.yellow);
+            _twoHandConncectionLine.SetPosition(HandData.RightHandPosition, HandData.LeftHandPosition);
+
+            if (_twoVirutalHandConncectionLine == null) _twoVirutalHandConncectionLine = new Linescript(0.01f, transform);
+            _twoVirutalHandConncectionLine.SetPosition(rightVirtualHandPosition, leftVirtualHandPosition); 
+
+            ShowText(ref _pinchDistance, (rightPinchPosition + leftPinchPosition) / 2f, Vector3.Distance(rightPinchPosition, leftPinchPosition).ToString("F2") + " m");
+        }
+
 
         if(isRightHand)
         {
@@ -146,6 +214,36 @@ public class DR_v2 : VirtualHandProvider
         {
             return new Pose(leftVirtualHandPosition, leftVirtualHandRotation);
         }
+
+        // Vector3 vec_RightHand_To_RealTimeMid = handMidpoint_realTime - HandData.RightHandPosition;
+        // Vector3 vec_LeftHand_To_RealTimeMid = handMidpoint_realTime - HandData.LeftHandPosition;
+        // Vector3 vec_RightHand_To_OnRedirMid = _handMidpointPosition_OnRedirection - HandData.RightHandPosition;
+        // Vector3 vec_LeftHand_To_OnRedirMid = _handMidpointPosition_OnRedirection - HandData.LeftHandPosition;
+        // Vector3 vec_OnRedirMid_To_LeftHand = HandData.LeftHandPosition - _handMidpointPosition_OnRedirection;
+        // Vector3 vec_OnRedirMid_To_RightHand = HandData.RightHandPosition - _handMidpointPosition_OnRedirection;
+
+        // float angleRightHand = Vector3.Angle(vec_RightHand_To_OnRedirMid, vec_RightHand_To_RealTimeMid);
+        // float angleLeftHand = Vector3.Angle(vec_LeftHand_To_OnRedirMid, vec_LeftHand_To_RealTimeMid);
+        // float angleOnRedirMid = Vector3.Angle(vec_OnRedirMid_To_RightHand, vec_OnRedirMid_To_LeftHand);
+        // if(angleRightHand > angleOnRedirMid || angleLeftHand > angleOnRedirMid)
+        // {
+        //     _handMidpointPosition_OnRedirection = handMidpoint_realTime;
+        // }
+
+        // Quaternion rightHandOffset_theta = Quaternion.LookRotation(vec_gazeToRightHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
+        // Quaternion leftHandOffset_theta = Quaternion.LookRotation(vec_gazeToLeftHand) * Quaternion.Inverse(Quaternion.LookRotation(vec_gazeToHandMidpoint));
+        // Vector3 rightVirtualHandForward = (rightHandOffset_theta * vec_headToPivot).normalized;
+        // Vector3 leftVirtualHandForward = (leftHandOffset_theta * vec_headToPivot).normalized;
+
+        // float rightHandOffset_r = vec_gazeToRightHand.magnitude - vec_gazeToHandMidpoint.magnitude;
+        // float leftHandOffset_r = vec_gazeToLeftHand.magnitude - vec_gazeToHandMidpoint.magnitude;
+        // float rightHandOffset_virtual_r = vec_headToPivot.magnitude + rightHandOffset_r;
+        // float leftHandOffset_virtual_r = vec_headToPivot.magnitude + leftHandOffset_r;
+
+        // Vector3 rightVirtualHandPosition = gazeOrigin + rightVirtualHandForward * rightHandOffset_virtual_r;
+        // Vector3 leftVirtualHandPosition = gazeOrigin + leftVirtualHandForward * leftHandOffset_virtual_r;
+
+        // float handScaleFactor = vec_headToPivot.magnitude;
     }
 
 
@@ -155,29 +253,30 @@ public class DR_v2 : VirtualHandProvider
     }
 
     private TextMesh _distanceText;
-    void ShowCurrentMode()
+    private TextMesh _pinchDistance;
+    void ShowText(ref TextMesh textMesh, Vector3 position, string content)
     {
-        if (_distanceText == null)
+        if (textMesh == null)
         {
-            GameObject textObject = new GameObject("DistanceText");
+            GameObject textObject = new GameObject();
             textObject.transform.parent = transform;
-            _distanceText = textObject.AddComponent<TextMesh>();
-            _distanceText.fontSize = 50;
-            _distanceText.anchor = TextAnchor.MiddleCenter;
-            _distanceText.alignment = TextAlignment.Center;
-            _distanceText.characterSize = 0.01f;
+            textMesh = textObject.AddComponent<TextMesh>();
+            textMesh.fontSize = 50;
+            textMesh.anchor = TextAnchor.MiddleCenter;
+            textMesh.alignment = TextAlignment.Center;
+            textMesh.characterSize = 0.01f;
         }
 
-        _distanceText.transform.position = _currentPivotPoint;
-        _distanceText.text = $"{_currentMode}"; // Format to 2 decimal places
-        _distanceText.color = _currentMode == DR_States.Gaze ? Color.red : (_currentMode == DR_States.Head ? Color.green : Color.blue);
+        textMesh.transform.position = position;
+        textMesh.text = content;
 
         // Orient the text towards the camera
         if (Camera.main != null)
         {
-            _distanceText.transform.LookAt(Camera.main.transform);
-            _distanceText.transform.Rotate(0, 180, 0);
+            textMesh.transform.LookAt(Camera.main.transform);
+            textMesh.transform.Rotate(0, 180, 0);
         }
     }
+
 
 }

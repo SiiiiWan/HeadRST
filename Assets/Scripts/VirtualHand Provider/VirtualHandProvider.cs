@@ -7,7 +7,7 @@ public class VirtualHandProvider : MonoBehaviour
     public HeadMovement HeadData { get; private set; }
     public PinchDetector PinchDetector { get; private set; }
 
-    protected Vector3 _currentPivotPoint;
+    protected Vector3 _pivot_redirected;
 
     public void UpdateDataSource()
     {
@@ -24,7 +24,7 @@ public class VirtualHandProvider : MonoBehaviour
 
     public virtual Pose GetVirtualHandPose(bool isRightHand)
     {
-        _currentPivotPoint = UpdatePivot(_currentPivotPoint);
+        _pivot_redirected = UpdatePivot(_pivot_redirected);
         
         if(isRightHand)
         {

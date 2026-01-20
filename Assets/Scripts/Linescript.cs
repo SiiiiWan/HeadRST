@@ -51,6 +51,18 @@ public class Linescript
         LineGameObject.transform.parent = parent;
     }
 
+    public Linescript(float widthMultiplier, Transform parent, Color color)
+    {
+        LineRenderer lineRenderer = LineGameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("UI/Unlit/Transparent"));
+        lineRenderer.material.renderQueue = 3150;
+        lineRenderer.material.color = color;
+        lineRenderer.widthMultiplier = widthMultiplier;
+        lineRenderer.positionCount = 2;
+        IsVisible = true;
+        LineGameObject.transform.parent = parent;
+    }
+
     public bool IsVisible { get; set; }
 
     public void DrawRay(Ray ray)
