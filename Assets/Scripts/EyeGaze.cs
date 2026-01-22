@@ -194,6 +194,22 @@ public class EyeGaze : Singleton<EyeGaze>
         return false;
     }
 
+    public bool IfGazeHitObjectsContains(GameObject obj, float maxDistance=100f)
+    {
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(GetGazeRay(), maxDistance);
+
+        if (hits.Length > 0)
+        {
+            foreach (var hit in hits)
+            {
+                if (hit.transform == obj.transform) return true;
+            }
+        }
+
+        return false;
+    }
+
     public bool GetGazeHitPoint_Sphere(out Vector3 hitPoint, float radius)
     {
         hitPoint = Vector3.zero;
