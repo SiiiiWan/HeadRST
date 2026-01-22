@@ -28,6 +28,8 @@ public class HandData : Singleton<HandData>
     public Quaternion RightHandRotation_delta, LeftHandRotation_delta;
     public Quaternion RightPinchTipRotation_delta, LeftPinchTipRotation_delta;
 
+    public Vector3 RightPalmPosition, LeftPalmPosition;
+
     public Vector3 RightHandDirection, LeftHandDirection;
     public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
     public float RightHandSpeed_wrist, LeftHandSpeed_wrist;
@@ -99,7 +101,17 @@ public class HandData : Singleton<HandData>
             LeftHandSpeed_pinch = LeftPinchTipPosition_delta.magnitude / Time.deltaTime;
         }
 
+        Transform rightPalm = GetPalmTransform(PinchDetector.GetInstance().RightHand);
+        if (rightPalm)
+        {
+            RightPalmPosition = rightPalm.position;
+        }
 
+        Transform leftPalm = GetPalmTransform(PinchDetector.GetInstance().LeftHand);
+        if (leftPalm)
+        {
+            LeftPalmPosition = leftPalm.position;
+        }
 
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
@@ -124,6 +136,20 @@ public class HandData : Singleton<HandData>
         foreach (var bone in skeleton.Bones)
         {
             if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip) // Use Hand_IndexTip for OVR //XRHand_IndexTip
+                return bone.Transform;
+        }
+        return null;
+    }
+
+    private Transform GetPalmTransform(OVRHand hand)
+    {
+        if (hand == null) return null;
+        var skeleton = hand.GetComponent<OVRSkeleton>();
+        if (skeleton == null || skeleton.Bones == null) return null;
+
+        foreach (var bone in skeleton.Bones)
+        {
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_Palm) // Use Hand_WristRoot for OVR //XRHand_Palm
                 return bone.Transform;
         }
         return null;

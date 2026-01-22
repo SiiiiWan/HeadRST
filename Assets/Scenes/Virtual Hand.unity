@@ -65521,7 +65521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RedirectedPivotPoint: {fileID: 894074986}
-  DistanceVirtualHandThr: {fileID: 1510986740}
+  CloseHandThre: {fileID: 1510986740}
 --- !u!1 &1013559996
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,14 +11,7 @@ public class DR_v2 : VirtualHandProvider
         Hand
     }
 
-    enum InteractionArea
-    {
-        Close,
-        Distance
-    }
-
     private DR_States _currentMode = DR_States.Gaze;
-    private InteractionArea _currentArea = InteractionArea.Distance;
     private bool _isGazeFixation_prev;
     private Vector3 _torsoPosition_prev;
     private float _headPitch_neutral;
@@ -30,7 +23,7 @@ public class DR_v2 : VirtualHandProvider
     Vector3 _rightVirtualHandPosition;
 
     // Visualizations
-    public GameObject RedirectedPivotPoint, DistanceVirtualHandThr;
+    public GameObject RedirectedPivotPoint, CloseHandThre;
     private Linescript _rightVirtualHandLine1, _leftVirtualHandLine1, _rightVirtualHandLine2, _leftVirtualHandLine2;
 
     public override Pose GetVirtualHandPose(bool isRightHand)
@@ -45,6 +38,7 @@ public class DR_v2 : VirtualHandProvider
         //// Hand
         Vector3 rightHandPosition = HandData.RightHandPosition;
         Vector3 leftHandPosition = HandData.LeftHandPosition;
+        Vector3 midPalmPosition = (HandData.RightPalmPosition + HandData.LeftPalmPosition) / 2f;
 
         //// Head
         float headPitchAngle = HeadData.HeadAngle_WorldY;
@@ -63,11 +57,6 @@ public class DR_v2 : VirtualHandProvider
         if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
         {
             _currentMode = DR_States.Hand;
-
-            if(Vector3.Angle(gazeDirection, (HandData.HandMidPosition - gazeOrigin).normalized) <= MathFunctions.Meter2Deg(Vector3.Distance(HandData.RightHandPosition, HandData.LeftHandPosition), Vector3.Distance(HandData.HandMidPosition, gazeOrigin)))
-            {
-                _currentArea = InteractionArea.Close;
-            }
         }
 
         Vector3 virtualHandMidpoint = (_leftVirtualHandPosition + _rightVirtualHandPosition) / 2f;
@@ -76,11 +65,6 @@ public class DR_v2 : VirtualHandProvider
         if(Vector3.Angle(gazeDirection, (virtualHandMidpoint - gazeOrigin).normalized) > MathFunctions.Meter2Deg(distanceBewteenVirualHands, distanceToVirtualHandMidpoint) && GazeData.IsFixating_DT() && _isGazeFixation_prev == false)
         {
             _currentMode = DR_States.Gaze;
-
-            if(Vector3.Angle(gazeDirection, (HandData.HandMidPosition - gazeOrigin).normalized) > MathFunctions.Meter2Deg(Vector3.Distance(HandData.RightHandPosition, HandData.LeftHandPosition), Vector3.Distance(HandData.HandMidPosition, gazeOrigin)))
-            {
-                _currentArea = InteractionArea.Distance;
-            }
         }
 
         // Set neutral head pitch angle
@@ -90,22 +74,6 @@ public class DR_v2 : VirtualHandProvider
         } 
 
         // mode effects
-        if(_currentArea == InteractionArea.Close)
-        {
-            // Update previous frame data
-            _isGazeFixation_prev = GazeData.IsFixating_DT();
-            _torsoPosition_prev = torsoPosition;
-            
-            if(isRightHand)
-            {
-                return new Pose(rightHandPosition, HandData.RightHandRotation);
-            }
-            else
-            {
-                return new Pose(leftHandPosition, HandData.LeftHandRotation);
-            }
-        }
-
         if(_currentMode == DR_States.Gaze)
         {
             // TODO: change 0.2f to cone-cast
@@ -138,6 +106,9 @@ public class DR_v2 : VirtualHandProvider
 
         // // Visualization
         RedirectedPivotPoint.transform.position = _redirectedCentroid;
+
+        CloseHandThre.transform.position = (HandData.RightPalmPosition + HandData.LeftPalmPosition) / 2f;
+        CloseHandThre.transform.localScale = Vector3.one * Vector3.Distance(HandData.RightPalmPosition, HandData.LeftPalmPosition) * 1.5f;
 
         if (_rightVirtualHandLine1 == null) _rightVirtualHandLine1 = new Linescript(0.01f, transform);
         _rightVirtualHandLine1.SetPosition(_redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition), _redirectedCentroid);
@@ -218,14 +189,31 @@ public class DR_v2 : VirtualHandProvider
         _torsoPosition_prev = torsoPosition;
 
         // Return Virtual Hand Pose
-        if(isRightHand)
-        {
-            return new Pose(_rightVirtualHandPosition, rightVirtualHandRotation);
+        if(Vector3.Angle(gazeDirection, midPalmPosition - gazeOrigin) <= MathFunctions.Meter2Deg(Vector3.Distance(HandData.RightPalmPosition, HandData.LeftPalmPosition), Vector3.Distance(midPalmPosition, gazeOrigin)) / 2f * 1.5f)
+        {  
+            // still bug when switching back
+            if(isRightHand)
+            {
+                return new Pose(rightHandPosition, HandData.RightHandRotation);
+            }
+            else
+            {
+                return new Pose(leftHandPosition, HandData.LeftHandRotation);
+            }
         }
         else
         {
-            return new Pose(_leftVirtualHandPosition, leftVirtualHandRotation);
+            if(isRightHand)
+            {
+                return new Pose(_rightVirtualHandPosition, rightVirtualHandRotation);
+            }
+            else
+            {
+                return new Pose(_leftVirtualHandPosition, leftVirtualHandRotation);
+            }            
         }
+        
+
 
     }
 
