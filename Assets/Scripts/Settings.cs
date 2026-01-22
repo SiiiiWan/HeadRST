@@ -31,7 +31,19 @@ public class Settings : Singleton<Settings>
             return new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation);
         }
     }
+
+    public float GetVirtualHandScalingFactor()
+    {
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
+        {
+            return VirtualHandProvider.GetVirtualHandScalingFactor();
+        }
+
+        return 1.0f;
+    }    
 }
+
+
 
 /// <summary>
 /// Defines the contract for objects that react to entering or exiting the user's gaze cone.

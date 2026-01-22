@@ -194,6 +194,19 @@ public class EyeGaze : Singleton<EyeGaze>
         return false;
     }
 
+    public bool GetGazeHitPoint_Sphere(out Vector3 hitPoint, float radius)
+    {
+        hitPoint = Vector3.zero;
+
+        if (Physics.SphereCast(GetGazeRay(), radius, out RaycastHit hit, 100f))
+        {
+            hitPoint = hit.point;
+            return true;
+        }
+
+        return false;
+    }
+
     public bool IsSaccading_VT()
     {
         return _gazeSpeed >= SaccadeThr;

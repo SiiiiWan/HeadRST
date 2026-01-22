@@ -16,6 +16,7 @@ public class HandData : Singleton<HandData>
     private readonly List<(float time, float speed)> _handSpeedHistory = new List<(float, float)>();
 
     public Transform RightHandAnchor, LeftHandAnchor;
+    public OVRHand RightOVRHand, LeftOVRHand;
 
     public Vector3 RightHandPosition, LeftHandPosition;
     public Vector3 RightPinchTipPosition, LeftPinchTipPosition;
@@ -36,6 +37,29 @@ public class HandData : Singleton<HandData>
 
     void Update()
     {
+        if(RightOVRHand.IsDataValid == false || LeftOVRHand.IsDataValid == false)
+        {
+            RightHandPosition_delta = Vector3.zero;
+            LeftHandPosition_delta = Vector3.zero;
+
+            RightHandRotation_delta = Quaternion.identity;
+            LeftHandRotation_delta = Quaternion.identity;
+
+            RightHandDirection_delta = Quaternion.identity;
+            LeftHandDirection_delta = Quaternion.identity;
+
+            HandDistance_delta = 0f;
+            HandMidPosition_delta = Vector3.zero;
+
+            RightPinchTipPosition_delta = Vector3.zero;
+            LeftPinchTipPosition_delta = Vector3.zero;
+
+            RightPinchTipRotation_delta = Quaternion.identity;
+            LeftPinchTipRotation_delta = Quaternion.identity;
+
+            return; // Skip update if hand data is not valid
+        }
+
         RightHandPosition_delta = RightHandAnchor.position - RightHandPosition;
         LeftHandPosition_delta = LeftHandAnchor.position - LeftHandPosition;
 

@@ -38,6 +38,11 @@ public class VirtualHandProvider : MonoBehaviour
         }
     }
 
+    public virtual float GetVirtualHandScalingFactor()
+    {
+        return 1.0f;
+    }
+
     public float GetVisualGain(Vector3 objectPosition)
     {
         UpdateDataSource();
