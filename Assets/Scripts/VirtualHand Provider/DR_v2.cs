@@ -20,6 +20,7 @@ public class DR_v2 : VirtualHandProvider
     private DR_States _currentMode = DR_States.Gaze;
     private InteractionArea _currentArea = InteractionArea.Distance;
     private bool _isGazeFixation_prev;
+    private Vector3 _torsoPosition_prev;
     private float _headPitch_neutral;
 
     Vector3 _redirectedCentroid;
@@ -27,6 +28,10 @@ public class DR_v2 : VirtualHandProvider
 
     Vector3 _leftVirtualHandPosition;
     Vector3 _rightVirtualHandPosition;
+
+    // Visualizations
+    public GameObject RedirectedPivotPoint, DistanceVirtualHandThr;
+    private Linescript _rightVirtualHandLine1, _leftVirtualHandLine1, _rightVirtualHandLine2, _leftVirtualHandLine2;
 
     public override Pose GetVirtualHandPose(bool isRightHand)
     {
@@ -68,7 +73,7 @@ public class DR_v2 : VirtualHandProvider
         Vector3 virtualHandMidpoint = (_leftVirtualHandPosition + _rightVirtualHandPosition) / 2f;
         float distanceBewteenVirualHands = Vector3.Distance(_leftVirtualHandPosition, _rightVirtualHandPosition);
         float distanceToVirtualHandMidpoint = Vector3.Distance(gazeOrigin, virtualHandMidpoint);
-        if(Vector3.Angle(gazeDirection, (virtualHandMidpoint - gazeOrigin).normalized) > MathFunctions.Deg2Meter(distanceBewteenVirualHands, distanceToVirtualHandMidpoint) && GazeData.IsFixating_DT() && _isGazeFixation_prev == false)
+        if(Vector3.Angle(gazeDirection, (virtualHandMidpoint - gazeOrigin).normalized) > MathFunctions.Meter2Deg(distanceBewteenVirualHands, distanceToVirtualHandMidpoint) && GazeData.IsFixating_DT() && _isGazeFixation_prev == false)
         {
             _currentMode = DR_States.Gaze;
 
@@ -89,6 +94,7 @@ public class DR_v2 : VirtualHandProvider
         {
             // Update previous frame data
             _isGazeFixation_prev = GazeData.IsFixating_DT();
+            _torsoPosition_prev = torsoPosition;
             
             if(isRightHand)
             {
@@ -100,22 +106,11 @@ public class DR_v2 : VirtualHandProvider
             }
         }
 
-        switch (_currentMode)
+        if(_currentMode == DR_States.Gaze)
         {
-            case DR_States.Gaze:                
-                // TODO: change 0.2f to cone-cast
-                _redirectedCentroid = gazeOrigin + gazeDirection * Vector3.Distance(GazeData.GetGazeHitPoint_Sphere(out Vector3 hitPoint, 0.2f) ? hitPoint : _redirectedCentroid, gazeOrigin);
-                break;
-            case DR_States.Head:
-                {
-                    break;
-                }
-            case DR_States.Hand:
-                {
-                    break;
-                }
-            default:
-                break;
+            // TODO: change 0.2f to cone-cast
+            _redirectedCentroid = gazeOrigin + gazeDirection * Vector3.Distance(GazeData.GetGazeHitPoint_Sphere(out Vector3 hitPoint, 0.2f) ? hitPoint : _redirectedCentroid, gazeOrigin);
+            _handToTorsoOffset = HandData.HandMidPosition - torsoPosition;
         }
 
         // Calculate the depth axis
@@ -137,15 +132,27 @@ public class DR_v2 : VirtualHandProvider
         Quaternion leftVirtualHandRotation = redirectionRotationOffset * HandData.LeftHandRotation;
 
         // Calculate Virtual Hand Position
-        if(_currentMode == DR_States.Gaze)
-        {
-            _handToTorsoOffset = MathFunctions.ProjectOntoXZPlane(HandData.HandMidPosition - torsoPosition);
-        }
-        _leftVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition + _handToTorsoOffset);
-        _rightVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition + _handToTorsoOffset);
+        _leftVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition) - redirectionRotationOffset *  _handToTorsoOffset;
+        _rightVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition) - redirectionRotationOffset *  _handToTorsoOffset;
 
 
         // // Visualization
+        RedirectedPivotPoint.transform.position = _redirectedCentroid;
+
+        if (_rightVirtualHandLine1 == null) _rightVirtualHandLine1 = new Linescript(0.01f, transform);
+        _rightVirtualHandLine1.SetPosition(_redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition), _redirectedCentroid);
+
+        if (_leftVirtualHandLine1 == null) _leftVirtualHandLine1 = new Linescript(0.01f, transform);
+        _leftVirtualHandLine1.SetPosition(_redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition), _redirectedCentroid);
+
+        if (_rightVirtualHandLine2 == null) _rightVirtualHandLine2 = new Linescript(0.01f, transform, Color.blue);
+        _rightVirtualHandLine2.SetPosition(_rightVirtualHandPosition, _redirectedCentroid);
+
+        if (_leftVirtualHandLine2 == null) _leftVirtualHandLine2 = new Linescript(0.01f, transform, Color.blue);
+        _leftVirtualHandLine2.SetPosition(_leftVirtualHandPosition, _redirectedCentroid);
+
+
+
         // if(TestMode)
         // {
             // RealHand_Left_Visual1.SetActive(true);
@@ -154,13 +161,11 @@ public class DR_v2 : VirtualHandProvider
             // RealHand_Right_Visual2.SetActive(true);
 
             // // Visulaizations
-            // RedirectedPivotPoint.transform.position = reDirectedRefPosition;
+
+
             // LocalPivotPoint.transform.position = _pivot_redirected;
             // // MidPoint_OnRedirection.transform.position = _handMidpointPosition_OnRedirection;
             // // MidPoint_RealTime.transform.position = HandData.HandMidPosition;
-
-            // if (_rightRealHandLine == null) _rightRealHandLine = new Linescript(0.01f, transform);
-            // _rightRealHandLine.SetPosition(rightElbowPosition, rightHandPosition);
 
             // if (_leftRealHandLine == null) _leftRealHandLine = new Linescript(0.01f, transform);
             // _leftRealHandLine.SetPosition(leftElbowPosition, leftHandPosition);
@@ -210,6 +215,7 @@ public class DR_v2 : VirtualHandProvider
 
         // Update previous frame data
         _isGazeFixation_prev = GazeData.IsFixating_DT();
+        _torsoPosition_prev = torsoPosition;
 
         // Return Virtual Hand Pose
         if(isRightHand)

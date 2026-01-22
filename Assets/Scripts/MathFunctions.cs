@@ -154,4 +154,38 @@ public static class MathFunctions
         return (v2.y - v1.y) / (v2.x - v1.x);
     }
 
+public static void GetSphereFrom3Points(Vector3 a, Vector3 b, Vector3 c, out Vector3 center, out float radius)
+    {
+        Vector3 vecB = b - a;
+        Vector3 vecC = c - a;
+        
+        // Normal to the plane defined by the three points
+        Vector3 normal = Vector3.Cross(vecB, vecC);
+        
+        // Check for collinearity (if normal is zero, points are on a line)
+        float sqrLenNormal = normal.sqrMagnitude;
+        if (sqrLenNormal < Mathf.Epsilon) 
+        {
+            center = Vector3.zero;
+            radius = 0f;
+            Debug.LogError("Points are collinear; no unique circle defined.");
+            return;
+        }
+
+        // Apply vector formula for circumcenter
+        // Part 1: (LengthC^2) * (Normal x VecB)
+        Vector3 part1 = vecC.sqrMagnitude * Vector3.Cross(normal, vecB);
+        
+        // Part 2: (LengthB^2) * (VecC x Normal)
+        Vector3 part2 = vecB.sqrMagnitude * Vector3.Cross(vecC, normal);
+        
+        // Calculate Center
+        // Denominator is 2 * |Normal|^2
+        Vector3 offset = (part1 + part2) / (2 * sqrLenNormal);
+        center = a + offset;
+
+        // Calculate Radius
+        radius = offset.magnitude;
+    }
+
 }
