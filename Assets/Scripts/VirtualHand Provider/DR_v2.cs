@@ -25,15 +25,7 @@ public class DR_v2 : VirtualHandProvider
     [Range(0f, 1f)] public float D = 0.475f;
 
 
-    public GameObject CloseHandCube;
-    public bool UseCloseSwitch = false;
-    public float CloseCubeThickness = 0.06f; // local X
-    public float CloseCubeHeight    = 0.04f; // local Y
-    public float CloseCubeMargin    = 0.02f; // extra length on local Z
-
     public float TestGain = 1f;
-
-    private float _upPitchTime;
     private float _torsoAmpGain;
 
     // Visualizations
@@ -45,21 +37,21 @@ public class DR_v2 : VirtualHandProvider
         // Get Tracking Data
         UpdateDataSource();
         
-        //// Gaze
+        //// Get Gaze Data
         Vector3 gazeOrigin = GazeData.GetGazeOrigin();
         Vector3 gazeDirection = GazeData.GetGazeDirection();
         
-        //// Hand
+        // // Get Hand Data
         Vector3 rightHandPosition = HandData.RightHandPosition;
         Vector3 leftHandPosition = HandData.LeftHandPosition;
         Vector3 leftPalmPosition = HandData.LeftPalmPosition;
         Vector3 rightPalmPosition = HandData.RightPalmPosition;
         Vector3 midPalmPosition = (leftPalmPosition + rightPalmPosition) / 2f;
 
-        //// Head
+        // // Get Head Data
         float headPitchAngle = HeadData.HeadAngle_WorldY;
 
-        //// Torso
+        // // Get Torso Data
         Posef torsoPose = BodyData.BodyState?.JointLocations[5].Pose ?? default;
         Vector3 torsoPosition = new Vector3(torsoPose.Position.x, torsoPose.Position.y, -torsoPose.Position.z);
         Quaternion torso_rotation =  new Quaternion(torsoPose.Orientation.x, torsoPose.Orientation.y, torsoPose.Orientation.z, torsoPose.Orientation.w);
@@ -70,12 +62,13 @@ public class DR_v2 : VirtualHandProvider
         Vector3 torso_forward = (torso_rotation * Vector3.forward).normalized;
 
         // Mode Switching Logic
+        // // Gaze -> Hand
         if(GazeData.IsFixating_DT() && _currentMode == DR_States.Gaze)
         {
             _currentMode = DR_States.Hand;
         }
 
-
+        // // Hand -> Gaze
         Vector3 virtualHandMidpoint = (_leftVirtualHandPosition + _rightVirtualHandPosition) / 2f;
         float distanceBewteenVirualHands = Vector3.Distance(_leftVirtualHandPosition, _rightVirtualHandPosition);
         float distanceToVirtualHandMidpoint = Vector3.Distance(gazeOrigin, virtualHandMidpoint);
@@ -84,26 +77,23 @@ public class DR_v2 : VirtualHandProvider
             _currentMode = DR_States.Gaze;
         }
 
-        // Set neutral head pitch angle
-        if(_currentMode == DR_States.Gaze || GazeData.IsFixating_DT() == false)
-        {
-            _headPitch_neutral = HeadData.HeadAngle_WorldY;
-        } 
 
-        // mode effects
+        // Mode Effects
+        // // Gaze mode
         if(_currentMode == DR_States.Gaze)
         {
+            // Redirect centriod to gaze point during 
             if(GazeData.GetGazeHitPoint_Sphere(out RaycastHit hit, Vector3.Distance(leftPalmPosition, rightPalmPosition)/2))
             {
-                _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Mathf.Clamp(Vector3.Distance(hit.point, gazeOrigin), 1, 5);   
-                // RedirectedPivotPoint.transform.position = hit.point;
-                // print(hit.transform.name);             
+                _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Mathf.Clamp(Vector3.Distance(hit.point, gazeOrigin), 1, 5);          
             }
             else
             {
                 _redirectedCentroid = gazeOrigin + gazeDirection * Mathf.Clamp(Vector3.Distance(_redirectedCentroid, gazeOrigin), 1, 5);   
             }       
             
+            // Update During Gaze Mode
+            _headPitch_neutral = HeadData.HeadAngle_WorldY;
             _handToTorsoOffset = HandData.HandMidPosition - torsoPosition;
             _torsoAmpGain = Vector3.Distance(torsoPosition, _redirectedCentroid);
         }
@@ -112,17 +102,18 @@ public class DR_v2 : VirtualHandProvider
         Vector3 directionFromGazeOrigin = (_redirectedCentroid - gazeOrigin).normalized;
 
         // Keyboard depth control to replace head depth atm
-        if(Input.GetKeyDown(KeyCode.DownArrow) || Vector3.Distance(torsoPosition, rightHandPosition) >= D)
+        if(Input.GetKeyDown(KeyCode.DownArrow))
         {
-            _redirectedCentroid += directionFromGazeOrigin * D * Time.deltaTime * 2f;
+            _redirectedCentroid += directionFromGazeOrigin * D;
             // _redirectedCentroid -= directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 25f;
         }
-        if(Input.GetKeyDown(KeyCode.UpArrow) || Vector3.Distance(torsoPosition, rightHandPosition) <= 0.25f)
+        if(Input.GetKeyDown(KeyCode.UpArrow))
         {
-            _redirectedCentroid -= directionFromGazeOrigin * D* Time.deltaTime * 2f;   
+            _redirectedCentroid -= directionFromGazeOrigin * D;   
             // _redirectedCentroid += directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 25f;
         }
 
+        // // Hand mode
         if(_currentMode == DR_States.Hand)
         {
             _redirectedCentroid += (torsoPosition - _torsoPosition_prev) * _torsoAmpGain;
@@ -137,19 +128,27 @@ public class DR_v2 : VirtualHandProvider
         _leftVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition)  - redirectionRotationOffset *  _handToTorsoOffset;
         _rightVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition)  - redirectionRotationOffset *  _handToTorsoOffset;
 
-        // Update Close Hit Cube
-        Vector3 palmsDir  = rightPalmPosition - leftPalmPosition;
-        CloseHandCube.transform.position = midPalmPosition;
-        if (palmsDir.sqrMagnitude > 1e-8f)
+        // Update Visualizations
+        UpdateVisuals();
+
+        // Update previous frame data
+        _isGazeFixation_prev = GazeData.IsFixating_DT();
+        _torsoPosition_prev = torsoPosition;
+
+        // Return Virtual Hand Pose
+        if(isRightHand)
         {
-            CloseHandCube.transform.rotation = Quaternion.LookRotation(palmsDir.normalized, Vector3.up);
+            return new Pose(_rightVirtualHandPosition, rightVirtualHandRotation);
         }
-        float lengthZ = palmsDir.magnitude + CloseCubeMargin;
-        CloseHandCube.transform.localScale = new Vector3(
-            CloseCubeThickness,
-            CloseCubeHeight,
-            Mathf.Max(lengthZ, 0.001f)
-        );
+        else
+        {
+            return new Pose(_leftVirtualHandPosition, leftVirtualHandRotation);
+        }     
+    }
+
+    void UpdateVisuals()
+    {
+        
 
         // // Visualization
         // RedirectedPivotPoint.transform.position = _redirectedCentroid;
@@ -227,42 +226,7 @@ public class DR_v2 : VirtualHandProvider
             // MidPoint_RealTime.transform.localScale = Vector3.one * Vector3.Distance(HandData.RightHandPosition, HandData.LeftHandPosition) * 0.5f;
             // ShowText(ref _handDistance, HandData.HandMidPosition, Vector3.Distance(HandData.RightHandPosition, HandData.LeftHandPosition).ToString("F2") + " m");
         // }
-
-        // Update previous frame data
-        _isGazeFixation_prev = GazeData.IsFixating_DT();
-        _torsoPosition_prev = torsoPosition;
-
-        // Return Virtual Hand Pose
-        if(GazeData.IfGazeHitObjectsContains(CloseHandCube) && UseCloseSwitch)
-        {  
-            CloseHandCube.GetComponent<MeshRenderer>().enabled = true;
-            // still bug when switching back
-            if(isRightHand)
-            {
-                return new Pose(rightHandPosition, HandData.RightHandRotation);
-            }
-            else
-            {
-                return new Pose(leftHandPosition, HandData.LeftHandRotation);
-            }
-        }
-        else
-        {
-            CloseHandCube.GetComponent<MeshRenderer>().enabled = false;
-            if(isRightHand)
-            {
-                return new Pose(_rightVirtualHandPosition, rightVirtualHandRotation);
-            }
-            else
-            {
-                return new Pose(_leftVirtualHandPosition, leftVirtualHandRotation);
-            }            
-        }
-        
-
-
     }
-
 
     public override bool IsGazeRedirecting()
     {
@@ -295,11 +259,5 @@ public class DR_v2 : VirtualHandProvider
             textMesh.transform.Rotate(0, 180, 0);
         }
     }
-        // Quaternion torsoRotation = new Quaternion(torsoPose.Orientation.x, torsoPose.Orientation.y, torsoPose.Orientation.z, torsoPose.Orientation.w);
-        // torsoRotation = Quaternion.Euler(
-        //     torsoRotation.eulerAngles.x,
-        //     -torsoRotation.eulerAngles.y + 90,
-        //     torsoRotation.eulerAngles.z);
-        // Vector3 torso_forward = (torsoRotation * Vector3.forward).normalized;
 
 }
