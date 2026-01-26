@@ -23,6 +23,8 @@ public class DR_v2 : VirtualHandProvider
     Vector3 _rightVirtualHandPosition;
 
     [Range(0f, 1f)] public float D = 0.475f;
+
+
     public GameObject CloseHandCube;
     public bool UseCloseSwitch = false;
     public float CloseCubeThickness = 0.06f; // local X
@@ -30,6 +32,10 @@ public class DR_v2 : VirtualHandProvider
     public float CloseCubeMargin    = 0.02f; // extra length on local Z
 
     public float TestGain = 1f;
+
+    private float _upPitchTime;
+    private float _torsoAmpGain;
+
     // Visualizations
     public GameObject RedirectedPivotPoint, CloseHandThre;
     private Linescript _rightVirtualHandLine1, _leftVirtualHandLine1, _rightVirtualHandLine2, _leftVirtualHandLine2;
@@ -87,23 +93,39 @@ public class DR_v2 : VirtualHandProvider
         // mode effects
         if(_currentMode == DR_States.Gaze)
         {
-            _redirectedCentroid = gazeOrigin + gazeDirection * Mathf.Clamp(Vector3.Distance(GazeData.GetGazeHitPoint_Sphere(out Vector3 hitPoint, Vector3.Distance(leftPalmPosition, rightPalmPosition)/2) ? hitPoint : _redirectedCentroid, gazeOrigin), 1, 5);
+            if(GazeData.GetGazeHitPoint_Sphere(out RaycastHit hit, Vector3.Distance(leftPalmPosition, rightPalmPosition)/2))
+            {
+                _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Mathf.Clamp(Vector3.Distance(hit.point, gazeOrigin), 1, 5);   
+                // RedirectedPivotPoint.transform.position = hit.point;
+                // print(hit.transform.name);             
+            }
+            else
+            {
+                _redirectedCentroid = gazeOrigin + gazeDirection * Mathf.Clamp(Vector3.Distance(_redirectedCentroid, gazeOrigin), 1, 5);   
+            }       
+            
             _handToTorsoOffset = HandData.HandMidPosition - torsoPosition;
+            _torsoAmpGain = Vector3.Distance(torsoPosition, _redirectedCentroid);
         }
 
         // Calculate the depth axis
         Vector3 directionFromGazeOrigin = (_redirectedCentroid - gazeOrigin).normalized;
 
         // Keyboard depth control to replace head depth atm
-        if(Input.GetKeyDown(KeyCode.DownArrow))
+        if(Input.GetKeyDown(KeyCode.DownArrow) || Vector3.Distance(torsoPosition, rightHandPosition) >= D)
         {
-            _redirectedCentroid -= directionFromGazeOrigin * D;
+            _redirectedCentroid += directionFromGazeOrigin * D * Time.deltaTime * 2f;
             // _redirectedCentroid -= directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 25f;
         }
-        if(Input.GetKeyDown(KeyCode.UpArrow))
+        if(Input.GetKeyDown(KeyCode.UpArrow) || Vector3.Distance(torsoPosition, rightHandPosition) <= 0.25f)
         {
-            _redirectedCentroid += directionFromGazeOrigin * D;
+            _redirectedCentroid -= directionFromGazeOrigin * D* Time.deltaTime * 2f;   
             // _redirectedCentroid += directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 25f;
+        }
+
+        if(_currentMode == DR_States.Hand)
+        {
+            _redirectedCentroid += (torsoPosition - _torsoPosition_prev) * _torsoAmpGain;
         }
 
         // Calculate Virtual Hand Rotation
@@ -112,8 +134,8 @@ public class DR_v2 : VirtualHandProvider
         Quaternion leftVirtualHandRotation = redirectionRotationOffset * HandData.LeftHandRotation;
 
         // Calculate Virtual Hand Position
-        _leftVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition) * TestGain - redirectionRotationOffset *  _handToTorsoOffset;
-        _rightVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition) * TestGain - redirectionRotationOffset *  _handToTorsoOffset;
+        _leftVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (leftHandPosition - torsoPosition)  - redirectionRotationOffset *  _handToTorsoOffset;
+        _rightVirtualHandPosition = _redirectedCentroid + redirectionRotationOffset * (rightHandPosition - torsoPosition)  - redirectionRotationOffset *  _handToTorsoOffset;
 
         // Update Close Hit Cube
         Vector3 palmsDir  = rightPalmPosition - leftPalmPosition;
@@ -209,8 +231,6 @@ public class DR_v2 : VirtualHandProvider
         // Update previous frame data
         _isGazeFixation_prev = GazeData.IsFixating_DT();
         _torsoPosition_prev = torsoPosition;
-
-
 
         // Return Virtual Hand Pose
         if(GazeData.IfGazeHitObjectsContains(CloseHandCube) && UseCloseSwitch)

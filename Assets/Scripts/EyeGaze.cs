@@ -31,6 +31,8 @@ public class EyeGaze : Singleton<EyeGaze>
 
     [Header("Gaze Correction")]
     private FixationTracker _gazeFixationTracker;
+
+        [Header("Gaze Fixation Detection")]
     private bool _isGazeFixating_DT;
     public float Duration_SetOnAwake = 0.25f;
     public float Dispersion_SetOnAwake = 3f;
@@ -210,13 +212,10 @@ public class EyeGaze : Singleton<EyeGaze>
         return false;
     }
 
-    public bool GetGazeHitPoint_Sphere(out Vector3 hitPoint, float radius)
+    public bool GetGazeHitPoint_Sphere(out  RaycastHit hit, float radius)
     {
-        hitPoint = Vector3.zero;
-
-        if (Physics.SphereCast(GetGazeRay(), radius, out RaycastHit hit, 100f))
+        if (Physics.SphereCast(GetGazeRay(), radius, out hit, 100f))
         {
-            hitPoint = hit.point;
             return true;
         }
 
