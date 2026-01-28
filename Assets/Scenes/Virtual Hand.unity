@@ -65980,11 +65980,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6066d244389157f4690eedf38f13456f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PitchOffsetThr_Up: 10
+  PitchOffsetThr_Up: 5
   IndicatorOffset_Up: 2
-  PitchOffsetThr_Down: 10
+  PitchOffsetThr_Down: 5
   IndicatorOffset_Down: 2
-  TestGain: 1
   RedirectedPivotPoint: {fileID: 894074986}
   HeadPitchThr_Upper: {fileID: 226183239}
   HeadPitchThr_Lower: {fileID: 999298046}

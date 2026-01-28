@@ -24,6 +24,21 @@ public class DepthControlIndicator : MonoBehaviour
         Triangle.transform.position = pos;
     }
 
+    public void SetSquarePosition_world(Vector3 pos)
+    {
+        Square.transform.position = pos;
+    }
+
+    public void SetSquareVisible(bool isVisible)
+    {
+        Square.SetActive(isVisible);
+    }
+
+    public void SetTriangleVisible(bool isVisible)
+    {
+        Triangle.SetActive(isVisible);
+    }
+
     public void SetSquareColor(Material color)
     {
         var renderer = Square.GetComponent<Renderer>();

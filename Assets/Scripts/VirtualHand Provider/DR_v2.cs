@@ -172,14 +172,25 @@ public class DR_v2 : VirtualHandProvider
         DownArrow.transform.LookAt(Camera.main.transform);
         HeadPitch_Current_Indicator.transform.position = HeadData.HeadPosition + vec_headPitch_localIndicator * depth;
 
+        UpArrow.SetSquarePosition_world(HeadData.HeadPosition + vec_visualizationBar_upper * depth);
+        DownArrow.SetSquarePosition_world(HeadData.HeadPosition + vec_visualizationBar_lower * depth);
 
         if(headPitchOffset > PitchOffsetThr_Up)
         {
-            // UpArrow.transform.position = HeadPitch_Current_Indicator.transform.position;
+            UpArrow.SetTrianglePosition_world(HeadPitch_Current_Indicator.transform.position);
+            UpArrow.SetSquareVisible(true);
         }
         else if(headPitchOffset < -PitchOffsetThr_Down)
         {
-            // DownArrow.transform.position = HeadPitch_Current_Indicator.transform.position;
+            DownArrow.SetTrianglePosition_world(HeadPitch_Current_Indicator.transform.position);
+            DownArrow.SetSquareVisible(true);
+        }
+        else
+        {
+            UpArrow.SetTrianglePosition_world(HeadData.HeadPosition + vec_visualizationBar_upper * depth);
+            DownArrow.SetTrianglePosition_world(HeadData.HeadPosition + vec_visualizationBar_lower * depth);
+            UpArrow.SetSquareVisible(false);
+            DownArrow.SetSquareVisible(false);
         }
 
         if(_headPitchControlState == HeadPitchControlState.PitchUp)
@@ -211,10 +222,6 @@ public class DR_v2 : VirtualHandProvider
     // // Visualization
     void UpdateVisuals(HeadPitchControlState headPitchControlState)
     {
-
-
-        // HeadPitchThr_Upper.transform.position = HeadData.HeadPosition + vec_visualizationBar_upper * depth;
-        // HeadPitchThr_Lower.transform.position = HeadData.HeadPosition + vec_visualizationBar_lower * depth;
 
         // if (_rightVirtualHandLine1 == null) _rightVirtualHandLine1 = new Linescript(0.01f, transform);
         // _rightVirtualHandLine1.SetPosition(HeadData.HeadPosition, _redirectedCentroid);
