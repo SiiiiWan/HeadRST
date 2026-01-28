@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -14,12 +15,28 @@ public class Settings : Singleton<Settings>
     public VirtualHandProvider VirtualHandProvider;
     public OVRBody BodyTracking;
 
+    public bool EnableVirtualHandInteractions = true;
+    public bool EnableRealHandInteractions = true;
+    public List<GameObject> HandInteractions_Virtual;
+    public List<GameObject> HandInteractions_Real;
+
+    public bool EnableTeleportation = false;
+
     void Update()
     {
         if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
         {
             VirtualHandProvider.UpdateVirtualHandPoses();
         }
+
+        if(EnableTeleportation)
+        {
+            EnableVirtualHandInteractions = false;
+            EnableRealHandInteractions = true;
+        }
+
+        HandInteractions_Virtual.ForEach(obj => obj.SetActive(EnableVirtualHandInteractions));
+        HandInteractions_Real.ForEach(obj => obj.SetActive(EnableRealHandInteractions));
     }
 
     public Pose GetVirtualHandPose(Handedness_v handedness)
