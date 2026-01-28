@@ -11,7 +11,6 @@ public enum Handedness_v
 public class Settings : Singleton<Settings>
 {
     public Handedness_v DominantHand = Handedness_v.Right;
-    public ManipulationTechnique ManipulationBehavior;
     public VirtualHandProvider VirtualHandProvider;
     public OVRBody BodyTracking;
 

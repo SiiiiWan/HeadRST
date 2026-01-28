@@ -9,6 +9,10 @@ public class GoGo : VirtualHandProvider
 
     public override void UpdateVirtualHandPoses()
     {
+        ObjectManager objectManager = ObjectManager.GetInstance();
+        objectManager.AllowDirectGrab = true;
+        objectManager.AllowIndirectGrab = false;
+
         // Get Tracking Data
         UpdateDataSource();
 

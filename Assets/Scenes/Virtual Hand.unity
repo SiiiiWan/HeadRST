@@ -69333,10 +69333,10 @@ GameObject:
   - component: {fileID: 1006584912}
   - component: {fileID: 1006584929}
   - component: {fileID: 1006584932}
-  - component: {fileID: 1006584930}
   - component: {fileID: 1006584931}
   - component: {fileID: 1006584933}
   - component: {fileID: 1006584934}
+  - component: {fileID: 1006584935}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -69374,8 +69374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DominantHand: 0
-  ManipulationBehavior: {fileID: 0}
-  VirtualHandProvider: {fileID: 1006584934}
+  VirtualHandProvider: {fileID: 1006584931}
   BodyTracking: {fileID: 664395242}
   EnableVirtualHandInteractions: 1
   EnableRealHandInteractions: 0
@@ -69390,19 +69389,6 @@ MonoBehaviour:
   - {fileID: 1964467896}
   - {fileID: 1126286246}
   EnableTeleportation: 0
---- !u!114 &1006584930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d15008e346956014ca99b1b23de18955, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DepthTransitionSpeed: 15
 --- !u!114 &1006584931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69474,6 +69460,18 @@ MonoBehaviour:
   DownArrow: {fileID: 1847064255}
   ArrowActivationMaterial: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   ArrowDeactivationMaterial: {fileID: 2100000, guid: cf97ad6e0918fe24f989ad47d68ee233, type: 2}
+--- !u!114 &1006584935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85102dab327ee84c852fba1dbe00160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1013559996
 GameObject:
   m_ObjectHideFlags: 0
