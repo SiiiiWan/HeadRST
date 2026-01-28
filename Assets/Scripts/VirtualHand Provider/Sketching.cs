@@ -32,7 +32,7 @@ public class Sketching : MonoBehaviour
         if (_currentDrawing == null)
         {
             Vector3 HandToPinchOffset = HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false);
-            Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(isRightHand: true).position + HandToPinchOffset;
+            Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
             _index = 0;
             _currentDrawing = new GameObject().AddComponent<LineRenderer>();
             _currentDrawing.startWidth = width;
@@ -48,7 +48,7 @@ public class Sketching : MonoBehaviour
     private void Draw()
     {
         Vector3 HandToPinchOffset = HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false);
-        Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(isRightHand: true).position + HandToPinchOffset;
+        Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
         Vector3 currentPos = _currentDrawing.GetPosition(_index);
         if (Vector3.Distance(currentPos, currentPinchPosition) > 0.01f)

@@ -1,28 +1,37 @@
 using UnityEngine;
 
 
-public enum DominantHand
+public enum Handedness_v
 {
-    right,
-    left
+    Right,
+    Left
 }
-
 
 public class Settings : Singleton<Settings>
 {
-    public DominantHand DominantHand = DominantHand.right;
+    public Handedness_v DominantHand = Handedness_v.Right;
     public ManipulationTechnique ManipulationBehavior;
     public VirtualHandProvider VirtualHandProvider;
     public OVRBody BodyTracking;
-    
-    public Pose GetVirtualHandPose(bool isRightHand)
+
+    void Update()
     {
         if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
         {
-            return VirtualHandProvider.GetVirtualHandPose(isRightHand);
+            VirtualHandProvider.UpdateVirtualHandPoses();
+        }
+    }
+
+    public Pose GetVirtualHandPose(Handedness_v handedness)
+    {
+        // if direct grab
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
+        {
+            return VirtualHandProvider.VirtualHandPoses.GetVirtualHandPose(handedness);
         }
 
-        if (isRightHand)
+        // if indirect interactions, use real hand pose
+        if (handedness == Handedness_v.Right)
         {
             return new Pose(HandData.GetInstance().RightHandPosition, HandData.GetInstance().RightHandRotation);
         }

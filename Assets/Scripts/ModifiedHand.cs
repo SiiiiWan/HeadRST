@@ -129,7 +129,7 @@ namespace Oculus.Interaction.Input.Filter
 
             _shadowHand.FromJoints(handDataAsset.JointPoses.ToList(), false);
 
-            handDataAsset.Root = Settings.GetInstance().GetVirtualHandPose(isRightHand);
+            handDataAsset.Root = Settings.GetInstance().GetVirtualHandPose(isRightHand ? Handedness_v.Right : Handedness_v.Left);
             handDataAsset.HandScale = handDataAsset.HandScale * Settings.GetInstance().GetVirtualHandScalingFactor();
 
             handDataAsset.JointPoses = _shadowHand.GetWorldPoses();

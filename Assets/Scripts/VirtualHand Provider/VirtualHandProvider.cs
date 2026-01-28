@@ -1,5 +1,29 @@
 using UnityEngine;
 
+public class VirtualDoubleHandPoses
+{
+    public Pose LeftHandPose;
+    public Pose RightHandPose;
+
+    public VirtualDoubleHandPoses(Pose leftHandPose, Pose rightHandPose)
+    {
+        LeftHandPose = leftHandPose;
+        RightHandPose = rightHandPose;
+    }
+
+    public Pose GetVirtualHandPose(Handedness_v handedness)
+    {
+        if(handedness == Handedness_v.Right)
+        {
+            return RightHandPose;
+        }
+        else
+        {
+            return LeftHandPose;
+        }
+    }
+}
+
 public class VirtualHandProvider : MonoBehaviour
 {
     public EyeGaze GazeData { get; private set; }
@@ -8,7 +32,7 @@ public class VirtualHandProvider : MonoBehaviour
     public OVRBody BodyData { get; private set; }
     public PinchDetector PinchDetector { get; private set; }
 
-    protected Vector3 _pivot_redirected;
+    public VirtualDoubleHandPoses VirtualHandPoses;
 
     public void UpdateDataSource()
     {
@@ -19,23 +43,12 @@ public class VirtualHandProvider : MonoBehaviour
         PinchDetector = PinchDetector.GetInstance();
     }
 
-    public virtual Vector3 UpdatePivot(Vector3 currentPivot)
+    public virtual void UpdateVirtualHandPoses()
     {
-        return currentPivot;
-    }
-
-    public virtual Pose GetVirtualHandPose(bool isRightHand)
-    {
-        _pivot_redirected = UpdatePivot(_pivot_redirected);
-        
-        if(isRightHand)
-        {
-            return new Pose(HandData.GetInstance().RightHandPosition, HandData.GetInstance().RightHandRotation);
-        }
-        else
-        {
-            return new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation);
-        }
+        VirtualHandPoses = new VirtualDoubleHandPoses(
+            new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation),
+            new Pose(HandData.GetInstance().RightHandPosition, HandData.GetInstance().RightHandRotation)
+        );
     }
 
     public virtual float GetVirtualHandScalingFactor()
@@ -43,17 +56,9 @@ public class VirtualHandProvider : MonoBehaviour
         return 1.0f;
     }
 
-    public float GetVisualGain(Vector3 objectPosition)
-    {
-        UpdateDataSource();
-        return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeData.GetGazeOrigin()) / Vector3.Distance(HandData.GetHandPosition(), GazeData.GetGazeOrigin()));
-        // TODO: Get hand position here use pinch 
-    }
-
     public virtual bool IsGazeRedirecting()
     {
         return false;
     }
-
 }
 

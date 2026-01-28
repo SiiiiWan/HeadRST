@@ -21,7 +21,7 @@ public class MultiSelectionCubeVolume : MonoBehaviour
             if (SelectionCubePrefab != null)
             {
                 // Store the starting position of the pinch
-                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(isRightHand: true).position + HandToPinchOffset;
+                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
                 // Instantiate the prefab
                 _selectionCubeInstance = Instantiate(SelectionCubePrefab);
@@ -42,7 +42,7 @@ public class MultiSelectionCubeVolume : MonoBehaviour
             if (_selectionCubeInstance != null)
             {
                 // Get the current position of the pinch
-                Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(isRightHand: true).position + HandToPinchOffset;
+                Vector3 currentPinchPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
                 // The center of the cube is the midpoint between the start and current positions
                 Vector3 center = (_pinchStartPosition + currentPinchPosition) / 2f;

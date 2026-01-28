@@ -16,7 +16,7 @@ public class GeometryShaper : MonoBehaviour
             if (CubePrefab != null)
             {
                 // Store the starting position of the pinch
-                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(isRightHand: true).position + HandToPinchOffset;
+                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
                 // Instantiate the prefab
                 GameObject cubeInstance = Instantiate(CubePrefab);

@@ -28,7 +28,7 @@ public class PinchDetector : Singleton<PinchDetector>
 
         Settings settings = Settings.GetInstance();
 
-        if (settings.DominantHand == DominantHand.right)
+        if (settings.DominantHand == Handedness_v.Right)
         {
             if (IsRightPinching)
             {

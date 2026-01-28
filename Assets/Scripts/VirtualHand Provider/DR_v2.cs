@@ -38,8 +38,6 @@ public class DR_v2 : VirtualHandProvider
     public float PitchOffsetThr_Down = 10f;
     public float IndicatorOffset_Down = 2f;
 
-
-    public float TestGain = 1f;
     private float _torsoAmpGain;
 
     // Visualizations
@@ -48,7 +46,7 @@ public class DR_v2 : VirtualHandProvider
     private Linescript _rightVirtualHandLine1, _leftVirtualHandLine1, _rightVirtualHandLine2, _leftVirtualHandLine2;
     public Material ArrowActivationMaterial, ArrowDeactivationMaterial;
 
-    public override Pose GetVirtualHandPose(bool isRightHand)
+    public override void UpdateVirtualHandPoses()
     {
         // Get Tracking Data
         UpdateDataSource();
@@ -203,15 +201,11 @@ public class DR_v2 : VirtualHandProvider
         _torsoPosition_prev = torsoPosition;
         _headPitchAngle_prev = headPitchAngle;
 
-        // Return Virtual Hand Pose
-        if(isRightHand)
-        {
-            return new Pose(_rightVirtualHandPosition, rightVirtualHandRotation);
-        }
-        else
-        {
-            return new Pose(_leftVirtualHandPosition, leftVirtualHandRotation);
-        }     
+        // Update Virtual Hand Poses
+        VirtualHandPoses = new VirtualDoubleHandPoses(
+            new Pose(_leftVirtualHandPosition, leftVirtualHandRotation),
+            new Pose(_rightVirtualHandPosition, rightVirtualHandRotation)
+        );
     }
 
     // // Visualization
