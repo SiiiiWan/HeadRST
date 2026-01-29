@@ -28,7 +28,7 @@ public class GoGo : VirtualHandProvider
         Vector3 Lr = leftHandPosition - torsoPosition;
 
         Vector3 rightVirtualHandPosition = rightHandPosition;
-        Vector3 leftVirtualHandPosition = leftHandPosition;;
+        Vector3 leftVirtualHandPosition = leftHandPosition;
 
         if(Rr.magnitude >= D)
         {
@@ -39,7 +39,6 @@ public class GoGo : VirtualHandProvider
         {
             leftVirtualHandPosition = leftHandPosition + Lr.normalized * Mathf.Pow((Lr.magnitude - D) * 100, 2) * k;
         }
-
 
         VirtualHandPoses = new VirtualDoubleHandPoses(
             new Pose(leftVirtualHandPosition, HandData.LeftHandRotation),

@@ -57,9 +57,6 @@ public class DR_v2 : VirtualHandProvider
         // // Get Hand Data
         Vector3 rightHandPosition = HandData.RightHandPosition;
         Vector3 leftHandPosition = HandData.LeftHandPosition;
-        Vector3 leftPalmPosition = HandData.LeftPalmPosition;
-        Vector3 rightPalmPosition = HandData.RightPalmPosition;
-        Vector3 midPalmPosition = (leftPalmPosition + rightPalmPosition) / 2f;
 
         // // Get Head Data
         float headPitchAngle = HeadData.HeadAngle_WorldY;
@@ -97,7 +94,7 @@ public class DR_v2 : VirtualHandProvider
         if(_currentMode == DR_States.Gaze)
         {
             // Redirect centriod to gaze point during 
-            if(GazeData.GetGazeHitPoint_Sphere(out RaycastHit hit, Vector3.Distance(leftPalmPosition, rightPalmPosition)/2))
+            if(GazeData.GetGazeHitPoint(out RaycastHit hit))
             {
                 _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Mathf.Clamp(Vector3.Distance(hit.point, gazeOrigin), 1, 5);          
             }
@@ -113,21 +110,18 @@ public class DR_v2 : VirtualHandProvider
             _torsoAmpGain = Vector3.Distance(torsoPosition, _redirectedCentroid);
         }
 
-        // Calculate the depth axis
-        Vector3 directionFromGazeOrigin = (_redirectedCentroid - gazeOrigin).normalized;
-
         // Head Pitch Depth Adjustment
         _headPitchControlState = HeadPitchControlState.Neutral;
         float headPitchOffset = headPitchAngle - _headPitchAngle_OnRedirection;
         if(headPitchOffset > PitchOffsetThr_Up && headPitchAngle > _headPitchAngle_prev)
         {
             _headPitchControlState = HeadPitchControlState.PitchUp;
-            _redirectedCentroid += directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 50f;
+            _redirectedCentroid += gazeDirection * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 50f;
         }
         if(headPitchOffset < -PitchOffsetThr_Down && headPitchAngle < _headPitchAngle_prev)
         {
             _headPitchControlState = HeadPitchControlState.PitchDown;
-            _redirectedCentroid -= directionFromGazeOrigin * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 50f;
+            _redirectedCentroid -= gazeDirection * MathFunctions.Deg2Meter(Time.deltaTime, Vector3.Distance(_redirectedCentroid, gazeOrigin)) * 50f;
         }
 
         // // Hand mode
@@ -137,6 +131,7 @@ public class DR_v2 : VirtualHandProvider
         }
 
         // Calculate Virtual Hand Rotation
+        Vector3 directionFromGazeOrigin = (_redirectedCentroid - gazeOrigin).normalized;
         Quaternion redirectionRotationOffset = Quaternion.LookRotation(directionFromGazeOrigin) * Quaternion.Inverse(Quaternion.LookRotation(MathFunctions.ProjectOntoXZPlane(torso_forward)));
         Quaternion rightVirtualHandRotation = redirectionRotationOffset * HandData.RightHandRotation;
         Quaternion leftVirtualHandRotation = redirectionRotationOffset * HandData.LeftHandRotation;

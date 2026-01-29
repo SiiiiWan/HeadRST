@@ -69334,7 +69334,6 @@ GameObject:
   - component: {fileID: 1006584929}
   - component: {fileID: 1006584932}
   - component: {fileID: 1006584931}
-  - component: {fileID: 1006584933}
   - component: {fileID: 1006584934}
   - component: {fileID: 1006584935}
   m_Layer: 0
@@ -69374,7 +69373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DominantHand: 0
-  VirtualHandProvider: {fileID: 1006584931}
+  VirtualHandProvider: {fileID: 1006584934}
   BodyTracking: {fileID: 664395242}
   EnableVirtualHandInteractions: 1
   EnableRealHandInteractions: 0
@@ -69416,25 +69415,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TaskCursor: {fileID: 0}
-  PositionRotationProvider_Global: {fileID: 1006584933}
+  PositionRotationProvider_Global: {fileID: 0}
   AllowDirectGrab: 1
   AllowIndirectGrab: 0
   CurrentFocusedObjects: []
   ClosestFocusedObject: {fileID: 0}
   ClosestFocusedObject_prev: {fileID: 0}
   PickedUpObject: {fileID: 0}
---- !u!114 &1006584933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c95c06fd16a9704fb6fd30fd6a70369, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1006584934
 MonoBehaviour:
   m_ObjectHideFlags: 0
