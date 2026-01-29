@@ -6,8 +6,7 @@ public class GazeAndPinch : VirtualHandProvider
     public override void UpdateVirtualHandPoses()
     {
         ObjectManager objectManager = ObjectManager.GetInstance();
-        objectManager.AllowDirectGrab = false;
-        objectManager.AllowIndirectGrab = true;
+        objectManager.ManipulationMode = ManipulationMode.Indirect;
 
         VirtualHandPoses = new VirtualDoubleHandPoses(
             new Pose(HandData.GetInstance().LeftHandPosition, HandData.GetInstance().LeftHandRotation),

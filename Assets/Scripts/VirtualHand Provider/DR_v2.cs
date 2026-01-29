@@ -47,6 +47,10 @@ public class DR_v2 : VirtualHandProvider
 
     public override void UpdateVirtualHandPoses()
     {
+
+        ObjectManager objectManager = ObjectManager.GetInstance();
+        objectManager.ManipulationMode = ManipulationMode.Direct;
+
         // Get Tracking Data
         UpdateDataSource();
         

@@ -32,7 +32,7 @@ public class AH_Ref_Frame_Global : MonoBehaviour
         {
             IsUpdatingFrame = false;
             IsUpdatingFrame_LastFrame = false;
-            transform.position = ObjectManager.GetInstance().PickedUpObject.transform.position;
+            transform.position = ObjectManager.GetInstance().PickedUpObject_1.transform.position;
 
             return;
         }
@@ -85,9 +85,9 @@ public class AH_Ref_Frame_Global : MonoBehaviour
                 IsUpdatingFrame = true;
 
                 // For object Manipulation
-                if(ObjectManager.GetInstance().PickedUpObject != null)
+                if(ObjectManager.GetInstance().PickedUpObject_1 != null)
                 {
-                    _previewObject = Instantiate(ObjectManager.GetInstance().PickedUpObject.gameObject);
+                    _previewObject = Instantiate(ObjectManager.GetInstance().PickedUpObject_1.gameObject);
                     _previewObject.GetComponent<Collider>().enabled = false;
                     _previewObject.GetComponent<Rigidbody>().isKinematic = true;
                     _previewObject.GetComponent<Outline>().enabled = true;

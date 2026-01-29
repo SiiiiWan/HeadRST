@@ -4,132 +4,141 @@ using Oculus.Interaction.HandGrab;
 using System.Collections.Generic;
 using System.Linq;
 
-public enum GrabbedState
+public enum ManipulationState
 {
-    NotGrabbed,
-    Grabbed_Indirect,
-    Grabbed_Direct
+    Idle,
+    Hovered,
+    PickedUp
 }
     
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Outline))]
-public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler, IPickupable
+public class ManipulatableObject : MonoBehaviour
 {
-    public bool ApplyGravityByDefault = true;
+    public bool UseGravity = true;
+    public ManipulationMode ManipulationMode { get; set; } = ManipulationMode.Direct;
+    public ManipulationState ManipulationState { get; private set; } = ManipulationState.Idle;
     
     private readonly List<(Vector3 position, Quaternion rotation, float time)> _movementHistory = new List<(Vector3, Quaternion, float)>();
     private const float ThrowVelocityTimeWindow = 0.15f; // Use 150ms of history for calculation
 
-    public bool IsPickedUp { get; protected set; }
-    public virtual void OnPickup()
-    {
-        IsPickedUp = true;
-        if(Grabbable == null)
-        {
-            if(ObjectManager.GetInstance().AllowIndirectGrab) SetGrabbedState(GrabbedState.Grabbed_Indirect);
-            else return;
-        }
-        else
-        {
-            if(Grabbable.SelectingPointsCount > 0)
-            {
-                if(ObjectManager.GetInstance().AllowDirectGrab) SetGrabbedState(GrabbedState.Grabbed_Direct);
-                else return;
-            }
-            else
-            {
-                if(ObjectManager.GetInstance().AllowIndirectGrab) SetGrabbedState(GrabbedState.Grabbed_Indirect);
-                else return;
-            }
-        }
+    public Grabbable Grabbable;
+    public HandGrabInteractable HandGrabInteractable;
 
-        SetCancelObjectGravity(true);
-        UpdateOutlineState(false);
-        ObjectManager.GetInstance().RegisterPickedUpObject(this);
-        PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
-    }
-    public virtual void HandlePickup()
-    {
-        // Update object position to follow the cursor
-        if(GrabbedState == GrabbedState.Grabbed_Indirect) ApplyPickedUpBehaviour();
-
-        // Check for drop condition
-        if (PinchDetector.GetInstance().IsNoHandPinching)
-        {
-            OnDrop();
-        }
-    }
-    public virtual void OnDrop()
-    {
-        IsPickedUp = false;
-        SetGrabbedState(GrabbedState.NotGrabbed);
-
-        SetCancelObjectGravity(false);
-        _movementHistory.Clear();
-        if(IsHovering)
-        {
-            UpdateOutlineState(true);
-        }
-        ObjectManager.GetInstance().UnregisterPickedUpObject(this);
-    }
-
-    public bool IsHovering { get; private set; }
-    public virtual void OnHoverEnter()
-    {
-        IsHovering = true;
-        UpdateOutlineState(true);
-    }
-
-    public virtual void OnHoverExit()
-    {
-        IsHovering = false;
-        UpdateOutlineState(false);
-    }
-
-    public float AngleToGaze { get; private set; }
-    public bool IsInGazeCone { get; private set; }
-    public virtual void OnGazeConeEnter()
-    {
-        IsInGazeCone = true;
-        ObjectManager.GetInstance().RegisterFocusedObj(this);
-    }
-    public virtual void OnGazeConeExit()
-    {
-        IsInGazeCone = false;
-        ObjectManager.GetInstance().UnregisterFocusedObj(this);
-    }
 
     protected virtual void Awake()
     {
-        UpdateOutlineState(false);
-        SetCancelObjectGravity(!ApplyGravityByDefault);
+        SetOutlineActive(false);
 
-        if(Grabbable == null)
-        {
-            Grabbable = GetComponentInChildren<Grabbable>();
-        }
+        if(Grabbable == null) Grabbable = GetComponentInChildren<Grabbable>();
+        if(HandGrabInteractable == null) HandGrabInteractable = GetComponentInChildren<HandGrabInteractable>();
     }
+
 
     protected virtual void Update()
     {
-        if (IsPickedUp)
-        {
-            HandlePickup();
-        }
-        else
-        {
-            RefreshInGazeConeState();
+        RefreshInGazeConeState();
+        ManipulationMode = ObjectManager.GetInstance().ManipulationMode;
 
-            if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
+        // Mode Switching
+        if(ManipulationMode == ManipulationMode.Direct)
+        {
+            switch (HandGrabInteractable.State)
             {
-                if(IsHovering || Grabbable.SelectingPointsCount > 0) OnPickup();
+                case InteractableState.Select:
+                    ManipulationState = ManipulationState.PickedUp;
+                    break;
+                case InteractableState.Hover:
+                    ManipulationState = ManipulationState.Hovered;
+                    break;
+                case InteractableState.Normal:
+                    ManipulationState = ManipulationState.Idle;
+                    break;
             }
+        }
+
+        if(ManipulationMode == ManipulationMode.Indirect)
+        {
+            switch (ManipulationState)
+            {
+                case ManipulationState.PickedUp:
+                    if (PinchDetector.GetInstance().IsNoHandPinching)
+                    {
+                        ManipulationState = ManipulationState.Idle;
+                        OnDrop();
+                    } 
+                    break;
+
+                case ManipulationState.Hovered:
+                    if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
+                    {
+                        ManipulationState = ManipulationState.PickedUp;  
+                        OnPickedUp();
+                    } 
+                    break;
+
+                case ManipulationState.Idle:
+                    
+                    break;
+            }
+        }
+
+        // Update Visuals
+        SetOutlineActive(ManipulationState == ManipulationState.Hovered);
+
+        if(ManipulationMode == ManipulationMode.Indirect)
+        {
+            ApplyIndirectPickedUpBehaviour();
         }
     }
 
-    public PositionRotationProvider PositionRotationProvider {get; set; }
-    public virtual void ApplyPickedUpBehaviour()
+    public void SetManipulationState(ManipulationState state)
     {
+        ManipulationState = state;
+    }
+
+
+    public virtual void OnPickedUp()
+    {
+        ObjectManager.GetInstance().RegisterPickedUpObject(this);
+        PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
+    }
+
+    public virtual void OnDrop()
+    {
+        _movementHistory.Clear();
+        ObjectManager.GetInstance().UnregisterPickedUpObject(this);
+    }
+
+    public float AngleToGaze { get; private set; }
+    private bool _isInGazeCone;
+    public bool IsInGazeCone 
+    {   
+        get { return _isInGazeCone; } 
+
+        private set
+            {
+                if (_isInGazeCone == value) return;
+
+                _isInGazeCone = value;
+
+                if(value == true)
+                {
+                    ObjectManager.GetInstance().RegisterFocusedObj(this);
+                }
+                else
+                {
+                    ObjectManager.GetInstance().UnregisterFocusedObj(this);
+                }
+            }
+    }
+
+
+    public PositionRotationProvider PositionRotationProvider { get; set; }
+    public virtual void ApplyIndirectPickedUpBehaviour()
+    {
+        if(PositionRotationProvider == null) return;
+
         UpdatePositionTo(PositionRotationProvider.GetPositionOutput(transform.position));
         UpdateRotationTo(PositionRotationProvider.GetRotationOutput(transform.rotation));
 
@@ -140,22 +149,14 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
     public void RefreshInGazeConeState()
     {
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        if (AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform)
-        {
-            OnGazeConeEnter();
-        }
-        else
-        {
-            OnGazeConeExit();
-        }
+        IsInGazeCone = AngleToGaze <= ObjectManager.GazeConeSize || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
     }
 
-    public void UpdateOutlineState(bool isEnabled)
+    public void SetOutlineActive(bool isEnabled)
     {
         if(GetComponent<Outline>() == null) return;
         GetComponent<Outline>().enabled = isEnabled;
     }
-
 
     public void UpdatePositionTo(Vector3 newPosition)
     {
@@ -173,7 +174,7 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
         Collider collider = transform.GetComponent<Collider>();
         if (rigidbody != null && collider != null)
         {
-            if (isFreeze == true || ApplyGravityByDefault == false)
+            if (isFreeze == true || UseGravity == false)
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
@@ -203,16 +204,6 @@ public class ManipulatableObject : MonoBehaviour, IHoverable, IInGazeConeHandler
             }
 
             return Vector3.zero;
-    }
-
-
-    public GrabbedState GrabbedState { get; protected set; }
-    public Grabbable Grabbable { get; protected set; }
-    public HandGrabInteractable HandGrabInteractable { get; protected set; }
-
-    public void SetGrabbedState(GrabbedState state)
-    {
-        GrabbedState = state;
     }
 }
 

@@ -16,7 +16,7 @@ public class MultiSelectionCubeVolume : MonoBehaviour
     {
         Vector3 HandToPinchOffset = HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false);
 
-        if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject == null)
+        if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject_1 == null)
         {
             if (SelectionCubePrefab != null)
             {

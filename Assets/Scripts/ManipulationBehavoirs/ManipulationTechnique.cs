@@ -16,17 +16,17 @@ public class ManipulationTechnique : MonoBehaviour
 
     public ManipulatableObject GazingObject { get; private set; }
 
-    public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
-    {
-        GrabbedObject = obj;
-        LastGrabbedObject = obj;
-        GrabbedObject.SetGrabbedState(grabbedState);
+    // public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    // {
+    //     GrabbedObject = obj;
+    //     LastGrabbedObject = obj;
+    //     // GrabbedObject.SetGrabbedState(grabbedState);
 
-        TriggerOnGazeFixation();
+    //     TriggerOnGazeFixation();
 
-        VirtualHandPosition_OnGrab = VirtualHandPosition;
-        ObjectPosition_OnGrab = GrabbedObject.transform.position;
-    }
+    //     VirtualHandPosition_OnGrab = VirtualHandPosition;
+    //     ObjectPosition_OnGrab = GrabbedObject.transform.position;
+    // }
 
     public virtual void ApplyIndirectGrabbedBehaviour() { }
     public virtual void ApplyDirectGrabbedBehaviour() { }
@@ -35,7 +35,7 @@ public class ManipulationTechnique : MonoBehaviour
 
     public virtual void TriggerOnHandReleased()
     {
-        GrabbedObject.SetGrabbedState(GrabbedState.NotGrabbed);
+        // GrabbedObject.SetGrabbedState(GrabbedState.NotGrabbed);
         GrabbedObject = null;
     }
 
@@ -210,7 +210,7 @@ public class ManipulationTechnique : MonoBehaviour
                 // }
                 if (PinchDetector.IsOneHandPinching && PinchDetector.IsNoHandPinching_LastFrame)
                 {
-                    TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
+                    // TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
                 }
                 else // gaze hover but not grabbed yet
                 {
@@ -224,29 +224,29 @@ public class ManipulationTechnique : MonoBehaviour
         }
         else // grabbed
         {
-            if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Direct)
-            {
-                if (GrabbedObject.Grabbable.SelectingPointsCount > 0)
-                {
-                    ApplyDirectGrabbedBehaviour();
-                }
-                else
-                {
-                    TriggerOnHandReleased();
-                }
+            // if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Direct)
+            // {
+            //     if (GrabbedObject.Grabbable.SelectingPointsCount > 0)
+            //     {
+            //         ApplyDirectGrabbedBehaviour();
+            //     }
+            //     else
+            //     {
+            //         TriggerOnHandReleased();
+            //     }
 
-            }
-            else if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Indirect)
-            {
-                if (PinchDetector.IsOneHandPinching)
-                {
-                    ApplyIndirectGrabbedBehaviour();
-                }
-                else
-                {
-                    TriggerOnHandReleased();
-                }
-            }
+            // }
+            // else if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Indirect)
+            // {
+            //     if (PinchDetector.IsOneHandPinching)
+            //     {
+            //         ApplyIndirectGrabbedBehaviour();
+            //     }
+            //     else
+            //     {
+            //         TriggerOnHandReleased();
+            //     }
+            // }
         }
 
         UpdatePreData();

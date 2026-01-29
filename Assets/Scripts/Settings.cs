@@ -23,7 +23,7 @@ public class Settings : Singleton<Settings>
 
     void Update()
     {
-        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().ManipulationMode == ManipulationMode.Direct)
         {
             VirtualHandProvider.UpdateVirtualHandPoses();
         }
@@ -41,7 +41,7 @@ public class Settings : Singleton<Settings>
     public Pose GetVirtualHandPose(Handedness_v handedness)
     {
         // if direct grab
-        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().ManipulationMode == ManipulationMode.Direct)
         {
             return VirtualHandProvider.VirtualHandPoses.GetVirtualHandPose(handedness);
         }
@@ -59,7 +59,7 @@ public class Settings : Singleton<Settings>
 
     public float GetVirtualHandScalingFactor()
     {
-        if(VirtualHandProvider != null && ObjectManager.GetInstance().AllowDirectGrab)
+        if(VirtualHandProvider != null && ObjectManager.GetInstance().ManipulationMode == ManipulationMode.Direct)
         {
             return VirtualHandProvider.GetVirtualHandScalingFactor();
         }

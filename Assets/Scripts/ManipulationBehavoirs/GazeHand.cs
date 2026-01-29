@@ -45,12 +45,12 @@ public class GazeHand : ManipulationTechnique
         VirtualHandOffsetFromObject = VirtualHandPosition - GazingObject.transform.position;
     }
 
-    public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
-    {
-        base.TriggerOnSingleHandGrabbed(obj, grabbedState);
+    // public override void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    // {
+    //     base.TriggerOnSingleHandGrabbed(obj, grabbedState);
 
-        _handInitPosition = WristPosition;
-    }
+    //     _handInitPosition = WristPosition;
+    // }
 
     public override void ApplyDirectGrabbedBehaviour()
     {

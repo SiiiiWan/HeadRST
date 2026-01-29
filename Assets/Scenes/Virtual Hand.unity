@@ -2662,6 +2662,8 @@ GameObject:
   - component: {fileID: 32330292}
   - component: {fileID: 32330291}
   - component: {fileID: 32330290}
+  - component: {fileID: 32330296}
+  - component: {fileID: 32330295}
   m_Layer: 0
   m_Name: Blue Cube
   m_TagString: Untagged
@@ -2804,6 +2806,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &32330295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32330288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &32330296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32330288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &32457800
 GameObject:
   m_ObjectHideFlags: 0
@@ -3233,7 +3268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &37901363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11663,7 +11700,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &122658882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11876,6 +11915,8 @@ GameObject:
   - component: {fileID: 133798327}
   - component: {fileID: 133798326}
   - component: {fileID: 133798325}
+  - component: {fileID: 133798331}
+  - component: {fileID: 133798330}
   m_Layer: 0
   m_Name: Test Origin
   m_TagString: Untagged
@@ -12018,6 +12059,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &133798330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133798323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 2083667359}
+  HandGrabInteractable: {fileID: 2083667358}
+--- !u!114 &133798331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 133798323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &135200352
 GameObject:
   m_ObjectHideFlags: 0
@@ -12549,7 +12623,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &141172527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20604,7 +20680,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &197160844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20913,7 +20991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &198325007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21402,7 +21482,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &211174294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26558,7 +26640,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &306777603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27317,7 +27401,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &320971061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31300,7 +31386,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &392759496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31823,7 +31911,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &399666339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37145,7 +37235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &501725983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37966,7 +38058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &519145884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40220,7 +40314,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &555772244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42064,7 +42160,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &586549467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46321,7 +46419,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &643234976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47075,7 +47175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &660721102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47397,7 +47499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &664714869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47908,7 +48012,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &680354560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49231,7 +49337,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &699247168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49451,7 +49559,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &704049355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50876,7 +50986,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &734685045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51830,7 +51942,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &741157200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53044,7 +53158,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &769957770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55305,7 +55421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &800273208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55633,7 +55751,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &808002018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56388,6 +56508,8 @@ GameObject:
   - component: {fileID: 825984532}
   - component: {fileID: 825984531}
   - component: {fileID: 825984530}
+  - component: {fileID: 825984536}
+  - component: {fileID: 825984535}
   m_Layer: 0
   m_Name: Blue Cube (1)
   m_TagString: Untagged
@@ -56530,6 +56652,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &825984535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825984528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &825984536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825984528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &826333236
 GameObject:
   m_ObjectHideFlags: 0
@@ -56893,7 +57048,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &829082665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57481,7 +57638,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &841911199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57608,6 +57767,8 @@ GameObject:
   - component: {fileID: 845196812}
   - component: {fileID: 845196811}
   - component: {fileID: 845196810}
+  - component: {fileID: 845196816}
+  - component: {fileID: 845196815}
   m_Layer: 0
   m_Name: Red Cube (2)
   m_TagString: Untagged
@@ -57750,6 +57911,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &845196815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845196808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &845196816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845196808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &848667331
 GameObject:
   m_ObjectHideFlags: 0
@@ -61004,7 +61198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &893897351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61706,7 +61902,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &903716828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62160,7 +62358,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &909639788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63044,7 +63244,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &921446514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64839,7 +65041,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &943627359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65515,7 +65719,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &947301179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66850,7 +67056,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &976961011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68109,7 +68317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &991408623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68314,6 +68524,8 @@ GameObject:
   - component: {fileID: 996231623}
   - component: {fileID: 996231622}
   - component: {fileID: 996231621}
+  - component: {fileID: 996231628}
+  - component: {fileID: 996231627}
   m_Layer: 0
   m_Name: Green Cube
   m_TagString: Untagged
@@ -68456,6 +68668,39 @@ Transform:
   - {fileID: 1582977364}
   m_Father: {fileID: 1615107549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &996231627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996231620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &996231628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996231620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &998101198
 GameObject:
   m_ObjectHideFlags: 0
@@ -68791,7 +69036,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1001072242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69373,7 +69620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DominantHand: 0
-  VirtualHandProvider: {fileID: 1006584934}
+  VirtualHandProvider: {fileID: 1006584931}
   BodyTracking: {fileID: 664395242}
   EnableVirtualHandInteractions: 1
   EnableRealHandInteractions: 0
@@ -69414,14 +69661,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2daee6909f9e9b4f9717a165b3d83a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TaskCursor: {fileID: 0}
+  ManipulationMode: 0
   PositionRotationProvider_Global: {fileID: 0}
-  AllowDirectGrab: 1
-  AllowIndirectGrab: 0
-  CurrentFocusedObjects: []
+  ObjectsInGazeCone: []
   ClosestFocusedObject: {fileID: 0}
   ClosestFocusedObject_prev: {fileID: 0}
-  PickedUpObject: {fileID: 0}
+  PickedUpObject_1: {fileID: 0}
+  PickedUpObject_2: {fileID: 0}
 --- !u!114 &1006584934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71692,7 +71938,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1040166055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77233,7 +77481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1127960688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78611,6 +78861,8 @@ GameObject:
   - component: {fileID: 1148216751}
   - component: {fileID: 1148216750}
   - component: {fileID: 1148216749}
+  - component: {fileID: 1148216755}
+  - component: {fileID: 1148216754}
   m_Layer: 0
   m_Name: Green Cube (1)
   m_TagString: Untagged
@@ -78753,6 +79005,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &1148216754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148216747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &1148216755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148216747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1148876958
 GameObject:
   m_ObjectHideFlags: 0
@@ -85755,7 +86040,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1263370546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86318,7 +86605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1276374937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86819,7 +87108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1283485067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87250,7 +87541,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1285453279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87528,7 +87821,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1290849805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88121,7 +88416,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1302917107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88562,6 +88859,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 133798324}
+  - {fileID: 1369271489}
   - {fileID: 1438443349}
   - {fileID: 1847064253}
   - {fileID: 894074987}
@@ -94298,6 +94596,197 @@ MonoBehaviour:
     _installationVariants:
     - _memberName: mode
       _value: '{"value__":0}'
+--- !u!1 &1369271488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1369271489}
+  - component: {fileID: 1369271496}
+  - component: {fileID: 1369271495}
+  - component: {fileID: 1369271494}
+  - component: {fileID: 1369271493}
+  - component: {fileID: 1369271490}
+  - component: {fileID: 1369271492}
+  - component: {fileID: 1369271491}
+  m_Layer: 0
+  m_Name: Test Origin (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1369271489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.368, y: 0.884, z: -0.539}
+  m_LocalScale: {x: 0.048146997, y: 0.048146997, z: 0.048146997}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 2143193828}
+  m_Father: {fileID: 1309074280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1369271490
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1369271491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 2143193831}
+  HandGrabInteractable: {fileID: 2143193830}
+--- !u!114 &1369271492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!65 &1369271493
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1369271494
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f7b5f80481b080a43b1e67b535d77a10, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1369271495
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1369271496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369271488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b023183069df224080314a560e6e1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockId: 7358e191-33b7-43ca-b066-b2f00531ac66
+  instanceId: 27a1a3c2-feaf-4406-9556-7ddd007763d3
+  version: 1
+  installationRoutineCheckpoint:
+    _installationRoutineId: 
+    _installationVariants: []
 --- !u!1 &1369682065
 GameObject:
   m_ObjectHideFlags: 0
@@ -95049,7 +95538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1384983881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95238,7 +95729,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1393423551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95641,7 +96134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1400695819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97496,7 +97991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1424728669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100344,6 +100841,8 @@ GameObject:
   - component: {fileID: 1470488703}
   - component: {fileID: 1470488702}
   - component: {fileID: 1470488701}
+  - component: {fileID: 1470488707}
+  - component: {fileID: 1470488706}
   m_Layer: 0
   m_Name: Blue Cube (2)
   m_TagString: Untagged
@@ -100486,6 +100985,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &1470488706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470488699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &1470488707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470488699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1471999278
 GameObject:
   m_ObjectHideFlags: 0
@@ -101237,7 +101769,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1481880578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102280,7 +102814,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 1
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!54 &1496611822
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105817,7 +106353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1552905601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106415,7 +106953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1571617343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106666,7 +107206,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1572520240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111276,7 +111818,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1633944353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113633,7 +114177,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1667368351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113822,7 +114368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1669297583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114735,7 +115283,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1684272986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116566,7 +117116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1705005621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121150,7 +121702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1775209276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123924,7 +124478,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1816234537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124577,7 +125133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1821866641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126507,7 +127065,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1861873203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129226,6 +129786,8 @@ GameObject:
   - component: {fileID: 1900786353}
   - component: {fileID: 1900786352}
   - component: {fileID: 1900786351}
+  - component: {fileID: 1900786357}
+  - component: {fileID: 1900786356}
   m_Layer: 0
   m_Name: Red Cube
   m_TagString: Untagged
@@ -129368,6 +129930,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &1900786356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900786349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &1900786357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900786349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1901864081
 GameObject:
   m_ObjectHideFlags: 0
@@ -131127,7 +131722,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1933591522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132738,7 +133335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &1961988744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136378,7 +136977,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &2005572331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137360,6 +137961,8 @@ GameObject:
   - component: {fileID: 2031621577}
   - component: {fileID: 2031621576}
   - component: {fileID: 2031621575}
+  - component: {fileID: 2031621581}
+  - component: {fileID: 2031621580}
   m_Layer: 0
   m_Name: Red Cube (1)
   m_TagString: Untagged
@@ -137502,6 +138105,39 @@ MonoBehaviour:
   installationRoutineCheckpoint:
     _installationRoutineId: 
     _installationVariants: []
+--- !u!114 &2031621580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031621573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
+--- !u!114 &2031621581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031621573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &2033048794
 GameObject:
   m_ObjectHideFlags: 0
@@ -143021,6 +143657,147 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5522727587629525543, guid: 1a64fc5a11671594981cd3095acf4ba5, type: 3}
+--- !u!1 &2143193827
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2143193828}
+  - component: {fileID: 2143193832}
+  - component: {fileID: 2143193831}
+  - component: {fileID: 2143193830}
+  - component: {fileID: 2143193829}
+  m_Layer: 0
+  m_Name: '[BuildingBlock] HandGrab'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2143193828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143193827}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1369271489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2143193829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143193827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a1bc992571301d4a9602ac95ef4c71a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactorFilters: []
+  _maxInteractors: -1
+  _maxSelectingInteractors: -1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 2143193831}
+  _rigidbody: {fileID: 1369271490}
+  _grabSource: {fileID: 0}
+  _useClosestPointAsGrabSource: 0
+  _releaseDistance: 0
+  _resetGrabOnGrabsUpdated: 1
+  _physicsGrabbable: {fileID: 0}
+--- !u!114 &2143193830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143193827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a7676b01585ce43908639a27765dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactorFilters: []
+  _maxInteractors: -1
+  _maxSelectingInteractors: -1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 2143193831}
+  _rigidbody: {fileID: 1369271490}
+  _physicsGrabbable: {fileID: 0}
+  _resetGrabOnGrabsUpdated: 1
+  _scoringModifier:
+    _positionRotationWeight: 0.5
+  _slippiness: 0
+  _supportedGrabTypes: 3
+  _pinchGrabRules:
+    _thumbRequirement: 0
+    _indexRequirement: 1
+    _middleRequirement: 1
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 1
+  _palmGrabRules:
+    _thumbRequirement: 1
+    _indexRequirement: 0
+    _middleRequirement: 2
+    _ringRequirement: 2
+    _pinkyRequirement: 1
+    _unselectMode: 0
+  _movementProvider: {fileID: 0}
+  _handAligment: 0
+  _handGrabPoses: []
+--- !u!114 &2143193831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143193827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transferOnSecondSelection: 1
+  _addNewPointsToFront: 0
+  _forwardElement: {fileID: 0}
+  _oneGrabTransformer: {fileID: 0}
+  _twoGrabTransformer: {fileID: 0}
+  _targetTransform: {fileID: 1369271489}
+  _maxGrabPoints: -1
+  _rigidbody: {fileID: 1369271490}
+  _kinematicWhileSelected: 1
+  _throwWhenUnselected: 1
+--- !u!114 &2143193832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143193827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b023183069df224080314a560e6e1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockId: f8766c17-aaf8-4b55-9431-de8deea83842
+  instanceId: 4ee3a7bd-60b2-4da0-8b10-1983a75648c5
+  version: 1
+  installationRoutineCheckpoint:
+    _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
+    _installationVariants:
+    - _memberName: mode
+      _value: '{"value__":0}'
 --- !u!1 &2145174441
 GameObject:
   m_ObjectHideFlags: 0
@@ -143191,7 +143968,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebf9ea68c93d084daf82b17d8b83103, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplyGravityByDefault: 0
+  UseGravity: 1
+  Grabbable: {fileID: 0}
+  HandGrabInteractable: {fileID: 0}
 --- !u!114 &2145174449
 MonoBehaviour:
   m_ObjectHideFlags: 0

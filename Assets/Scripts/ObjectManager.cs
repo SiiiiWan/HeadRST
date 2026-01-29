@@ -1,85 +1,96 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ManipulationMode
+{
+    Direct,
+    Indirect
+}
+
 public class ObjectManager : Singleton<ObjectManager>
 {
-    public TaskCursor TaskCursor;
-    public PositionRotationProvider PositionRotationProvider_Global;
-    public bool AllowDirectGrab = true;
-    public bool AllowIndirectGrab = true;
+    public ManipulationMode ManipulationMode = ManipulationMode.Direct;
 
-    [HideInInspector] public List<ManipulatableObject> CurrentFocusedObjects = new List<ManipulatableObject>();
+    public PositionRotationProvider PositionRotationProvider_Global;
+
+    public const float GazeConeSize = 10f; // Use 150ms of history for calculation
+    [HideInInspector] public List<ManipulatableObject> ObjectsInGazeCone = new List<ManipulatableObject>();
     [HideInInspector] public ManipulatableObject ClosestFocusedObject, ClosestFocusedObject_prev;
-    [HideInInspector] public ManipulatableObject PickedUpObject;
+    [HideInInspector] public ManipulatableObject PickedUpObject_1, PickedUpObject_2;
 
     void Update()
     {
-        if(PickedUpObject != null)
+        if(ManipulationMode == ManipulationMode.Indirect)
         {
-            return; // Skip updating focused objects when an object is picked up
-        }
-        // ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Cursor();
-        ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Ray(EyeGaze.GetInstance().GetGazeRay());
+            ClosestFocusedObject = UpdateAndGetClosestFocusedObject_Ray(EyeGaze.GetInstance().GetGazeRay());
 
-        if (ClosestFocusedObject_prev != ClosestFocusedObject)
-        {
-            if (ClosestFocusedObject != null)
+            if (ClosestFocusedObject != ClosestFocusedObject_prev)
             {
-                if(AllowIndirectGrab) ClosestFocusedObject.OnHoverEnter();
+                if (ClosestFocusedObject != null)
+                {
+                    ClosestFocusedObject.SetManipulationState(ManipulationState.Hovered);
+                }
+                    
+                if (ClosestFocusedObject_prev != null)
+                {
+                    ClosestFocusedObject_prev.SetManipulationState(ManipulationState.Idle);
+                }
             }
-                
-            if (ClosestFocusedObject_prev != null)
-            {
-                ClosestFocusedObject_prev.OnHoverExit();
-            }
+            
+            ClosestFocusedObject_prev = ClosestFocusedObject;            
         }
         
-        ClosestFocusedObject_prev = ClosestFocusedObject;
     }
 
     public void RegisterFocusedObj(ManipulatableObject obj)
     {
-        if (!CurrentFocusedObjects.Contains(obj))
+        if (!ObjectsInGazeCone.Contains(obj))
         {
-            CurrentFocusedObjects.Add(obj);
+            ObjectsInGazeCone.Add(obj);
         }
     }
 
     public void UnregisterFocusedObj(ManipulatableObject obj)
     {
-        if (CurrentFocusedObjects.Contains(obj))
+        if (ObjectsInGazeCone.Contains(obj))
         {
-            CurrentFocusedObjects.Remove(obj);
+            ObjectsInGazeCone.Remove(obj);
         }
     }
 
     public void RegisterPickedUpObject(ManipulatableObject obj)
     {
-        PickedUpObject = obj;
+        if (PickedUpObject_1 == null)
+        {
+            PickedUpObject_1 = obj;
+        }
+        else if (PickedUpObject_2 == null)
+        {
+            PickedUpObject_2 = obj;
+        }
     }
 
     public void UnregisterPickedUpObject(ManipulatableObject obj)
     {
-        if(PickedUpObject == obj) PickedUpObject = null;
+        if(PickedUpObject_1 == obj) PickedUpObject_1 = null;
+        if(PickedUpObject_2 == obj) PickedUpObject_2 = null;
     }
 
-    public ManipulatableObject UpdateAndGetClosestFocusedObject_Cursor()
+    public ManipulatableObject UpdateAndGetClosestFocusedObject_Position(Vector3 pos)
     {
-        if (CurrentFocusedObjects == null || CurrentFocusedObjects.Count == 0)
+        if (ObjectsInGazeCone == null || ObjectsInGazeCone.Count == 0)
         {
             return null;
         }
 
         ManipulatableObject closestObject = null;
         float minDistance = float.MaxValue;
-        Vector3 cursorPosition = TaskCursor.transform.position;
 
-        foreach (var obj in CurrentFocusedObjects)
+        foreach (var obj in ObjectsInGazeCone)
         {
             if (obj == null) continue;
 
-            float distance = Vector3.Distance(obj.transform.position, cursorPosition);
+            float distance = Vector3.Distance(obj.transform.position, pos);
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -92,7 +103,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
     public ManipulatableObject UpdateAndGetClosestFocusedObject_Ray(Ray ray)
     {
-        if (CurrentFocusedObjects == null || CurrentFocusedObjects.Count == 0)
+        if (ObjectsInGazeCone == null || ObjectsInGazeCone.Count == 0)
         {
             return null;
         }
@@ -100,7 +111,7 @@ public class ObjectManager : Singleton<ObjectManager>
         ManipulatableObject closestObject = null;
         float minDistance = float.MaxValue;
 
-        foreach (var obj in CurrentFocusedObjects)
+        foreach (var obj in ObjectsInGazeCone)
         {
             if (obj == null) continue;
 
@@ -115,9 +126,9 @@ public class ObjectManager : Singleton<ObjectManager>
         return closestObject;
     }
 
-    public Vector3 GetCenterOfFocusedObjects()
+    public Vector3 GetCentreOfFocusedObjects()
     {
-        if (CurrentFocusedObjects == null || CurrentFocusedObjects.Count == 0)
+        if (ObjectsInGazeCone == null || ObjectsInGazeCone.Count == 0)
         {
             return Vector3.zero;
         }
@@ -125,7 +136,7 @@ public class ObjectManager : Singleton<ObjectManager>
         Vector3 center = Vector3.zero;
         int validObjectCount = 0;
 
-        foreach (var obj in CurrentFocusedObjects)
+        foreach (var obj in ObjectsInGazeCone)
         {
             if (obj == null) continue;
 
