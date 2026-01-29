@@ -96,11 +96,11 @@ public class DR_v2 : VirtualHandProvider
             // Redirect centriod to gaze point during 
             if(GazeData.GetGazeHitPoint(out RaycastHit hit))
             {
-                _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Mathf.Clamp(Vector3.Distance(hit.point, gazeOrigin), 1, 5);          
+                _redirectedCentroid = gazeOrigin + (hit.point - gazeOrigin).normalized * Vector3.Distance(hit.point, gazeOrigin);          
             }
             else
             {
-                _redirectedCentroid = gazeOrigin + gazeDirection * Mathf.Clamp(Vector3.Distance(_redirectedCentroid, gazeOrigin), 1, 5);   
+                _redirectedCentroid = gazeOrigin + gazeDirection * Vector3.Distance(_redirectedCentroid, gazeOrigin);   
             }       
             
             // Update During Gaze Mode

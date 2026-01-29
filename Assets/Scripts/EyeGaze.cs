@@ -207,6 +207,57 @@ public class EyeGaze : Singleton<EyeGaze>
         return false;
     }
 
+    // public bool GetGazeHitPoint_Cone(out RaycastHit hit, int numOfRays=100, float coneAngle=4f, float maxDistance=100f)
+    // {
+    //     hit = default;
+    //     Ray gazeRay = GetGazeRay();
+
+    //     if (Physics.Raycast(gazeRay, out RaycastHit primaryHit, maxDistance))
+    //     {
+    //         hit = primaryHit;
+    //         return true;
+    //     }
+
+    //     float coneRad = Mathf.Deg2Rad * Mathf.Max(0f, coneAngle);
+
+    //     Vector3 axis = gazeRay.direction.normalized;
+    //     // Build orthonormal basis (u,v,w) with w = axis
+    //     // if not looking purely up or down, use up vector as reference
+    //     Vector3 u = Vector3.Cross(Mathf.Abs(Vector3.Dot(axis, Vector3.up)) < 0.999f ? Vector3.up : Vector3.forward, axis).normalized;
+    //     Vector3 v = Vector3.Cross(axis, u);
+
+    //     bool found = false;
+    //     float bestDist = maxDistance;
+    //     RaycastHit bestHit = default;
+
+    //     for (int i = 0; i < numOfRays; i++)
+    //     {
+    //         // Uniform sampling within cone
+    //         float cosTheta = Mathf.Lerp(Mathf.Cos(coneRad), 1f, Random.value);
+    //         float sinTheta = Mathf.Sqrt(1f - cosTheta * cosTheta);
+    //         float phi = Random.value * Mathf.PI * 2f;
+
+    //         Vector3 sampleDir = (u * (Mathf.Cos(phi) * sinTheta) + v * (Mathf.Sin(phi) * sinTheta) + axis * cosTheta).normalized;
+
+    //         if (Physics.Raycast(new Ray(gazeRay.origin, sampleDir), out RaycastHit rHit, maxDistance))
+    //         {
+    //             if (rHit.distance < bestDist)
+    //             {
+    //                 bestDist = rHit.distance;
+    //                 bestHit = rHit;
+    //                 found = true;
+    //             }
+    //         }
+    //     }
+
+    //     if (found)
+    //     {
+    //         hit = bestHit;
+    //         return true;
+    //     }                
+
+    // }
+
     public bool IfGazeHitObjectsContains(GameObject obj, float maxDistance=100f)
     {
         RaycastHit[] hits;
