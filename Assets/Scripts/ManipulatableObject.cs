@@ -22,7 +22,8 @@ public class ManipulatableObject : MonoBehaviour
     private readonly List<(Vector3 position, Quaternion rotation, float time)> _movementHistory = new List<(Vector3, Quaternion, float)>();
     private const float ThrowVelocityTimeWindow = 0.15f; // Use 150ms of history for calculation
 
-
+    private List<Handedness_v> _grabbedHands = new List<Handedness_v>();
+    
     public Grabbable Grabbable;
     public HandGrabInteractable HandGrabInteractable;
 
