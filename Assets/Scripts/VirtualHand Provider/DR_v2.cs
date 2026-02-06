@@ -50,6 +50,7 @@ public class DR_v2 : VirtualHandProvider
 
         ObjectManager objectManager = ObjectManager.GetInstance();
         objectManager.ManipulationMode = ManipulationMode.Direct;
+        objectManager.ObjectPositionRotationProvider = null;
 
         // Get Tracking Data
         UpdateDataSource();

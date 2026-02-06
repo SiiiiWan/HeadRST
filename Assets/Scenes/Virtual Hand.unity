@@ -69620,7 +69620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DominantHand: 0
-  VirtualHandProvider: {fileID: 1006584931}
+  VirtualHandProvider: {fileID: 1006584935}
   BodyTracking: {fileID: 664395242}
   EnableVirtualHandInteractions: 1
   EnableRealHandInteractions: 0
@@ -69662,7 +69662,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ManipulationMode: 0
-  PositionRotationProvider_Global: {fileID: 0}
   ObjectsInGazeCone: []
   ClosestFocusedObject: {fileID: 0}
   ClosestFocusedObject_prev: {fileID: 0}

@@ -11,6 +11,7 @@ public class GoGo : VirtualHandProvider
     {
         ObjectManager objectManager = ObjectManager.GetInstance();
         objectManager.ManipulationMode = ManipulationMode.Direct;
+        objectManager.ObjectPositionRotationProvider = null;
 
         // Get Tracking Data
         UpdateDataSource();

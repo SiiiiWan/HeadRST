@@ -11,13 +11,17 @@ public class PinchDetector : Singleton<PinchDetector>
 {
     public OVRHand RightHand, LeftHand;
     public bool IsRightPinching, IsLeftPinching;
-    public bool IsBothHandsPinching, IsOneHandPinching, IsNoHandPinching, IsNoHandPinching_LastFrame, IsOneHandPinching_LastFrame;
+    public bool IsBothHandsPinching, IsOneHandPinching, IsNoHandPinching, IsNoHandPinching_LastFrame, IsOneHandPinching_LastFrame, IsBothHandsPinching_LastFrame;
     public PinchState PinchState = PinchState.NotPinching;
     public float PinchThreshold = 0.01f; // Adjust this threshold as needed
 
     public GameObject righHandPinchBall_index, righHandPinchBall_thumb, leftHandPinchBall_index, leftHandPinchBall_thumb, lefthandPinchBall_hand, righthandPinchBall_hand;
     void Update()
     {
+        IsNoHandPinching_LastFrame = IsNoHandPinching;
+        IsOneHandPinching_LastFrame = IsOneHandPinching;
+        IsBothHandsPinching_LastFrame = IsBothHandsPinching;
+        
         UpdatePinchBalls();
 
         // IsRightPinching = RightHand.GetFingerIsPinching(OVRHand.HandFinger.Index);
@@ -26,36 +30,21 @@ public class PinchDetector : Singleton<PinchDetector>
         IsRightPinching = Vector3.Distance(righHandPinchBall_thumb.transform.position, righHandPinchBall_index.transform.position) < PinchThreshold; // Adjust threshold as needed
         IsLeftPinching = Vector3.Distance(leftHandPinchBall_thumb.transform.position, leftHandPinchBall_index.transform.position) < PinchThreshold; // Adjust threshold as needed
 
-        Settings settings = Settings.GetInstance();
-
-        if (settings.DominantHand == Handedness_v.Right)
+        if(IsRightPinching && IsLeftPinching)
         {
-            if (IsRightPinching)
-            {
-                PinchState = PinchState.OneHandPinching;
-            }
-            else
-            {
-                PinchState = PinchState.NotPinching;
-            }
+            PinchState = PinchState.BothHandsPinching;
+        }
+        else if(IsRightPinching || IsLeftPinching)
+        {
+            PinchState = PinchState.OneHandPinching;
         }
         else
         {
-            if (IsLeftPinching)
-            {
-                PinchState = PinchState.OneHandPinching;
-            }
-            else
-            {
-                PinchState = PinchState.NotPinching;
-            }
+            PinchState = PinchState.NotPinching;
         }
 
         IsBothHandsPinching = PinchState == PinchState.BothHandsPinching;
         IsOneHandPinching = PinchState == PinchState.OneHandPinching;
-
-        IsNoHandPinching_LastFrame = IsNoHandPinching;
-        IsOneHandPinching_LastFrame = IsOneHandPinching;
         IsNoHandPinching = PinchState == PinchState.NotPinching;
     }
 

@@ -22,8 +22,10 @@ public class ManipulatableObject : MonoBehaviour
     private readonly List<(Vector3 position, Quaternion rotation, float time)> _movementHistory = new List<(Vector3, Quaternion, float)>();
     private const float ThrowVelocityTimeWindow = 0.15f; // Use 150ms of history for calculation
 
+
     public Grabbable Grabbable;
     public HandGrabInteractable HandGrabInteractable;
+
 
 
     protected virtual void Awake()
@@ -37,7 +39,7 @@ public class ManipulatableObject : MonoBehaviour
 
     protected virtual void Update()
     {
-        RefreshInGazeConeState();
+        RefreshSelfInGazeConeState();
         ManipulationMode = ObjectManager.GetInstance().ManipulationMode;
 
         // Mode Switching
@@ -62,34 +64,59 @@ public class ManipulatableObject : MonoBehaviour
             switch (ManipulationState)
             {
                 case ManipulationState.PickedUp:
+
+                    ApplyIndirectPickedUpBehaviour();
+
+                    if(ObjectManager.GetInstance().IsFullHand)
+                    {
+                        if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsBothHandsPinching_LastFrame)
+                        {
+                            ManipulationState = ManipulationState.Idle;  
+                            OnDrop();
+                        }
+                        break; // do nothing if both hands are occupied
+                    }
+
+
                     if (PinchDetector.GetInstance().IsNoHandPinching)
                     {
                         ManipulationState = ManipulationState.Idle;
                         OnDrop();
-                    } 
+                    }
                     break;
 
                 case ManipulationState.Hovered:
-                    if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
+                    if(ObjectManager.GetInstance().IsFullHand)
                     {
-                        ManipulationState = ManipulationState.PickedUp;  
-                        OnPickedUp();
-                    } 
-                    break;
+                        break; // do nothing if both hands are occupied
+                    }
+                    else if(ObjectManager.GetInstance().IsOneHandPickedUp)
+                    {
+                        if(PinchDetector.GetInstance().IsBothHandsPinching && !PinchDetector.GetInstance().IsBothHandsPinching_LastFrame)
+                        {
+                            ManipulationState = ManipulationState.PickedUp;  
+                            OnPickedUp();
+                        }
+                        break; // do nothing if one hand is occupied
+                    }
+                    else
+                    {
+                        if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
+                        {
+                            ManipulationState = ManipulationState.PickedUp;  
+                            OnPickedUp();
+                        }                         
+                        break;
+                    }
 
                 case ManipulationState.Idle:
-                    
+                    // enter hover state by object manager
                     break;
             }
         }
 
         // Update Visuals
         SetOutlineActive(ManipulationState == ManipulationState.Hovered);
-
-        if(ManipulationMode == ManipulationMode.Indirect)
-        {
-            ApplyIndirectPickedUpBehaviour();
-        }
     }
 
     public void SetManipulationState(ManipulationState state)
@@ -101,7 +128,6 @@ public class ManipulatableObject : MonoBehaviour
     public virtual void OnPickedUp()
     {
         ObjectManager.GetInstance().RegisterPickedUpObject(this);
-        PositionRotationProvider = ObjectManager.GetInstance().PositionRotationProvider_Global;
     }
 
     public virtual void OnDrop()
@@ -133,20 +159,21 @@ public class ManipulatableObject : MonoBehaviour
             }
     }
 
-
-    public PositionRotationProvider PositionRotationProvider { get; set; }
     public virtual void ApplyIndirectPickedUpBehaviour()
     {
-        if(PositionRotationProvider == null) return;
+        IObjectPositionRotationProvider objectPositionRotationProvider = ObjectManager.GetInstance().ObjectPositionRotationProvider;
+        if(objectPositionRotationProvider == null) return;
 
-        UpdatePositionTo(PositionRotationProvider.GetPositionOutput(transform.position));
-        UpdateRotationTo(PositionRotationProvider.GetRotationOutput(transform.rotation));
+        if(!ObjectManager.GetInstance().GetPitckedUpObjectHandedness(this, out Handedness_v hand)) return;
+
+        UpdatePositionTo(objectPositionRotationProvider.GetPositionOutput(transform.position, hand));
+        UpdateRotationTo(objectPositionRotationProvider.GetRotationOutput(transform.rotation, hand));
 
         _movementHistory.Add((transform.position, transform.rotation, Time.time));
         _movementHistory.RemoveAll(p => Time.time - p.time > ThrowVelocityTimeWindow);
     }
 
-    public void RefreshInGazeConeState()
+    public void RefreshSelfInGazeConeState()
     {
         AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
         IsInGazeCone = AngleToGaze <= ObjectManager.GazeConeSize || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
