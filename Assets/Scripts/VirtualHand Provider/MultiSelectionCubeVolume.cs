@@ -16,25 +16,25 @@ public class MultiSelectionCubeVolume : MonoBehaviour
     {
         Vector3 HandToPinchOffset = HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false);
 
-        if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject_rightHand == null)
-        {
-            if (SelectionCubePrefab != null)
-            {
-                // Store the starting position of the pinch
-                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
+        // if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject_rightHand == null)
+        // {
+        //     if (SelectionCubePrefab != null)
+        //     {
+        //         // Store the starting position of the pinch
+        //         _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
-                // Instantiate the prefab
-                _selectionCubeInstance = Instantiate(SelectionCubePrefab);
-                _selectionCubeInstance.name = "SelectionCubeInstance";
-                _selectionCubeInstance.transform.parent = transform;
-                _selectionCubeInstance.tag = "MultiselectVolume";
-                _selectionCubeCollider = _selectionCubeInstance.GetComponent<BoxCollider>();
-            }
-            else
-            {
-                Debug.LogWarning("SelectionCubePrefab is not assigned in the VirtualHandInteraction component.");
-            }
-        }
+        //         // Instantiate the prefab
+        //         _selectionCubeInstance = Instantiate(SelectionCubePrefab);
+        //         _selectionCubeInstance.name = "SelectionCubeInstance";
+        //         _selectionCubeInstance.transform.parent = transform;
+        //         _selectionCubeInstance.tag = "MultiselectVolume";
+        //         _selectionCubeCollider = _selectionCubeInstance.GetComponent<BoxCollider>();
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning("SelectionCubePrefab is not assigned in the VirtualHandInteraction component.");
+        //     }
+        // }
 
         // While pinching
         if (PinchDetector.GetInstance().IsOneHandPinching)

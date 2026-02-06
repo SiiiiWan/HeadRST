@@ -10,12 +10,59 @@ public enum PinchState
 public class PinchDetector : Singleton<PinchDetector>
 {
     public OVRHand RightHand, LeftHand;
-    public bool IsRightPinching, IsLeftPinching;
+
     public bool IsBothHandsPinching, IsOneHandPinching, IsNoHandPinching, IsNoHandPinching_LastFrame, IsOneHandPinching_LastFrame, IsBothHandsPinching_LastFrame;
     public PinchState PinchState = PinchState.NotPinching;
     public float PinchThreshold = 0.01f; // Adjust this threshold as needed
 
     public GameObject righHandPinchBall_index, righHandPinchBall_thumb, leftHandPinchBall_index, leftHandPinchBall_thumb, lefthandPinchBall_hand, righthandPinchBall_hand;
+
+    public delegate void PinchAction();
+    public static event PinchAction OnRightHandPinch_Close, OnRightHandPinch_Release, OnLeftHandPinch_Close, OnLeftHandPinch_Release;
+
+    private bool _isRightPinching;
+    public bool IsRightPinching
+    {
+        get { return _isRightPinching; }
+        set 
+        {
+            if(value != _isRightPinching)
+            {
+                _isRightPinching = value;
+                if(_isRightPinching)
+                {
+                    OnRightHandPinch_Close?.Invoke();
+                }
+                else
+                {
+                    OnRightHandPinch_Release?.Invoke();
+                }
+            }
+        }
+    }
+    
+    private bool _isLeftPinching;
+    public bool IsLeftPinching
+    {
+        get { return _isLeftPinching; }
+        set 
+        {
+            if(value != _isLeftPinching)
+            {
+                _isLeftPinching = value;
+                if(_isLeftPinching)
+                {
+                    OnLeftHandPinch_Close?.Invoke();
+                }
+                else
+                {
+                    OnLeftHandPinch_Release?.Invoke();
+                }
+            }
+        }
+    }
+
+
     void Update()
     {
         IsNoHandPinching_LastFrame = IsNoHandPinching;

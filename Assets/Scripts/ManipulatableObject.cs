@@ -8,14 +8,15 @@ public enum ManipulationState
 {
     Idle,
     Hovered,
-    PickedUp
+    Transformation,
+    Scaling
 }
     
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Outline))]
 public class ManipulatableObject : MonoBehaviour
 {
-    public bool UseGravity = true;
+    public bool UseGravity;
     public ManipulationMode ManipulationMode { get; set; } = ManipulationMode.Direct;
     public ManipulationState ManipulationState { get; private set; } = ManipulationState.Idle;
     
@@ -37,7 +38,6 @@ public class ManipulatableObject : MonoBehaviour
         if(HandGrabInteractable == null) HandGrabInteractable = GetComponentInChildren<HandGrabInteractable>();
     }
 
-
     protected virtual void Update()
     {
         RefreshSelfInGazeConeState();
@@ -49,7 +49,7 @@ public class ManipulatableObject : MonoBehaviour
             switch (HandGrabInteractable.State)
             {
                 case InteractableState.Select:
-                    ManipulationState = ManipulationState.PickedUp;
+                    ManipulationState = ManipulationState.Transformation;
                     break;
                 case InteractableState.Hover:
                     ManipulationState = ManipulationState.Hovered;
@@ -62,62 +62,54 @@ public class ManipulatableObject : MonoBehaviour
 
         if(ManipulationMode == ManipulationMode.Indirect)
         {
-            switch (ManipulationState)
+            switch (_grabbedHands.Count)
             {
-                case ManipulationState.PickedUp:
-
-                    ApplyIndirectPickedUpBehaviour();
-
-                    if(ObjectManager.GetInstance().IsFullHand)
-                    {
-                        if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsBothHandsPinching_LastFrame)
-                        {
-                            ManipulationState = ManipulationState.Idle;  
-                            OnDrop();
-                        }
-                        break; // do nothing if both hands are occupied
-                    }
-
-
-                    if (PinchDetector.GetInstance().IsNoHandPinching)
-                    {
-                        ManipulationState = ManipulationState.Idle;
-                        OnDrop();
-                    }
+                case 2:
+                    ApplyIndirectScalingBehaviour();
+                    break;
+                case 1: 
+                    ApplyIndirectTransformationBehaviour();
                     break;
 
-                case ManipulationState.Hovered:
-                    if(ObjectManager.GetInstance().IsFullHand)
-                    {
-                        break; // do nothing if both hands are occupied
-                    }
-                    else if(ObjectManager.GetInstance().IsOneHandPickedUp)
-                    {
-                        if(PinchDetector.GetInstance().IsBothHandsPinching && !PinchDetector.GetInstance().IsBothHandsPinching_LastFrame)
-                        {
-                            ManipulationState = ManipulationState.PickedUp;  
-                            OnPickedUp();
-                        }
-                        break; // do nothing if one hand is occupied
-                    }
-                    else
-                    {
-                        if(PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame)
-                        {
-                            ManipulationState = ManipulationState.PickedUp;  
-                            OnPickedUp();
-                        }                         
-                        break;
-                    }
-
-                case ManipulationState.Idle:
-                    // enter hover state by object manager
-                    break;
+                case 0: break;
+                default: break;
             }
         }
 
         // Update Visuals
         SetOutlineActive(ManipulationState == ManipulationState.Hovered);
+    }
+
+    void RightHandPinch_Close_Handler()
+    {
+        if(ObjectManager.GetInstance().IsObjectClosestFocused(this))
+        {
+            _grabbedHands.Add(Handedness_v.Right);
+        }
+    }
+
+    void RightHandPinch_Release_Handler()
+    {
+        if(_grabbedHands.Contains(Handedness_v.Right))
+        {
+            _grabbedHands.Remove(Handedness_v.Right);
+        }
+    }
+
+    void LeftHandPinch_Close_Handler()
+    {
+        if(ObjectManager.GetInstance().IsObjectClosestFocused(this))
+        {
+            _grabbedHands.Add(Handedness_v.Left);
+        }        
+    }
+
+    void LeftHandPinch_Release_Handler()
+    {
+        if(_grabbedHands.Contains(Handedness_v.Left))
+        {
+            _grabbedHands.Remove(Handedness_v.Left);
+        }
     }
 
     public void SetManipulationState(ManipulationState state)
@@ -128,13 +120,13 @@ public class ManipulatableObject : MonoBehaviour
 
     public virtual void OnPickedUp()
     {
-        ObjectManager.GetInstance().RegisterPickedUpObject(this);
+        // ObjectManager.GetInstance().RegisterPickedUpObject(this);
     }
 
     public virtual void OnDrop()
     {
         _movementHistory.Clear();
-        ObjectManager.GetInstance().UnregisterPickedUpObject(this);
+        // ObjectManager.GetInstance().UnregisterPickedUpObject(this);
     }
 
     public float AngleToGaze { get; private set; }
@@ -160,16 +152,29 @@ public class ManipulatableObject : MonoBehaviour
             }
     }
 
-    public virtual void ApplyIndirectPickedUpBehaviour()
+    public virtual void ApplyIndirectTransformationBehaviour()
     {
         IObjectPositionRotationProvider objectPositionRotationProvider = ObjectManager.GetInstance().ObjectPositionRotationProvider;
         if(objectPositionRotationProvider == null) return;
 
-        if(!ObjectManager.GetInstance().GetPitckedUpObjectHandedness(this, out Handedness_v hand)) return;
+        transform.position = objectPositionRotationProvider.GetPositionOutput(transform.position, _grabbedHands[0]);
+        transform.rotation = objectPositionRotationProvider.GetRotationOutput(transform.rotation, _grabbedHands[0]);
 
-        UpdatePositionTo(objectPositionRotationProvider.GetPositionOutput(transform.position, hand));
-        UpdateRotationTo(objectPositionRotationProvider.GetRotationOutput(transform.rotation, hand));
+        UpdateMovementHistory();
+    }
 
+    public virtual void ApplyIndirectScalingBehaviour()
+    {
+        IObjectPositionRotationProvider objectPositionRotationProvider = ObjectManager.GetInstance().ObjectPositionRotationProvider;
+        if(objectPositionRotationProvider == null) return;
+
+        transform.localScale = objectPositionRotationProvider.GetScaleOutput(transform.localScale);
+        
+        UpdateMovementHistory();
+    }
+
+    void UpdateMovementHistory()
+    {
         _movementHistory.Add((transform.position, transform.rotation, Time.time));
         _movementHistory.RemoveAll(p => Time.time - p.time > ThrowVelocityTimeWindow);
     }
@@ -184,16 +189,6 @@ public class ManipulatableObject : MonoBehaviour
     {
         if(GetComponent<Outline>() == null) return;
         GetComponent<Outline>().enabled = isEnabled;
-    }
-
-    public void UpdatePositionTo(Vector3 newPosition)
-    {
-        transform.position = newPosition;
-    }
-
-    public void UpdateRotationTo(Quaternion newRotation)
-    {
-        transform.rotation = newRotation;
     }
 
     public void SetCancelObjectGravity(bool isFreeze)
@@ -232,6 +227,23 @@ public class ManipulatableObject : MonoBehaviour
             }
 
             return Vector3.zero;
+    }
+
+    protected virtual void OnEnable() 
+    {
+        PinchDetector.OnRightHandPinch_Close += RightHandPinch_Close_Handler;
+        PinchDetector.OnRightHandPinch_Release += RightHandPinch_Release_Handler;
+        PinchDetector.OnLeftHandPinch_Close += LeftHandPinch_Close_Handler;
+        PinchDetector.OnLeftHandPinch_Release += LeftHandPinch_Release_Handler;
+        
+    }
+
+    protected virtual void OnDisable()
+    {
+        PinchDetector.OnRightHandPinch_Close -= RightHandPinch_Close_Handler;
+        PinchDetector.OnRightHandPinch_Release -= RightHandPinch_Release_Handler;
+        PinchDetector.OnLeftHandPinch_Close -= LeftHandPinch_Close_Handler;
+        PinchDetector.OnLeftHandPinch_Release -= LeftHandPinch_Release_Handler;        
     }
 }
 

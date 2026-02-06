@@ -19,6 +19,13 @@ public class GazeAndPinch : VirtualHandProvider, IObjectPositionRotationProvider
         return currentRotation;
     }
 
+    public Vector3 GetScaleOutput(Vector3 currentScale)
+    {
+        float currentHandDistance = HandData.GetInstance().HandDistance;
+        float deltaHandDistance = HandData.GetInstance().HandDistance_delta;
+        return currentScale * currentHandDistance / (currentHandDistance - deltaHandDistance);
+    }
+
     public override void UpdateVirtualHandPoses()
     {
         ObjectManager objectManager = ObjectManager.GetInstance();

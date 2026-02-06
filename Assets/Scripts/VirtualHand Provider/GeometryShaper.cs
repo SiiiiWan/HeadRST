@@ -11,23 +11,23 @@ public class GeometryShaper : MonoBehaviour
     {
         Vector3 HandToPinchOffset = HandData.GetInstance().GetHandPosition(usePinchTip: true) - HandData.GetInstance().GetHandPosition(usePinchTip: false);
 
-        if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject_rightHand == null)
-        {
-            if (CubePrefab != null)
-            {
-                // Store the starting position of the pinch
-                _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
+        // if (PinchDetector.GetInstance().IsOneHandPinching && PinchDetector.GetInstance().IsNoHandPinching_LastFrame && ObjectManager.GetInstance().PickedUpObject_rightHand == null)
+        // {
+        //     if (CubePrefab != null)
+        //     {
+        //         // Store the starting position of the pinch
+        //         _pinchStartPosition = Settings.GetInstance().GetVirtualHandPose(Settings.GetInstance().DominantHand).position + HandToPinchOffset;
 
-                // Instantiate the prefab
-                GameObject cubeInstance = Instantiate(CubePrefab);
-                cubeInstance.name = "SelectionCubeInstance";
-                cubeInstance.transform.parent = transform;
-            }
-            else
-            {
-                Debug.LogWarning("SelectionCubePrefab is not assigned in the VirtualHandInteraction component.");
-            }
-        }
+        //         // Instantiate the prefab
+        //         GameObject cubeInstance = Instantiate(CubePrefab);
+        //         cubeInstance.name = "SelectionCubeInstance";
+        //         cubeInstance.transform.parent = transform;
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning("SelectionCubePrefab is not assigned in the VirtualHandInteraction component.");
+        //     }
+        // }
 
         // While pinching
         // if (PinchDetector.GetInstance().IsOneHandPinching)

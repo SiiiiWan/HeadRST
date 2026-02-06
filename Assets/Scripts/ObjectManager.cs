@@ -17,7 +17,6 @@ public class ObjectManager : Singleton<ObjectManager>
     public const float GazeConeSize = 10f; // Use 150ms of history for calculation
     [HideInInspector] public List<ManipulatableObject> ObjectsInGazeCone = new List<ManipulatableObject>();
     [HideInInspector] public ManipulatableObject ClosestFocusedObject_current, ClosestFocusedObject_prev;
-    public ManipulatableObject PickedUpObject_rightHand, PickedUpObject_leftHand;
 
     void Update()
     {
@@ -30,13 +29,13 @@ public class ObjectManager : Singleton<ObjectManager>
             if (ClosestFocusedObject_current != ClosestFocusedObject_prev)
             {
                 // ..to a new object, set the new object to Hovered
-                if (ClosestFocusedObject_current != null && ClosestFocusedObject_current.ManipulationState != ManipulationState.PickedUp)
+                if (ClosestFocusedObject_current != null && ClosestFocusedObject_current.ManipulationState != ManipulationState.Transformation)
                 {
                     ClosestFocusedObject_current.SetManipulationState(ManipulationState.Hovered);
                 }
                     
                 // set the previous object to Idle
-                if (ClosestFocusedObject_prev != null && ClosestFocusedObject_prev.ManipulationState != ManipulationState.PickedUp)
+                if (ClosestFocusedObject_prev != null && ClosestFocusedObject_prev.ManipulationState != ManipulationState.Transformation)
                 {
                     ClosestFocusedObject_prev.SetManipulationState(ManipulationState.Idle);
                 }
@@ -62,56 +61,9 @@ public class ObjectManager : Singleton<ObjectManager>
         }
     }
 
-    public bool IsFullHand {get => PickedUpObject_rightHand != null && PickedUpObject_leftHand != null; }
-    public bool IsOneHandPickedUp {get => !IsFullHand && (PickedUpObject_rightHand != null || PickedUpObject_leftHand != null); }
-    public void RegisterPickedUpObject(ManipulatableObject obj)
+    public bool IsObjectClosestFocused(ManipulatableObject obj)
     {
-        if(PickedUpObject_rightHand == null && PickedUpObject_leftHand == null)
-        {
-            if(PinchDetector.GetInstance().IsRightPinching)
-            {
-                PickedUpObject_rightHand = obj;
-                return;
-            }
-            else if(PinchDetector.GetInstance().IsLeftPinching)
-            {
-                PickedUpObject_leftHand = obj;
-                return;
-            }
-        }
-        
-        if (PickedUpObject_rightHand == null)
-        {
-            PickedUpObject_rightHand = obj;
-        }
-        else if (PickedUpObject_leftHand == null)
-        {
-            PickedUpObject_leftHand = obj;
-        }
-    }
-    public bool GetPitckedUpObjectHandedness(ManipulatableObject obj, out Handedness_v hand)
-    {
-        hand = Settings.GetInstance().DominantHand;
-        if(PickedUpObject_rightHand == obj) 
-        {
-            hand = Handedness_v.Right; 
-            return true; 
-        }
-        
-        if(PickedUpObject_leftHand == obj)
-        { 
-            hand = Handedness_v.Left; 
-            return true; 
-        }
-
-        return false;
-    }
-
-
-    public void UnregisterPickedUpObject(ManipulatableObject obj)
-    {
-        if(PickedUpObject_rightHand == obj) PickedUpObject_rightHand = null;
-        if(PickedUpObject_leftHand == obj) PickedUpObject_leftHand = null;
+        return ClosestFocusedObject_current == obj;
     }
 
     public ManipulatableObject UpdateAndGetClosestFocusedObject_Position(Vector3 pos)
@@ -126,7 +78,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
         foreach (var obj in ObjectsInGazeCone)
         {
-            if (obj == null || obj.ManipulationState == ManipulationState.PickedUp) continue;
+            if (obj == null) continue;
 
             float distance = Vector3.Distance(obj.transform.position, pos);
             if (distance < minDistance)
@@ -151,7 +103,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
         foreach (var obj in ObjectsInGazeCone)
         {
-            if (obj == null || obj.ManipulationState == ManipulationState.PickedUp) continue;
+            if (obj == null) continue;
 
             float distance = Vector3.Angle(ray.direction, obj.transform.position - ray.origin);
             if (distance < minDistance)

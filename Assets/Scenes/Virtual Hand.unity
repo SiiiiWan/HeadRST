@@ -4849,8 +4849,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RightHand: {fileID: 1736594311}
   LeftHand: {fileID: 1433731092}
-  IsRightPinching: 0
-  IsLeftPinching: 0
   IsBothHandsPinching: 0
   IsOneHandPinching: 0
   IsNoHandPinching: 0
