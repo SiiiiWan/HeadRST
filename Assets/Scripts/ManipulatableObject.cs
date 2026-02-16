@@ -16,7 +16,7 @@ public enum ManipulationState
 [RequireComponent(typeof(Outline))]
 public class ManipulatableObject : MonoBehaviour
 {
-    public bool UseGravity;
+    public bool UseGravityWhenNoGrabbed;
     public ManipulationMode ManipulationMode { get; set; } = ManipulationMode.Direct;
     public ManipulationState ManipulationState { get; private set; } = ManipulationState.Idle;
     
@@ -78,6 +78,15 @@ public class ManipulatableObject : MonoBehaviour
 
         // Update Visuals
         SetOutlineActive(ManipulationState == ManipulationState.Hovered);
+
+        if(ManipulationState == ManipulationState.Transformation || ManipulationState == ManipulationState.Scaling)
+        {
+            SetObjectGravityActive(false);
+        }
+        else
+        {
+            if(UseGravityWhenNoGrabbed) SetObjectGravityActive(true);
+        }
     }
 
     void RightHandPinch_Close_Handler()
@@ -191,13 +200,13 @@ public class ManipulatableObject : MonoBehaviour
         GetComponent<Outline>().enabled = isEnabled;
     }
 
-    public void SetCancelObjectGravity(bool isFreeze)
+    public void SetObjectGravityActive(bool activateState)
     {        
         Rigidbody rigidbody = transform.GetComponent<Rigidbody>();
         Collider collider = transform.GetComponent<Collider>();
         if (rigidbody != null && collider != null)
         {
-            if (isFreeze == true || UseGravity == false)
+            if (activateState == false)
             {
                 rigidbody.isKinematic = true;
                 rigidbody.useGravity = false;
