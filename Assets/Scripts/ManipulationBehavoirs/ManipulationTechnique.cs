@@ -3,9 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+public enum StaticState
+{
+    Gaze,
+    Head
+}
 
 public class ManipulationTechnique : MonoBehaviour
 {
+    public virtual string TechniqueName => GetType().Name;
+
     #region Manipulation Behaviors
 
     public float MaxDepth { get; set; } = 11f;

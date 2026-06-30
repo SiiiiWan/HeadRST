@@ -1,0 +1,61 @@
+
+using System;
+using UnityEngine;
+
+public class MagicPitch : Magic
+{
+    public override string TechniqueName => "MAGICPITCH";
+
+    protected override void ApplyHeadStateBehaviour()
+    {
+        Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;
+        HeadDepthOffset = GetHeadDepthOffset(objectDirection);
+        GrabbedObject.transform.position += HeadDepthOffset;
+
+        DistanceToGazeAfterAddingHeadDepth = Vector3.Distance(GrabbedObject.transform.position, GazeOrigin);
+        GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(DistanceToGazeAfterAddingHeadDepth, MinDepth, MaxDepth);
+
+        AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
+        if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze;
+    }
+
+    public virtual Vector3 GetHeadDepthOffset(Vector3 objectDirection)
+    {
+        float maxGain = 0.8f;
+        float minGain = 0;
+
+        BaseGain = VitLerp(Math.Abs(HeadSpeed), minGain, maxGain, MinHeadSpeed, MaxHeadSpeed);
+        EdgeGain = EyeHeadGain();
+        return objectDirection * DeltaHeadY * BaseGain * EdgeGain;
+    }
+
+    public float EyeHeadGain()
+    {
+        float eyeRange = GetEyeRange(EyeInHeadXAngle, EyeInHeadYAngle);
+        float k = 3;
+        float boostStartDeg = eyeRange / k;
+
+        float gain = 1;
+        float gazeAngleFromHead = Vector3.Angle(GazeDirection, HeadForward);
+
+        if (gazeAngleFromHead >= boostStartDeg & Filtered_EyeInHeadAngle > Filtered_EyeInHeadAngle_Pre)
+        {
+            gain = LinearDepthFunctionTwoPoints(gazeAngleFromHead, new Vector2(boostStartDeg, 1), new Vector2(eyeRange, k));
+        }
+
+        return gain;
+    }
+
+    private float GetEyeRange(float x, float y, float upLim = 15, float downLim = 30, float sideLim = 30)
+    {
+        if (y >= 0) return (1 - (1 - (upLim / sideLim)) * Mathf.Sin(Mathf.Atan2(y, x))) * sideLim;
+        return (1 + (1 - (downLim / sideLim)) * Mathf.Sin(Mathf.Atan2(y, x))) * sideLim;
+    }
+
+    protected float LinearDepthFunctionTwoPoints(float x, Vector2 left, Vector2 right)
+    {
+        float k = (right.y - left.y) / (right.x - left.x);
+        float b = right.y - k * right.x;
+        return k * x + b;
+    }
+}

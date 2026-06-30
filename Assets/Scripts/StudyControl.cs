@@ -3,8 +3,6 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
-using NUnit.Framework;
-using System.Threading.Tasks;
 
 public enum CubePositionLabels
 {
@@ -25,9 +23,20 @@ public class StudyControl : Singleton<StudyControl>
 {
     [Header("Study Settings")]
     public string ParticipantID;
-    public Handedness DominantHand = Handedness.right;
+    [SerializeField] private TechniqueControl techniqueControl;
     public bool IsPractice;
-    public ManipulationTechnique ManipulationBehavior;
+
+    public TechniqueControl TechniqueControl
+    {
+        get
+        {
+            if (techniqueControl == null) techniqueControl = GetComponent<TechniqueControl>();
+            return techniqueControl;
+        }
+    }
+
+    public Handedness DominantHand => TechniqueControl != null ? TechniqueControl.DominantHand : Handedness.right;
+    public ManipulationTechnique ManipulationBehavior => TechniqueControl != null ? TechniqueControl.ManipulationBehavior : null;
 
     [Header("Study States")]
     public bool StudyFlag = false; // Indicates if the study is currently running
@@ -76,8 +85,6 @@ public class StudyControl : Singleton<StudyControl>
     void Start()
     {
         // UpdateHandVisuals();
-        // SwitchToGazeNPinch(); 
-
         _startButtonPosition = TaskButtonsFront.position;
         _startTaskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
@@ -118,7 +125,7 @@ public class StudyControl : Singleton<StudyControl>
 
         UpdateTaskVisualFeedbacks();
 
-        if (PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
+        if (ManipulationBehavior != null && PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
             if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo || TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
             {
@@ -461,31 +468,6 @@ public class StudyControl : Singleton<StudyControl>
         return combinations;
     }
 
-    // public List<(float depth, DockingDirections direction)> GetShuffledDepth_Direction_Combinations(List<float> depths)
-    // {
-    //     // Create all unique combinations
-    //     var combinations = new List<(float, DockingDirections)>();
-    //     foreach (var depth in depths)
-    //     {
-    //         foreach (DockingDirections direction in System.Enum.GetValues(typeof(DockingDirections)))
-    //         {
-    //             combinations.Add((depth, direction));
-    //         }
-    //     }
-
-    //     // Shuffle the list
-    //     combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
-
-    //     return combinations;
-    // }
-
-    // public Vector3 GetRandomFrontPosition(float height, float depth, float width)
-    // {
-    //     Vector3 camPos = Camera.main.transform.position;
-
-    //     return new Vector3(camPos.x + Random.Range(-width / 2f, width / 2f), height, camPos.z + depth);
-    // }
-
     public List<CubePositionLabels> GetShuffledStartPositionLabels()
     {
         var positions = System.Enum.GetValues(typeof(CubePositionLabels)).Cast<CubePositionLabels>().ToList();
@@ -494,147 +476,31 @@ public class StudyControl : Singleton<StudyControl>
         return positions;
     }
 
-    // public void SwitchToVisualGain()
-    // {
-    //     ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-    //     TechniqueText.text = "Current Technique: Visual Gain";
-    // }
+    public void SwitchToGazePinch() => TechniqueControl.SwitchToGazePinch();
+    public void SwitchToMAGIC() => TechniqueControl.SwitchToMAGIC();
+    public void SwitchToMAGICPITCH() => TechniqueControl.SwitchToMAGICPITCH();
+    public void SwitchToMAGMODPITCH() => TechniqueControl.SwitchToMAGMODPITCH();
+
+    public void SwitchToGazeNPinch() => SwitchToGazePinch();
+    public void SwitchToAnywhereHandBase() => SwitchToMAGICPITCH();
+    public void SwitchToAnywhereHandAttenuated() => SwitchToMAGMODPITCH();
+
+    public void SwitchHead() => WarnLegacyControl(nameof(SwitchHead));
+    public void SwitchGaze() => WarnLegacyControl(nameof(SwitchGaze));
+    public void SwitchCentricType() => WarnLegacyControl(nameof(SwitchCentricType));
+    public void SwitchToVisual() => SwitchToGazePinch();
+    public void SwitchToHandRaycast() => WarnLegacyControl(nameof(SwitchToHandRaycast));
+    public void SwitchToIsomorphic() => WarnLegacyControl(nameof(SwitchToIsomorphic));
+    public void SwitchToPrism() => WarnLegacyControl(nameof(SwitchToPrism));
+    public void Reset() => WarnLegacyControl(nameof(Reset));
+
+    private void WarnLegacyControl(string methodName)
+    {
+        Debug.LogWarning($"Legacy control '{methodName}' is not used by the MagicPitch appendix scene.");
+    }
 
     public Vector3 GetVirtualHandPosition(bool isRightHand)
     {
-        if (isRightHand)
-        {
-            if (DominantHand == Handedness.right)
-            {
-                return ManipulationBehavior.VirtualHandPosition;
-            }
-            else
-            {
-                return HandData.GetInstance().RightHandPosition;
-            }
-        }
-        else
-        {
-            if (DominantHand == Handedness.left)
-            {
-                return ManipulationBehavior.VirtualHandPosition;
-            }
-            else
-            {
-                return HandData.GetInstance().LeftHandPosition;
-            }
-        }
+        return TechniqueControl.GetVirtualHandPosition(isRightHand);
     }
-
-    // public void SwitchToAnywhereHandBase()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is AnywhereHand_Base)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<AnywhereHand_Base>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-
-    //     TechniqueText.text = "Current Technique: AnywhereHand- HeadPriority";
-    // }
-
-    // public void SwitchToAnywhereHandAttenuated()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is AnywhereHand_Att)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<AnywhereHand_Att>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: AnywhereHand - HandPriority";
-    // }
-
-    // public void SwitchToContinuous2()
-    // {
-    //     ManipulationBehavior = GetComponent<Continuous2>();
-    //     TechniqueText.text = "Current Technique: AnywhereHand 2";
-    // }
-
-    // public void SwitchToGazeHand()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is GazeHand)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<GazeHand>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: GazeHand2";
-    // }
-
-    // public void SwitchToGazeNPinch()
-    // {
-    //     var techniques = GetComponents<ManipulationTechnique>();
-    //     foreach (var technique in techniques)
-    //     {
-    //         if (technique is GazeNPinchOrigin)
-    //         {
-    //             technique.enabled = true;
-    //             ManipulationBehavior = GetComponent<GazeNPinchOrigin>();
-    //         }
-    //         else
-    //         {
-    //             technique.enabled = false;
-    //         }
-    //     }
-    //     TechniqueText.text = "Current Technique: Gaze+Pinch (Visual Gain)";
-    // }
-
-    // public void SwitchTask_DepthOnly()
-    // {
-    //     TaskMode = TaskMode.depth_only;
-    //     TaskText.text = "Current Task: Far-Close Switching";
-    //     StartTask();
-    // }
-
-    // public void SwitchTask_AmpAndDepth()
-    // {
-    //     TaskMode = TaskMode.amp_and_depth;
-    //     TaskText.text = "Current Task: Distance Manipulation";
-    //     StartTask();
-    // }
-
-    // public void SwitchToScaledHOMER()
-    // {
-    //     ManipulationBehavior = GetComponent<ScaledHOMER>();
-    //     TechniqueText.text = "Current Technique: Scaled HOMER";
-    // }
-
-    // public void SwitchToGazeNPinchEyeHead()
-    // {
-    //     ManipulationBehavior = GetComponent<GazeNPinchEyeHead>();
-    //     TechniqueText.text = "Current Technique: Gaze and Pinch Eye Head";
-    // }
-
-    // public void SwitchToHomerEyeHead()
-    // {
-    //     ManipulationBehavior = GetComponent<HomerEyeHead>();
-    //     TechniqueText.text = "Current Technique: HOMER Eye Head";
-    // }
-
 }

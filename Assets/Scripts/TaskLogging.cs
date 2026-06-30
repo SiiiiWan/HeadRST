@@ -14,7 +14,7 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
         SetupDataLogging();
 
         pid = StudyControl.GetInstance().ParticipantID.ToString();
-        technique = StudyControl.GetInstance().ManipulationBehavior.GetType().Name.ToString();
+        technique = StudyControl.GetInstance().ManipulationBehavior.TechniqueName;
     }
     
     void SetupDataLogging()
@@ -24,7 +24,7 @@ public class SelectionTaskLogging : Singleton<SelectionTaskLogging>
             // study settings
             ("Participant", () => StudyControl.GetInstance().ParticipantID.ToString()),
             ("DominantHand", () => StudyControl.GetInstance().DominantHand.ToString()),
-            ("Technique", () => StudyControl.GetInstance().ManipulationBehavior.GetType().Name.ToString()),
+            ("Technique", () => StudyControl.GetInstance().ManipulationBehavior.TechniqueName),
             ("IsPractice", () => StudyControl.GetInstance().IsPractice.ToString()),
 
             // study status

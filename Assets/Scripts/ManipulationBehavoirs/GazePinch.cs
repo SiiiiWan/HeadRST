@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class GazeNPinchOrigin : ManipulationTechnique
+public class GazePinch : ManipulationTechnique
 {
+    public override string TechniqueName => "GAZE+PINCH";
 
     public override void Update()
     {
@@ -9,8 +10,13 @@ public class GazeNPinchOrigin : ManipulationTechnique
         VirtualHandPosition = WristPosition;
     }
 
-
     public override void ApplyIndirectGrabbedBehaviour()
+    {
+        ApplyGazePinchTransform();
+        VirtualHandPosition = WristPosition;
+    }
+
+    protected void ApplyGazePinchTransform()
     {
         VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
         OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
@@ -20,7 +26,7 @@ public class GazeNPinchOrigin : ManipulationTechnique
         GrabbedObject.transform.rotation = PinchRotation_delta * GrabbedObject.transform.rotation;
     }
 
-    public float GetVisualGain(Vector3 objectPosition)
+    protected float GetVisualGain(Vector3 objectPosition)
     {
         return Mathf.Max(1f, Vector3.Distance(objectPosition, GazeOrigin) / Vector3.Distance(PinchPosition, GazeOrigin));
     }
