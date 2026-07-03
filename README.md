@@ -104,14 +104,16 @@ The eye tracking health warning is triggered when the gaze direction stays nearl
 6. Choose the technique and dominant hand in `TechniqueControl`.
 7. Set `IsPractice` in `StudyControl`.
 8. Enter Play Mode or build to the headset.
-9. Press the in-scene start button to begin the task.
+9. Use your virtual hand to press the in-scene start button to begin the task.
 10. Select objects with gaze and pinch, then manipulate them according to the selected technique.
 
-In practice mode, the scene first provides a practice object and then runs the practice task condition. When the practice task is complete, the start button returns so the demo can be repeated.
+In practice mode, the scene first provides a practice object and then runs the practice task condition after the start button is pressed down with one of your virtual hands. When the practice task is complete, the start button returns so the practice round can be repeated.
 
-In formal mode, the scene runs the full formal task condition set. When all trials are complete, the completion text is shown.
+In formal mode, the scene runs the full formal task condition set upon the button is pressed. When all trials are complete, the completion text is shown.
 
 During either mode, `Skip Current Trial` can be used from the `StudyControl` inspector in Play Mode to advance past the current trial.
+
+You should hear a click sound upon each trial is completed. If not, check the sound volume or if the headset is muted.
 
 ## Troubleshooting
 
