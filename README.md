@@ -55,10 +55,16 @@ Set `DominantHand` to `left` or `right` before running the demo. The selected te
 
 ## Study Controls
 
-Select the `Control` object in the scene to access the study controls.
+Select the `Control` object in the scene to access the study settings.
 
-- `StartTask`: starts the practice or formal task sequence.
+- `IsPractice`: enables the practice sequence when checked and the formal task sequence when unchecked.
 - `Skip Current Trial`: available in Play Mode from the `StudyControl` inspector. It removes the current object and target so the task sequence advances to the next trial.
+
+The task is started from the in-scene start button during Play Mode, not from a separate inspector start button.
+
+Practice mode uses the practice depth/amplitude condition and shows a practice object before the task begins. After the practice sequence finishes, the start button is shown again so another run can be started.
+
+Formal mode runs the full task condition set and shows the completion text after all trials are finished.
 
 ## Paper Parameters
 
@@ -96,8 +102,16 @@ The eye tracking health warning is triggered when the gaze direction stays nearl
 4. Confirm eye tracking and hand tracking are enabled on the headset.
 5. Select `Control` in the hierarchy.
 6. Choose the technique and dominant hand in `TechniqueControl`.
-7. Enter Play Mode or build to the headset.
-8. Select objects with gaze and pinch, then manipulate them according to the selected technique.
+7. Set `IsPractice` in `StudyControl`.
+8. Enter Play Mode or build to the headset.
+9. Press the in-scene start button to begin the task.
+10. Select objects with gaze and pinch, then manipulate them according to the selected technique.
+
+In practice mode, the scene first provides a practice object and then runs the practice task condition. When the practice task is complete, the start button returns so the demo can be repeated.
+
+In formal mode, the scene runs the full formal task condition set. When all trials are complete, the completion text is shown.
+
+During either mode, `Skip Current Trial` can be used from the `StudyControl` inspector in Play Mode to advance past the current trial.
 
 ## Troubleshooting
 
@@ -107,54 +121,3 @@ The eye tracking health warning is triggered when the gaze direction stays nearl
 - If pinch feedback is missing, check the `PinchBalls` objects and the active dominant hand.
 - If technique switching appears stuck, verify that only one of the four technique components is active through `TechniqueControl`.
 - If scene references appear missing after an external edit, reload the scene in Unity before saving it again.
-
-## Appendix Export
-
-For digital appendix submission, export the project as a clean Unity project folder rather than a Git repository. Include only the files needed for Unity to reconstruct the project:
-
-```text
-Assets/
-Packages/
-ProjectSettings/
-README.md
-```
-
-Do not include generated or local-only folders and files:
-
-```text
-.git/
-.agents/
-.codex/
-.vscode/
-Library/
-Logs/
-Temp/
-UserSettings/
-*.csproj
-*.sln
-```
-
-Recommended workflow:
-
-1. Save the scene in Unity.
-2. Close Unity so generated files are not locked.
-3. Create a new folder named `MagicPitch_DigitalAppendix`.
-4. Copy `Assets`, `Packages`, `ProjectSettings`, and `README.md` into that folder.
-5. Zip `MagicPitch_DigitalAppendix` and submit the zip file.
-
-Example PowerShell commands:
-
-```powershell
-$source = "C:\Users\wangh90\Unity Projects\HeadRST"
-$export = "$env:USERPROFILE\Desktop\MagicPitch_DigitalAppendix"
-
-New-Item -ItemType Directory -Force $export
-Copy-Item "$source\Assets" "$export\Assets" -Recurse -Force
-Copy-Item "$source\Packages" "$export\Packages" -Recurse -Force
-Copy-Item "$source\ProjectSettings" "$export\ProjectSettings" -Recurse -Force
-Copy-Item "$source\README.md" "$export\README.md" -Force
-
-Compress-Archive -Path "$export\*" -DestinationPath "$env:USERPROFILE\Desktop\MagicPitch_DigitalAppendix.zip" -Force
-```
-
-After unzipping, the receiver should open the exported folder in Unity `6000.0.44f1`. Unity will regenerate `Library`, `.csproj`, and `.sln` files automatically.
