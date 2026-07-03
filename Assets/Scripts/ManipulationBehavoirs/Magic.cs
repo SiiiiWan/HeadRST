@@ -17,7 +17,7 @@ public class Magic : GazePinch
     public float CurrentDistanceToGaze { get; protected set; }
     public float AngleGazeDirectionToObject { get; protected set; }
 
-    public override void ApplyIndirectGrabbedBehaviour()
+    public override void ApplyGrabbedBehaviour()
     {
         ApplyGazePinchTransform();
 
@@ -31,8 +31,6 @@ public class Magic : GazePinch
         {
             ApplyHeadStateBehaviour();
         }
-
-        VirtualHandPosition = WristPosition;
     }
 
     protected void ApplyGazeProjection()

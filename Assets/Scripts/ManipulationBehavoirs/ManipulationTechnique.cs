@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ManipulationTechnique : MonoBehaviour
+public abstract class ManipulationTechnique : MonoBehaviour
 {
     public virtual string TechniqueName => GetType().Name;
 
@@ -23,7 +23,6 @@ public class ManipulationTechnique : MonoBehaviour
 
     protected TechniqueInputFrame InputFrame => InputProvider.Current;
 
-    public Vector3 VirtualHandPosition { get; protected set; }
     public Vector3 PinchPosition => InputFrame.PinchPosition;
     public Vector3 PinchPosition_delta => InputFrame.PinchPositionDelta;
     public Quaternion PinchRotation_delta => InputFrame.PinchRotationDelta;
@@ -45,16 +44,13 @@ public class ManipulationTechnique : MonoBehaviour
 
     public List<ManipulatableObject> ObjectsInGazeCone { get; private set; } = new List<ManipulatableObject>();
 
-    public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
+    public virtual void TriggerOnGrabbed(ManipulatableObject obj)
     {
         GrabbedObject = obj;
-        GrabbedObject.SetGrabbedState(grabbedState);
+        GrabbedObject.SetGrabbedState(GrabbedState.Grabbed);
     }
 
-    public virtual void ApplyIndirectGrabbedBehaviour() { }
-    public virtual void ApplyDirectGrabbedBehaviour() { }
-    public virtual void ApplyGazingButNotGrabbingBehaviour() { }
-    public virtual void ApplyObjectFreeBehaviour() { }
+    public abstract void ApplyGrabbedBehaviour();
 
     public virtual void TriggerOnHandReleased()
     {
@@ -62,12 +58,9 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = null;
     }
 
-    public virtual void TriggerOnLookAtNewObjectBehavior() { }
-
     public virtual void Awake()
     {
         InputProvider.Refresh();
-        VirtualHandPosition = WristPosition;
     }
 
     public virtual void Update()
@@ -77,58 +70,22 @@ public class ManipulationTechnique : MonoBehaviour
 
         if (GrabbedObject == null)
         {
-            if (ObjectsInGazeCone.Count > 0)
-            {
-                if (GazingObject != ObjectsInGazeCone[0])
-                {
-                    GazingObject = ObjectsInGazeCone[0];
-                    TriggerOnLookAtNewObjectBehavior();
-                }
-            }
-            else
-            {
-                GazingObject = null;
-            }
+            GazingObject = ObjectsInGazeCone.Count > 0 ? ObjectsInGazeCone[0] : null;
 
-            if (GazingObject != null)
+            if (GazingObject != null && InputFrame.IsOneHandPinching && InputFrame.IsNoHandPinchingLastFrame)
             {
-                if (InputFrame.IsOneHandPinching && InputFrame.IsNoHandPinchingLastFrame)
-                {
-                    TriggerOnSingleHandGrabbed(GazingObject, GrabbedState.Grabbed_Indirect);
-                }
-                else
-                {
-                    ApplyGazingButNotGrabbingBehaviour();
-                }
-            }
-            else
-            {
-                ApplyObjectFreeBehaviour();
+                TriggerOnGrabbed(GazingObject);
             }
         }
         else
         {
-            if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Direct)
+            if (InputFrame.IsOneHandPinching)
             {
-                if (GrabbedObject.Grabbable.SelectingPointsCount > 0)
-                {
-                    ApplyDirectGrabbedBehaviour();
-                }
-                else
-                {
-                    TriggerOnHandReleased();
-                }
+                ApplyGrabbedBehaviour();
             }
-            else if (GrabbedObject.GrabbedState == GrabbedState.Grabbed_Indirect)
+            else
             {
-                if (InputFrame.IsOneHandPinching)
-                {
-                    ApplyIndirectGrabbedBehaviour();
-                }
-                else
-                {
-                    TriggerOnHandReleased();
-                }
+                TriggerOnHandReleased();
             }
         }
     }
@@ -157,3 +114,4 @@ public class ManipulationTechnique : MonoBehaviour
     public Vector3 OffsetAddedByHand { get; protected set; }
     public float AngleRotatedByHand { get; protected set; }
 }
+

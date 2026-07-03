@@ -86,20 +86,6 @@ public class TechniqueControl : MonoBehaviour
         SwitchTechnique<MagicModPitch>(MagicPitchTechnique.MAGMODPITCH);
     }
 
-    public Vector3 GetVirtualHandPosition(bool isRightHand)
-    {
-        if (isRightHand)
-        {
-            return DominantHand == Handedness.right
-                ? ManipulationBehavior.VirtualHandPosition
-                : HandData.GetInstance().RightHandPosition;
-        }
-
-        return DominantHand == Handedness.left
-            ? ManipulationBehavior.VirtualHandPosition
-            : HandData.GetInstance().LeftHandPosition;
-    }
-
     private void SwitchTechnique<T>(MagicPitchTechnique technique) where T : ManipulationTechnique
     {
         var techniques = GetComponents<ManipulationTechnique>();

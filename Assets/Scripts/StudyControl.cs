@@ -58,7 +58,7 @@ public class StudyControl : Singleton<StudyControl>
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
     public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
 
-    private Vector3 _startButtonPosition, _startTaskEndTextPosition;
+    private Vector3 _taskButtonPosition, _taskEndTextPosition;
     private GameObject _practiceDemoObject;
 
     public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
@@ -95,10 +95,9 @@ public class StudyControl : Singleton<StudyControl>
 
     private void Start()
     {
-        _startButtonPosition = TaskButtonsFront.position;
-        _startTaskEndTextPosition = TaskEndText.transform.position;
+        _taskButtonPosition = TaskButtonsFront.position;
+        _taskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
-        TaskButtonsFront.position = Vector3.down * 1000;
 
         if (IsPractice)
         {
@@ -120,9 +119,6 @@ public class StudyControl : Singleton<StudyControl>
     private void Update()
     {
         TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
-
-        if (Input.GetKeyDown(KeyCode.Space)) TaskButtonsFront.position = _startButtonPosition;
-
         if (TargetIndicator == null || ObjectToBeManipulated == null)
         {
             TargetLine.IsVisible = false;
@@ -205,7 +201,6 @@ public class StudyControl : Singleton<StudyControl>
             Destroy(TargetIndicator);
             TargetIndicator = null;
         }
-
         TaskButtonsFront.position = Vector3.down * 1000;
         TaskEndText.transform.position = Vector3.down * 1000;
 
@@ -252,8 +247,8 @@ public class StudyControl : Singleton<StudyControl>
 
     public void OnStudyComplete()
     {
-        if (IsPractice) TaskButtonsFront.position = _startButtonPosition;
-        TaskEndText.transform.position = _startTaskEndTextPosition;
+        if (IsPractice) TaskButtonsFront.position = _taskButtonPosition;
+        TaskEndText.transform.position = _taskEndTextPosition;
     }
 
     private IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
@@ -326,9 +321,5 @@ public class StudyControl : Singleton<StudyControl>
         System.Random rng = new System.Random();
         return positions.OrderBy(_ => rng.Next()).ToList();
     }
-
-    public Vector3 GetVirtualHandPosition(bool isRightHand)
-    {
-        return TechniqueControl.GetVirtualHandPosition(isRightHand);
-    }
 }
+

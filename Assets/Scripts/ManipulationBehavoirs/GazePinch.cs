@@ -4,16 +4,9 @@ public class GazePinch : ManipulationTechnique
 {
     public override string TechniqueName => "GAZE+PINCH";
 
-    public override void Update()
-    {
-        base.Update();
-        VirtualHandPosition = WristPosition;
-    }
-
-    public override void ApplyIndirectGrabbedBehaviour()
+    public override void ApplyGrabbedBehaviour()
     {
         ApplyGazePinchTransform();
-        VirtualHandPosition = WristPosition;
     }
 
     protected void ApplyGazePinchTransform()

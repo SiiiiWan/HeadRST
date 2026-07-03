@@ -1,13 +1,10 @@
 using UnityEngine;
-using Oculus.Interaction;
-using Oculus.Interaction.HandGrab;
 using System.Collections.Generic;
 
 public enum GrabbedState
 {
     NotGrabbed,
-    Grabbed_Indirect,
-    Grabbed_Direct
+    Grabbed
 }
 
 public class ManipulatableObject : MonoBehaviour
@@ -15,8 +12,6 @@ public class ManipulatableObject : MonoBehaviour
     public bool IsHitbyGaze { get; private set; }
     public float AngleToGaze { get; private set; }
     public GrabbedState GrabbedState { get; private set; } = GrabbedState.NotGrabbed;
-    public Grabbable Grabbable;
-    public HandGrabInteractable HandGrabInteractable;
     public ManipulationTechnique ManipulationBehavior { get; private set; }
     public List<Transform> Wedges = new List<Transform>();
 
@@ -53,18 +48,6 @@ public class ManipulatableObject : MonoBehaviour
         if (transform.TryGetComponent<Outline>(out Outline outline))
         {
             outline.enabled = isVisible;
-        }
-    }
-
-    public void DisableDirectGrab()
-    {
-        if (Grabbable != null)
-        {
-            Grabbable.enabled = false;
-        }
-        if (HandGrabInteractable != null)
-        {
-            HandGrabInteractable.enabled = false;
         }
     }
 
