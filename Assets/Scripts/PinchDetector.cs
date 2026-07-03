@@ -16,41 +16,57 @@ public class PinchDetector : Singleton<PinchDetector>
     public float PinchThreshold = 0.01f;
 
     public GameObject righHandPinchBall_index, righHandPinchBall_thumb, leftHandPinchBall_index, leftHandPinchBall_thumb;
+    private bool _warnedMissingPinchBalls;
+
     void Update()
     {
+        if (!HasPinchBallBindings())
+        {
+            if (!_warnedMissingPinchBalls)
+            {
+                Debug.LogWarning("PinchDetector is missing one or more pinch ball bindings. Pinch input is disabled until the bindings are restored.", this);
+                _warnedMissingPinchBalls = true;
+            }
+
+            IsRightPinching = false;
+            IsLeftPinching = false;
+            SetPinchState(PinchState.NotPinching);
+            return;
+        }
+
         UpdatePinchBalls();
 
         IsRightPinching = Vector3.Distance(righHandPinchBall_thumb.transform.position, righHandPinchBall_index.transform.position) < PinchThreshold;
         IsLeftPinching = Vector3.Distance(leftHandPinchBall_thumb.transform.position, leftHandPinchBall_index.transform.position) < PinchThreshold;
 
         StudyControl studyControl = StudyControl.GetInstance();
+        Handedness dominantHand = studyControl != null ? studyControl.DominantHand : Handedness.right;
 
-        if (studyControl.DominantHand == Handedness.right)
+        if (dominantHand == Handedness.right)
         {
-            if (IsRightPinching)
-            {
-                PinchState = PinchState.OneHandPinching;
-            }
-            else
-            {
-                PinchState = PinchState.NotPinching;
-            }
+            PinchState = IsRightPinching ? PinchState.OneHandPinching : PinchState.NotPinching;
         }
         else
         {
-            if (IsLeftPinching)
-            {
-                PinchState = PinchState.OneHandPinching;
-            }
-            else
-            {
-                PinchState = PinchState.NotPinching;
-            }
+            PinchState = IsLeftPinching ? PinchState.OneHandPinching : PinchState.NotPinching;
         }
 
+        SetPinchState(PinchState);
+    }
+
+    private bool HasPinchBallBindings()
+    {
+        return righHandPinchBall_index != null &&
+               righHandPinchBall_thumb != null &&
+               leftHandPinchBall_index != null &&
+               leftHandPinchBall_thumb != null;
+    }
+
+    private void SetPinchState(PinchState pinchState)
+    {
+        PinchState = pinchState;
         IsBothHandsPinching = PinchState == PinchState.BothHandsPinching;
         IsOneHandPinching = PinchState == PinchState.OneHandPinching;
-
         IsNoHandPinching_LastFrame = IsNoHandPinching;
         IsNoHandPinching = PinchState == PinchState.NotPinching;
     }
@@ -80,5 +96,4 @@ public class PinchDetector : Singleton<PinchDetector>
                 leftHandPinchBall_thumb.transform.position = bone.Transform.position;
         }
     }
-
 }

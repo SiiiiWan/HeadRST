@@ -18,8 +18,23 @@ public class HandData : Singleton<HandData>
     public float RightHandSpeed_wrist, LeftHandSpeed_wrist;
     public float RightHandSpeed_pinch, LeftHandSpeed_pinch;
 
+    private bool _warnedMissingHandAnchors;
+
     void Update()
     {
+        if (RightHandAnchor == null || LeftHandAnchor == null)
+        {
+            if (!_warnedMissingHandAnchors)
+            {
+                Debug.LogWarning("HandData is missing left or right hand anchors. Hand tracking data will not update until the bindings are restored.", this);
+                _warnedMissingHandAnchors = true;
+            }
+
+            return;
+        }
+
+        float deltaTime = Mathf.Max(Time.deltaTime, 0.0001f);
+
         RightHandPosition_delta = RightHandAnchor.position - RightHandPosition;
         LeftHandPosition_delta = LeftHandAnchor.position - LeftHandPosition;
 
@@ -29,34 +44,32 @@ public class HandData : Singleton<HandData>
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
 
-        Transform rightTip = GetPinchTipTransform(PinchDetector.GetInstance().RightHand);
+        PinchDetector pinchDetector = PinchDetector.GetInstance();
+        Transform rightTip = GetPinchTipTransform(pinchDetector != null ? pinchDetector.RightHand : null);
         if (rightTip)
         {
             RightPinchTipPosition_delta = rightTip.position - RightPinchTipPosition;
             RightPinchTipRotation_delta = rightTip.rotation * Quaternion.Inverse(RightPinchTipRotation);
             RightPinchTipPosition = rightTip.position;
             RightPinchTipRotation = rightTip.rotation;
-            RightHandSpeed_pinch = RightPinchTipPosition_delta.magnitude / Time.deltaTime;
+            RightHandSpeed_pinch = RightPinchTipPosition_delta.magnitude / deltaTime;
         }
 
-
-        Transform leftTip = GetPinchTipTransform(PinchDetector.GetInstance().LeftHand);
+        Transform leftTip = GetPinchTipTransform(pinchDetector != null ? pinchDetector.LeftHand : null);
         if (leftTip)
         {
             LeftPinchTipPosition_delta = leftTip.position - LeftPinchTipPosition;
             LeftPinchTipRotation_delta = leftTip.rotation * Quaternion.Inverse(LeftPinchTipRotation);
             LeftPinchTipPosition = leftTip.position;
             LeftPinchTipRotation = leftTip.rotation;
-            LeftHandSpeed_pinch = LeftPinchTipPosition_delta.magnitude / Time.deltaTime;
+            LeftHandSpeed_pinch = LeftPinchTipPosition_delta.magnitude / deltaTime;
         }
-
-
 
         RightHandRotation = RightHandAnchor.rotation;
         LeftHandRotation = LeftHandAnchor.rotation;
 
-        RightHandSpeed_wrist = RightHandPosition_delta.magnitude / Time.deltaTime;
-        LeftHandSpeed_wrist = LeftHandPosition_delta.magnitude / Time.deltaTime;
+        RightHandSpeed_wrist = RightHandPosition_delta.magnitude / deltaTime;
+        LeftHandSpeed_wrist = LeftHandPosition_delta.magnitude / deltaTime;
     }
 
     private Transform GetPinchTipTransform(OVRHand hand)

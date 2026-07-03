@@ -190,6 +190,21 @@ public class StudyControl : Singleton<StudyControl>
 
     public void StartTask()
     {
+        ClearCurrentTrial();
+        TaskButtonsFront.position = Vector3.down * 1000;
+        TaskEndText.transform.position = Vector3.down * 1000;
+
+        if (_practiceDemoObject) Destroy(_practiceDemoObject);
+        StartCoroutine(RunTrials_within(OnStudyComplete));
+    }
+
+    public void SkipCurrentTrial()
+    {
+        ClearCurrentTrial();
+    }
+
+    private void ClearCurrentTrial()
+    {
         if (ObjectToBeManipulated != null)
         {
             Destroy(ObjectToBeManipulated);
@@ -201,11 +216,10 @@ public class StudyControl : Singleton<StudyControl>
             Destroy(TargetIndicator);
             TargetIndicator = null;
         }
-        TaskButtonsFront.position = Vector3.down * 1000;
-        TaskEndText.transform.position = Vector3.down * 1000;
 
-        if (_practiceDemoObject) Destroy(_practiceDemoObject);
-        StartCoroutine(RunTrials_within(OnStudyComplete));
+        TargetLine.IsVisible = false;
+        Circle_static.IsVisible = false;
+        Circle_dynamic.IsVisible = false;
     }
 
     private IEnumerator RunTrials_within(System.Action onComplete = null)
@@ -322,4 +336,3 @@ public class StudyControl : Singleton<StudyControl>
         return positions.OrderBy(_ => rng.Next()).ToList();
     }
 }
-

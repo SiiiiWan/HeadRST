@@ -34,7 +34,7 @@ The scene contains the task environment, target objects, gaze input, hand input,
 - `Control`: central study/demo control object.
 - `TechniqueControl`: selects the active technique and dominant hand.
 - `TechniqueInputProvider`: combines eye, head, and hand input into a shared input layer for the techniques.
-- `Eye Gaze`: reads and filters the headset eye gaze ray.
+- `Eye Gaze`: reads, filters, and monitors the headset eye gaze ray.
 - `Hand Tracking`: provides hand pose and pinch input.
 - `PinchBalls`: visualizes pinch positions.
 
@@ -52,6 +52,13 @@ MagicModPitch
 ```
 
 Set `DominantHand` to `left` or `right` before running the demo. The selected technique is activated through the inspector control so only one technique is active at a time.
+
+## Study Controls
+
+Select the `Control` object in the scene to access the study controls.
+
+- `StartTask`: starts the practice or formal task sequence.
+- `Skip Current Trial`: available in Play Mode from the `StudyControl` inspector. It removes the current object and target so the task sequence advances to the next trial.
 
 ## Paper Parameters
 
@@ -73,6 +80,14 @@ Input integration parameters:
 - `t_fixation = 0.25`
 - `theta_fixation = 3`
 
+Eye tracking health parameters on `Eye Gaze`:
+
+- `HeadAlignedWarningAngle = 0.5`
+- `HeadAlignedWarningDuration = 1.5`
+- `HeadAlignedWarningRepeatInterval = 5`
+
+The eye tracking health warning is triggered when the gaze direction stays nearly identical to the head direction for a sustained period. This usually indicates that headset eye tracking is unavailable, disabled, or not calibrated.
+
 ## Running The Demo
 
 1. Open the project with Unity `6000.0.44f1`.
@@ -87,7 +102,59 @@ Input integration parameters:
 ## Troubleshooting
 
 - If gaze input is null, check the headset eye tracking permission and the `Eye Gaze` object references.
+- If gaze and head directions remain aligned and a warning appears, check headset eye tracking permission, calibration, and device support.
 - If hand input is null, check hand tracking permission and the `Hand Tracking` references.
 - If pinch feedback is missing, check the `PinchBalls` objects and the active dominant hand.
 - If technique switching appears stuck, verify that only one of the four technique components is active through `TechniqueControl`.
 - If scene references appear missing after an external edit, reload the scene in Unity before saving it again.
+
+## Appendix Export
+
+For digital appendix submission, export the project as a clean Unity project folder rather than a Git repository. Include only the files needed for Unity to reconstruct the project:
+
+```text
+Assets/
+Packages/
+ProjectSettings/
+README.md
+```
+
+Do not include generated or local-only folders and files:
+
+```text
+.git/
+.agents/
+.codex/
+.vscode/
+Library/
+Logs/
+Temp/
+UserSettings/
+*.csproj
+*.sln
+```
+
+Recommended workflow:
+
+1. Save the scene in Unity.
+2. Close Unity so generated files are not locked.
+3. Create a new folder named `MagicPitch_DigitalAppendix`.
+4. Copy `Assets`, `Packages`, `ProjectSettings`, and `README.md` into that folder.
+5. Zip `MagicPitch_DigitalAppendix` and submit the zip file.
+
+Example PowerShell commands:
+
+```powershell
+$source = "C:\Users\wangh90\Unity Projects\HeadRST"
+$export = "$env:USERPROFILE\Desktop\MagicPitch_DigitalAppendix"
+
+New-Item -ItemType Directory -Force $export
+Copy-Item "$source\Assets" "$export\Assets" -Recurse -Force
+Copy-Item "$source\Packages" "$export\Packages" -Recurse -Force
+Copy-Item "$source\ProjectSettings" "$export\ProjectSettings" -Recurse -Force
+Copy-Item "$source\README.md" "$export\README.md" -Force
+
+Compress-Archive -Path "$export\*" -DestinationPath "$env:USERPROFILE\Desktop\MagicPitch_DigitalAppendix.zip" -Force
+```
+
+After unzipping, the receiver should open the exported folder in Unity `6000.0.44f1`. Unity will regenerate `Library`, `.csproj`, and `.sln` files automatically.
