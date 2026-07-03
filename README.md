@@ -59,14 +59,14 @@ The core tuning parameters are exposed in the inspector and aligned with the pap
 
 Technique parameters:
 
-- `MinDepth = 1`
-- `MaxDepth = 11`
-- `theta_thr = 15`
-- `v_min = 0.1`
-- `v_max = 0.6`
-- `G_min = 0`
-- `G_max = 0.8`
-- `v_hmax = 0.1` for `MagicModPitch`
+- `theta_thr = 15` on `Magic`, `MagicPitch`, and `MagicModPitch`
+- `MinDepth = 1` on `MagicPitch` and `MagicModPitch`
+- `MaxDepth = 11` on `MagicPitch` and `MagicModPitch`
+- `v_min = 0.1` on `MagicPitch` and `MagicModPitch`
+- `v_max = 0.6` on `MagicPitch` and `MagicModPitch`
+- `G_min = 0` on `MagicPitch` and `MagicModPitch`
+- `G_max = 0.8` on `MagicPitch` and `MagicModPitch`
+- `v_hmax = 0.1` on `MagicModPitch`
 
 Input integration parameters:
 

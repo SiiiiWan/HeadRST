@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.XR;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class HeadMovement : Singleton<HeadMovement>
 {
@@ -86,7 +85,6 @@ public class HeadMovement : Singleton<HeadMovement>
     public float DeltaHeadRotation
     {
         get {return Vector3.Angle(CamDir, PreCamDir);}
-        // get {return Quaternion.Angle(CamRotation, PreCamRotation);} // including head roll
     }
 
     private OneEuroFilter _rollSpdFilter, _rollAccFilter;
@@ -148,7 +146,6 @@ public class HeadMovement : Singleton<HeadMovement>
         HeadAcc = acc;
     }
 
-    /// Detects HMD
     private List<InputDevice> devices;
     private InputDeviceCharacteristics desiredCharacteristics;
     private InputDevice inputHeadset;

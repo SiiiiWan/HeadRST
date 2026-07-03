@@ -1,8 +1,21 @@
 using UnityEngine;
 
+public enum StaticState
+{
+    Gaze,
+    Head
+}
+
 public class Magic : GazePinch
 {
     public override string TechniqueName => "MAGIC";
+
+    [Header("MAGIC Parameters")]
+    [SerializeField] protected float theta_thr = 15f;
+
+    public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
+    public float CurrentDistanceToGaze { get; protected set; }
+    public float AngleGazeDirectionToObject { get; protected set; }
 
     public override void ApplyIndirectGrabbedBehaviour()
     {

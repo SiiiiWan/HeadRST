@@ -4,6 +4,20 @@ public class MagicPitch : Magic
 {
     public override string TechniqueName => "MAGICPITCH";
 
+    [Header("MAGICPITCH Parameters")]
+    [SerializeField] protected float MinDepth = 1f;
+    [SerializeField] protected float MaxDepth = 11f;
+    [SerializeField] protected float v_min = 0.1f;
+    [SerializeField] protected float v_max = 0.6f;
+    [SerializeField] protected float G_min = 0f;
+    [SerializeField] protected float G_max = 0.8f;
+
+    public Vector3 HeadDepthOffset { get; protected set; }
+    public float DistanceToGazeAfterAddingHeadDepth { get; protected set; }
+    public float BaseGain { get; protected set; }
+    public float EdgeGain { get; protected set; }
+    public float PitchGain { get; protected set; }
+
     protected override void ApplyHeadStateBehaviour()
     {
         Vector3 objectDirection = (GrabbedObject.transform.position - GazeOrigin).normalized;

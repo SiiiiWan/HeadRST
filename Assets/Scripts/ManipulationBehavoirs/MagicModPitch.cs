@@ -8,6 +8,9 @@ public class MagicModPitch : MagicPitch
     [FormerlySerializedAs("MaxHandSpeed")]
     public float v_hmax = 0.1f;
 
+    public Vector3 HeadDepthOffset_base { get; protected set; }
+    public float Attenuation { get; protected set; } = 1;
+
     public override Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
         HeadDepthOffset_base = base.GetHeadDepthOffset(objectDirection);

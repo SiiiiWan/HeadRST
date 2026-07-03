@@ -1,11 +1,5 @@
 using UnityEngine;
 
-public enum Hand
-{
-    Left,
-    Right
-}
-
 public class HandData : Singleton<HandData>
 {
 
@@ -21,12 +15,8 @@ public class HandData : Singleton<HandData>
     public Quaternion RightHandRotation_delta, LeftHandRotation_delta;
     public Quaternion RightPinchTipRotation_delta, LeftPinchTipRotation_delta;
 
-    public Vector3 RightHandDirection, LeftHandDirection;
-    public Quaternion RightHandDirection_delta, LeftHandDirection_delta;
     public float RightHandSpeed_wrist, LeftHandSpeed_wrist;
     public float RightHandSpeed_pinch, LeftHandSpeed_pinch;
-    public float HandDistance, HandDistance_delta;
-    public Vector3 HandMidPosition, HandMidPosition_delta;
 
     void Update()
     {
@@ -36,17 +26,8 @@ public class HandData : Singleton<HandData>
         RightHandRotation_delta = RightHandAnchor.rotation * Quaternion.Inverse(RightHandRotation);
         LeftHandRotation_delta = LeftHandAnchor.rotation * Quaternion.Inverse(LeftHandRotation);
 
-        RightHandDirection_delta = Quaternion.FromToRotation(RightHandDirection, RightHandAnchor.forward);
-        LeftHandDirection_delta = Quaternion.FromToRotation(LeftHandDirection, LeftHandAnchor.forward);
-
         RightHandPosition = RightHandAnchor.position;
         LeftHandPosition = LeftHandAnchor.position;
-
-        HandDistance_delta = Vector3.Distance(RightHandPosition, LeftHandPosition) - HandDistance;
-        HandDistance = Vector3.Distance(RightHandPosition, LeftHandPosition);
-
-        HandMidPosition_delta = (RightHandPosition + LeftHandPosition) / 2 - HandMidPosition;
-        HandMidPosition = (RightHandPosition + LeftHandPosition) / 2;
 
         Transform rightTip = GetPinchTipTransform(PinchDetector.GetInstance().RightHand);
         if (rightTip)
@@ -76,9 +57,6 @@ public class HandData : Singleton<HandData>
 
         RightHandSpeed_wrist = RightHandPosition_delta.magnitude / Time.deltaTime;
         LeftHandSpeed_wrist = LeftHandPosition_delta.magnitude / Time.deltaTime;
-
-        RightHandDirection = RightHandAnchor.forward;
-        LeftHandDirection = LeftHandAnchor.forward;
     }
 
     private Transform GetPinchTipTransform(OVRHand hand)
@@ -89,16 +67,10 @@ public class HandData : Singleton<HandData>
 
         foreach (var bone in skeleton.Bones)
         {
-            if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip) // Use Hand_IndexTip for OVR //XRHand_IndexTip
+            if (bone.Id == OVRSkeleton.BoneId.XRHand_ThumbTip)
                 return bone.Transform;
         }
         return null;
-    }
-
-
-    public Vector3 GetHandPosition(bool usePinchTip)
-    {
-        return GetHandPosition(StudyControl.GetInstance().DominantHand, usePinchTip);
     }
 
     public Vector3 GetHandPosition(Handedness dominantHand, bool usePinchTip)
@@ -113,11 +85,6 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public Vector3 GetDeltaHandPosition(bool usePinchTip)
-    {
-        return GetDeltaHandPosition(StudyControl.GetInstance().DominantHand, usePinchTip);
-    }
-
     public Vector3 GetDeltaHandPosition(Handedness dominantHand, bool usePinchTip)
     {
         if (dominantHand == Handedness.left)
@@ -128,28 +95,6 @@ public class HandData : Singleton<HandData>
         {
             return usePinchTip ? RightPinchTipPosition_delta : RightHandPosition_delta;
         }
-    }
-
-    public Quaternion GetHandRotation(bool usePinchTip)
-    {
-        return GetHandRotation(StudyControl.GetInstance().DominantHand, usePinchTip);
-    }
-
-    public Quaternion GetHandRotation(Handedness dominantHand, bool usePinchTip)
-    {
-        if (dominantHand == Handedness.left)
-        {
-            return usePinchTip ? LeftPinchTipRotation : LeftHandRotation;
-        }
-        else
-        {
-            return usePinchTip ? RightPinchTipRotation : RightHandRotation;
-        }
-    }
-
-    public Quaternion GetDeltaHandRotation(bool usePinchTip)
-    {
-        return GetDeltaHandRotation(StudyControl.GetInstance().DominantHand, usePinchTip);
     }
 
     public Quaternion GetDeltaHandRotation(Handedness dominantHand, bool usePinchTip)
@@ -164,22 +109,6 @@ public class HandData : Singleton<HandData>
         }
     }
 
-    public float GetHandRotationSpeed(bool usePinchTip)
-    {
-        return GetHandRotationSpeed(StudyControl.GetInstance().DominantHand, usePinchTip);
-    }
-
-    public float GetHandRotationSpeed(Handedness dominantHand, bool usePinchTip)
-    {
-        GetDeltaHandRotation(dominantHand, usePinchTip).ToAngleAxis(out float rotationAngle, out Vector3 axis);
-        return rotationAngle / Time.deltaTime;
-    }
-
-    public float GetHandSpeed(bool usePinchTip)
-    {
-        return GetHandSpeed(StudyControl.GetInstance().DominantHand, usePinchTip);
-    }
-
     public float GetHandSpeed(Handedness dominantHand, bool usePinchTip)
     {
         if (dominantHand == Handedness.left)
@@ -191,43 +120,5 @@ public class HandData : Singleton<HandData>
             return usePinchTip ? RightHandSpeed_pinch : RightHandSpeed_wrist;
         }
     }
-
-    public Vector3 GetHandDirection()
-    {
-        return GetHandDirection(StudyControl.GetInstance().DominantHand);
-    }
-
-    public Vector3 GetHandDirection(Handedness dominantHand)
-    {
-        return dominantHand == Handedness.left ? LeftHandDirection : RightHandDirection;
-    }
-
-    public Quaternion GetHandDirectionDelta()
-    {
-        return GetHandDirectionDelta(StudyControl.GetInstance().DominantHand);
-    }
-
-    public Quaternion GetHandDirectionDelta(Handedness dominantHand)
-    {
-        return dominantHand == Handedness.left ? LeftHandDirection_delta : RightHandDirection_delta;
-    }
-
-    public Transform GetHandTransform(bool usePinchTip)
-    {
-        return GetHandTransform(StudyControl.GetInstance().DominantHand, usePinchTip);
-    }
-
-    public Transform GetHandTransform(Handedness dominantHand, bool usePinchTip)
-    {
-        if (dominantHand == Handedness.left)
-        {
-            return usePinchTip ? GetPinchTipTransform(PinchDetector.GetInstance().LeftHand) : LeftHandAnchor;
-        }
-        else
-        {
-            return usePinchTip ? GetPinchTipTransform(PinchDetector.GetInstance().RightHand) : RightHandAnchor;
-        }
-    }
-
 
 }

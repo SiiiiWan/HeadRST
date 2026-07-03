@@ -158,7 +158,7 @@ public class OneEuroFilter
 			freq = 1.0f/(timestamp-lasttime);
 		lasttime = timestamp;
 		// estimate the current variation per second 
-		float dvalue = x.hasLastRawValue() ? (value - x.lastRawValue())*freq : 0.0f; // FIXME: 0.0 or value? 
+		float dvalue = x.hasLastRawValue() ? (value - x.lastRawValue())*freq : 0.0f;
 		float edvalue = dx.filterWithAlpha(dvalue, alpha(dcutoff));
 		// use it to update the cutoff frequency
 		float cutoff = mincutoff + beta*Mathf.Abs(edvalue);

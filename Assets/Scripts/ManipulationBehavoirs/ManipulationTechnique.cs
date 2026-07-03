@@ -2,27 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum StaticState
-{
-    Gaze,
-    Head
-}
-
 public class ManipulationTechnique : MonoBehaviour
 {
     public virtual string TechniqueName => GetType().Name;
 
-    [Header("Parameters")]
-    [SerializeField] protected float MinDepth = 1f;
-    [SerializeField] protected float MaxDepth = 11f;
-    [SerializeField] protected float theta_thr = 15f;
-    [SerializeField] protected float v_min = 0.1f;
-    [SerializeField] protected float v_max = 0.6f;
-    [SerializeField] protected float G_min = 0f;
-    [SerializeField] protected float G_max = 0.8f;
-
     public ManipulatableObject GrabbedObject { get; private set; }
-    public ManipulatableObject LastGrabbedObject { get; private set; }
     public ManipulatableObject GazingObject { get; private set; }
 
     private TechniqueInputProvider _inputProvider;
@@ -44,54 +28,27 @@ public class ManipulationTechnique : MonoBehaviour
     public Vector3 PinchPosition_delta => InputFrame.PinchPositionDelta;
     public Quaternion PinchRotation_delta => InputFrame.PinchRotationDelta;
     public Vector3 WristPosition => InputFrame.WristPosition;
-    public Vector3 WristPosition_delta => InputFrame.WristPositionDelta;
     public float HandTranslationSpeed => InputFrame.HandTranslationSpeed;
-    public float HandRotationSpeed => InputFrame.HandRotationSpeed;
-    public bool IsHandStablized => InputFrame.IsHandStabilized;
-    public Vector3 VirtualHandPosition_OnGrab { get; private set; }
-    public Vector3 ObjectPosition_OnGrab { get; private set; }
 
     public Vector3 GazeOrigin => InputFrame.GazeOrigin;
     public Vector3 GazeDirection => InputFrame.GazeDirection;
     public bool IsGazeFixating => InputFrame.IsGazeFixating;
-    public bool IsGazeFixating_pre => InputFrame.WasGazeFixating;
-    public Vector3 GazeFixationCentroid => InputFrame.GazeFixationCentroid;
-    public bool IsGazeSaccading => InputFrame.IsGazeSaccading;
-    public Vector3 GazeDirection_OnGazeFixation => InputFrame.GazeDirectionOnGazeFixation;
-    public Vector3 HeadDirection_OnGazeFixation => InputFrame.HeadDirectionOnGazeFixation;
     public float EyeInHeadYAngle => InputFrame.EyeInHeadYAngle;
     public float Filtered_EyeInHeadAngle => InputFrame.FilteredEyeInHeadAngle;
     public float Filtered_EyeInHeadAngle_Pre => InputFrame.FilteredEyeInHeadAnglePrevious;
     public float EyeInHeadXAngle => InputFrame.EyeInHeadXAngle;
-    public float EyeInHeadYAngle_OnGazeFixation => InputFrame.EyeInHeadYAngleOnGazeFixation;
     public Vector3 Filtered_HandMovementVector => InputFrame.FilteredHandMovementVector;
 
     public Vector3 HeadForward => InputFrame.HeadForward;
-    public Vector3 HeadRight => InputFrame.HeadRight;
-    public Vector3 HeadPosition => InputFrame.HeadPosition;
-    public bool IsHeadFixating => InputFrame.IsHeadFixating;
-    public bool IsHeadFixating_pre => InputFrame.WasHeadFixating;
-    public Vector3 HeadFixationCentroid => InputFrame.HeadFixationCentroid;
     public float HeadSpeed => InputFrame.HeadSpeed;
-    public float HeadYAngle => InputFrame.HeadYAngle;
     public float DeltaHeadY => InputFrame.DeltaHeadY;
-    public float Limit_HeadY_Up => InputFrame.LimitHeadYUp;
-    public float Limit_HeadY_Down => InputFrame.LimitHeadYDown;
-    public float HeadYAngle_OnGazeFixation => InputFrame.HeadYAngleOnGazeFixation;
 
     public List<ManipulatableObject> ObjectsInGazeCone { get; private set; } = new List<ManipulatableObject>();
 
     public virtual void TriggerOnSingleHandGrabbed(ManipulatableObject obj, GrabbedState grabbedState)
     {
         GrabbedObject = obj;
-        LastGrabbedObject = obj;
         GrabbedObject.SetGrabbedState(grabbedState);
-        StudyControl.GetInstance().IsAfterFirstPickUpInTrial = true;
-
-        TriggerOnGazeFixation();
-
-        VirtualHandPosition_OnGrab = VirtualHandPosition;
-        ObjectPosition_OnGrab = GrabbedObject.transform.position;
     }
 
     public virtual void ApplyIndirectGrabbedBehaviour() { }
@@ -105,7 +62,6 @@ public class ManipulationTechnique : MonoBehaviour
         GrabbedObject = null;
     }
 
-    public virtual void TriggerOnLookAtHandBehavior() { }
     public virtual void TriggerOnLookAtNewObjectBehavior() { }
 
     public virtual void Awake()
@@ -184,24 +140,6 @@ public class ManipulationTechnique : MonoBehaviour
         return k1 + (k2 - k1) / (v2 - v1) * (x - v1);
     }
 
-    public void TriggerOnGazeFixation()
-    {
-        InputProvider.CaptureGazeFixation();
-    }
-
-    public void ObjectHighlight(bool highlight, ManipulatableObject obj)
-    {
-        if (obj.TryGetComponent(out Outline outline))
-        {
-            outline.enabled = highlight;
-        }
-    }
-
-    public void UpdateHeadInputRange()
-    {
-        InputProvider.Refresh();
-    }
-
     public void UpdateAndSortObjectInGazeConeList()
     {
         ManipulatableObject[] anchors = FindObjectsByType<ManipulatableObject>(FindObjectsSortMode.None);
@@ -215,22 +153,7 @@ public class ManipulationTechnique : MonoBehaviour
         ObjectsInGazeCone.AddRange(sortedAnchors);
     }
 
-    public StaticState CurrentState { get; protected set; } = StaticState.Gaze;
-
     public float VisualGainValue { get; protected set; }
     public Vector3 OffsetAddedByHand { get; protected set; }
     public float AngleRotatedByHand { get; protected set; }
-    public float CurrentDistanceToGaze { get; protected set; }
-    public Vector3 HeadDepthOffset { get; protected set; }
-    public float DistanceToGazeAfterAddingHeadDepth { get; protected set; }
-    public float AngleGazeDirectionToObject { get; protected set; }
-
-    public float theta_gain_min { get; protected set; } = 30;
-    public float theta_gain_max { get; protected set; } = 10;
-    public float BaseGain { get; protected set; }
-    public float EdgeGain { get; protected set; }
-    public float PitchGain { get; protected set; }
-
-    public Vector3 HeadDepthOffset_base { get; protected set; }
-    public float Attenuation { get; protected set; } = 1;
 }

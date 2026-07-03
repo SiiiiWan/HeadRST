@@ -1,8 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using System.Linq;
-using System.Collections;
 
 public enum CubePositionLabels
 {
@@ -16,13 +16,11 @@ public enum CubePositionLabels
     BackLowerRight
 }
 
-public enum DockingDirections { forward, backward }
 public enum Handedness { left, right }
 
 public class StudyControl : Singleton<StudyControl>
 {
     [Header("Study Settings")]
-    public string ParticipantID;
     [SerializeField] private TechniqueControl techniqueControl;
     public bool IsPractice;
 
@@ -38,12 +36,10 @@ public class StudyControl : Singleton<StudyControl>
     public Handedness DominantHand => TechniqueControl != null ? TechniqueControl.DominantHand : Handedness.right;
     public ManipulationTechnique ManipulationBehavior => TechniqueControl != null ? TechniqueControl.ManipulationBehavior : null;
 
-    [Header("Study States")]
-    public bool StudyFlag = false; // Indicates if the study is currently running
-    public int TotalTrialCount;
-    public bool IsAfterFirstPickUpInTrial = false;
-    public CubePositionLabels StartPositionLabel;
-    public float TaskMinDepth, TaskMaxDepth, TaskAmplitude;
+    [Header("Task State")]
+    public float TaskMinDepth;
+    public float TaskMaxDepth;
+    public float TaskAmplitude;
 
     [Header("Bindings")]
     public TextMeshPro TaskText;
@@ -57,20 +53,36 @@ public class StudyControl : Singleton<StudyControl>
     [HideInInspector] public Linescript TargetLine;
     [HideInInspector] public Linescript Circle_static, Circle_dynamic;
 
-    public List<((float depth_min, float depth_max), float amplitude)> DepthAmplitudeCombinations = new List<((float, float), float)>();
-    public List<(float depth, DockingDirections direction)> DepthDirectionCombinations = new List<(float, DockingDirections)>();
-
-    [HideInInspector] public List<CubePositionLabels> StartPositionLabelsList = new List<CubePositionLabels>();
-
-
-    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f)};
-    public List<(float min, float max)> DepthPairs_practice { get; private set; } = new List<(float, float)> {(2f, 6f)};
-
+    public List<(float min, float max)> DepthPairs_within { get; private set; } = new List<(float, float)> { (2f, 4f), (2f, 6f), (2f, 10f) };
+    public List<(float min, float max)> DepthPairs_practice { get; private set; } = new List<(float, float)> { (2f, 6f) };
     public List<float> Amplitudes_within { get; private set; } = new List<float> { 15f, 30f, 60f };
     public List<float> Amplitudes_practice { get; private set; } = new List<float> { 30f };
 
     private Vector3 _startButtonPosition, _startTaskEndTextPosition;
-    private GameObject practiceDemoObject;
+    private GameObject _practiceDemoObject;
+
+    public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
+    public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
+    public Vector3 HeadPosition_OnTrialStart { get; private set; } = Vector3.zero;
+    public Vector3 HeadPosition_OnTaskStart { get; private set; } = Vector3.zero;
+    public Dictionary<CubePositionLabels, Vector3> CubePositions { get; private set; } = new Dictionary<CubePositionLabels, Vector3>();
+
+    public float TaskSpatialDistance => Vector3.Distance(TrialStartPosition, TrialEndPosition);
+
+    public float ProjectedDistanceOnTaskAxis
+    {
+        get
+        {
+            if (ObjectToBeManipulated == null) return 0;
+
+            Vector3 taskVector = TrialEndPosition - TrialStartPosition;
+            Vector3 objectVector = ObjectToBeManipulated.transform.position - TrialStartPosition;
+
+            return Vector3.Project(objectVector, taskVector).magnitude * (Vector3.Dot(objectVector, taskVector) > 0 ? 1 : -1);
+        }
+    }
+
+    public float TaskProgress => ProjectedDistanceOnTaskAxis / TaskSpatialDistance;
 
     protected override void Awake()
     {
@@ -81,9 +93,8 @@ public class StudyControl : Singleton<StudyControl>
         TargetLine.IsVisible = false;
     }
 
-    void Start()
+    private void Start()
     {
-        // UpdateHandVisuals();
         _startButtonPosition = TaskButtonsFront.position;
         _startTaskEndTextPosition = TaskEndText.transform.position;
         TaskEndText.transform.position = Vector3.down * 1000;
@@ -97,19 +108,17 @@ public class StudyControl : Singleton<StudyControl>
 
     private IEnumerator WaitAndSpawnPracticeObject()
     {
-        // Wait until the main camera's position is not Vector3.zero
         while (Camera.main.transform.position == Vector3.zero)
         {
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        Vector3 spawnPosition = Camera.main.transform.position + (5 * Vector3.forward);
-        practiceDemoObject = SpawnPrefab(ObjectPrefab, spawnPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
+        Vector3 spawnPosition = Camera.main.transform.position + 5 * Vector3.forward;
+        _practiceDemoObject = SpawnPrefab(ObjectPrefab, spawnPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
     }
 
-    void Update()
+    private void Update()
     {
-        // UpdateHandVisuals();
         TaskText.text = IsPractice ? "Start Practice" : "Start Formal Test";
 
         if (Input.GetKeyDown(KeyCode.Space)) TaskButtonsFront.position = _startButtonPosition;
@@ -119,7 +128,7 @@ public class StudyControl : Singleton<StudyControl>
             TargetLine.IsVisible = false;
             Circle_static.IsVisible = false;
             Circle_dynamic.IsVisible = false;
-            return; // No target indicator to check
+            return;
         }
 
         UpdateTaskVisualFeedbacks();
@@ -129,7 +138,8 @@ public class StudyControl : Singleton<StudyControl>
 
         if (ManipulationBehavior != null && inputProvider.Current.PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
-            if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo || TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
+            DockingTarget dockingTarget = TargetIndicator.GetComponent<DockingTarget>();
+            if (dockingTarget.PoseAligned_200msAgo || dockingTarget.IsPoseAligned())
             {
                 Destroy(ObjectToBeManipulated);
                 Destroy(TargetIndicator);
@@ -141,9 +151,8 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
-    void UpdateTaskVisualFeedbacks()
+    private void UpdateTaskVisualFeedbacks()
     {
-
         TargetLine.SetPosition(TargetIndicator.transform.position, ObjectToBeManipulated.transform.position);
 
         float staticCircleRadius = TargetIndicator.transform.localScale.x * 1.2f;
@@ -152,22 +161,21 @@ public class StudyControl : Singleton<StudyControl>
         Vector3 camToObjectVector = ObjectToBeManipulated.transform.position - HeadPosition_OnTrialStart;
         Vector3 camToTargetVector = TargetIndicator.transform.position - HeadPosition_OnTrialStart;
         float projectedDistanceOnDepthAxis = Vector3.Project(camToObjectVector, camToTargetVector).magnitude;
-
         float depthProgress = Mathf.Max(0, 3 * (projectedDistanceOnDepthAxis / camToTargetVector.magnitude) - 2);
+
         Circle_dynamic.DrawRing(TargetIndicator.transform.position, staticCircleRadius * depthProgress);
 
         float circleLineWidth = MathFunctions.Deg2Meter(0.1f, camToTargetVector.magnitude);
-
         Circle_dynamic.SetWidth(circleLineWidth);
         Circle_static.SetWidth(circleLineWidth);
 
-        bool showRings = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold() && Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) < TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold() * 4;
+        float positionThreshold = TargetIndicator.GetComponent<DockingTarget>().GetPositionAlignmentThreshold();
+        bool showRings = Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) > positionThreshold &&
+                         Mathf.Abs(camToObjectVector.magnitude - camToTargetVector.magnitude) < positionThreshold * 4;
 
         Circle_static.IsVisible = showRings;
         Circle_dynamic.IsVisible = showRings;
-
     }
-
 
     public GameObject SpawnPrefab(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 scale)
     {
@@ -180,16 +188,8 @@ public class StudyControl : Singleton<StudyControl>
     public void StartTrial(Vector3 startPos, Vector3 endPos, out GameObject startObj, out GameObject target)
     {
         HeadPosition_OnTrialStart = Camera.main.transform.position;
-        // Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, startPos)) * Vector3.one;
         startObj = SpawnPrefab(ObjectPrefab, startPos, Quaternion.identity, ObjectPrefab.transform.localScale);
-
-        // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(HeadPosition_OnTrialStart, endPos)) * Vector3.one;
         target = SpawnPrefab(TargetPrefab, endPos, startObj.transform.rotation, TargetPrefab.transform.localScale);
-
-        // print("Trial target size: " + MathFunctions.Meter2Deg(scale.x, Vector3.Distance(Camera.main.transform.position, endPos)) + " degrees");
-
-        TotalTrialCount++;
-        IsAfterFirstPickUpInTrial = false;
     }
 
     public void StartTask()
@@ -206,53 +206,26 @@ public class StudyControl : Singleton<StudyControl>
             TargetIndicator = null;
         }
 
-        TotalTrialCount = 0;
-
         TaskButtonsFront.position = Vector3.down * 1000;
         TaskEndText.transform.position = Vector3.down * 1000;
 
-        // if (TaskMode == TaskMode.depth_only) StartCoroutine(RunTrials_between());
-        // else
-
-        if(practiceDemoObject) Destroy(practiceDemoObject);
+        if (_practiceDemoObject) Destroy(_practiceDemoObject);
         StartCoroutine(RunTrials_within(OnStudyComplete));
     }
 
-    public Vector3 TrialStartPosition { get; private set; } = Vector3.zero;
-    public Vector3 TrialEndPosition { get; private set; } = Vector3.zero;
-    public Vector3 HeadPosition_OnTrialStart { get; private set; } = Vector3.zero;
-    public Vector3 HeadPosition_OnTaskStart { get; private set; } = Vector3.zero;
-
-    public float TaskSpatialDistance { get { return Vector3.Distance(TrialStartPosition, TrialEndPosition); } }
-    public float ProjectedDistanceOnTaskAxis
-    {
-        get
-        {
-            if (ObjectToBeManipulated == null) return 0;
-
-            Vector3 taskVector = TrialEndPosition - TrialStartPosition;
-            Vector3 objectVector = ObjectToBeManipulated.transform.position - TrialStartPosition;
-
-            return Vector3.Project(objectVector, taskVector).magnitude * (Vector3.Dot(objectVector, taskVector) > 0 ? 1 : -1);
-        }
-    }
-    public float TaskProgress { get { return ProjectedDistanceOnTaskAxis / TaskSpatialDistance; } }
-
     private IEnumerator RunTrials_within(System.Action onComplete = null)
     {
-        StudyFlag = true;
-
         HeadPosition_OnTaskStart = Camera.main.transform.position;
-        DepthAmplitudeCombinations = IsPractice ? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice) : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
+        List<((float depth_min, float depth_max), float amplitude)> depthAmplitudeCombinations = IsPractice
+            ? GetShuffledDepth_Amplitude_Combinations(DepthPairs_practice, Amplitudes_practice)
+            : GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
 
-        foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
+        foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in depthAmplitudeCombinations)
         {
             var depthPair = depthAmpCondition.Item1;
-            float amplitude = depthAmpCondition.Item2;
-
             TaskMinDepth = depthPair.depth_min;
             TaskMaxDepth = depthPair.depth_max;
-            TaskAmplitude = amplitude;
+            TaskAmplitude = depthAmpCondition.Item2;
 
             CubePositions = GetCubePositions_Visual(
                 viewPoint: HeadPosition_OnTaskStart,
@@ -262,22 +235,18 @@ public class StudyControl : Singleton<StudyControl>
                 angularDeviation_horizontal: TaskAmplitude,
                 angularDeviation_vertical: TaskAmplitude);
 
-            StartPositionLabelsList = GetShuffledStartPositionLabels();
+            List<CubePositionLabels> startPositionLabelsList = GetShuffledStartPositionLabels();
 
-            foreach (CubePositionLabels startPosition in StartPositionLabelsList)
+            foreach (CubePositionLabels startPosition in startPositionLabelsList)
             {
-                StartPositionLabel = startPosition;
                 TrialStartPosition = CubePositions[startPosition];
                 TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
 
                 StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
-
-                // Wait until TargetIndicator is null before continuing to the next trial
                 yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
             }
         }
 
-        StudyFlag = false;
         onComplete?.Invoke();
     }
 
@@ -287,123 +256,38 @@ public class StudyControl : Singleton<StudyControl>
         TaskEndText.transform.position = _startTaskEndTextPosition;
     }
 
-    private void ShowTrials_within()
-    {
-        DepthAmplitudeCombinations = GetShuffledDepth_Amplitude_Combinations(DepthPairs_within, Amplitudes_within);
-
-        foreach (((float depth_min, float depth_max), float amplitude) depthAmpCondition in DepthAmplitudeCombinations)
-        {
-            var depthPair = depthAmpCondition.Item1;
-            float amplitude = depthAmpCondition.Item2;
-
-            CubePositions = GetCubePositions_Visual(
-                viewPoint: Camera.main.transform.position,
-                forwardDir: Vector3.forward,
-                minDepth: depthPair.depth_min,
-                maxDepth: depthPair.depth_max,
-                angularDeviation_horizontal: amplitude,
-                angularDeviation_vertical: amplitude);
-
-            StartPositionLabelsList = GetShuffledStartPositionLabels();
-
-            foreach (CubePositionLabels startPosition in StartPositionLabelsList)
-            {
-                TrialStartPosition = CubePositions[startPosition];
-                TrialEndPosition = CubePositions[GetDiagonalPositionLabel(startPosition)];
-
-                if (depthPair.depth_min < 1f)
-                {
-                    TrialStartPosition += Vector3.down * 0.5f;
-                    TrialEndPosition += Vector3.down * 0.5f;
-                }
-
-                // Vector3 scale_start = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialStartPosition)) * Vector3.one;
-                // Vector3 scale_end = MathFunctions.Deg2Meter(TargetSize, Vector3.Distance(Camera.main.transform.position, TrialEndPosition)) * Vector3.one;
-                GameObject obj = SpawnPrefab(ObjectPrefab, TrialStartPosition, Quaternion.identity, ObjectPrefab.transform.localScale);
-                obj.GetComponent<ManipulatableObject>().enabled = false;
-                // SpawnPrefab(TargetPrefab, TrialEndPosition, Quaternion.identity, scale_end);
-                // print(Vector3.Angle(Vector3.forward, TrialStartPosition - Camera.main.transform.position) + " degrees");
-            }
-        }
-    }
-
-    // private IEnumerator RunTrials_between()
-    // {
-    //     DepthDirectionCombinations = GetShuffledDepth_Direction_Combinations(Depths_between);
-
-    //     foreach ((float depth, DockingDirections direction) depthDirCondition in DepthDirectionCombinations)
-    //     {
-    //         Vector3 closePosition = GetRandomFrontPosition(height: 0.8f, depth: 0.5f, width: 0.6f);
-    //         Vector3 farPosition = Camera.main.transform.position +
-    //                 Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.right) *
-    //                 Quaternion.AngleAxis(Random.Range(-MaxAmplitude_between, MaxAmplitude_between), Vector3.up) *
-    //                 Vector3.forward.normalized * depthDirCondition.depth;
-
-    //         if (depthDirCondition.direction == DockingDirections.forward)
-    //         {
-    //             TrialStartPosition = closePosition;
-    //             TrialEndPosition = farPosition;
-    //         }
-    //         else
-    //         {
-    //             TrialStartPosition = farPosition;
-    //             TrialEndPosition = closePosition;
-    //         }
-
-    //         StartTrial(TrialStartPosition, TrialEndPosition, out ObjectToBeManipulated, out TargetIndicator);
-
-    //         // Wait until TargetIndicator is null before continuing to the next trial
-    //         yield return StartCoroutine(WaitForTargetIndicatorToBeNull(null));
-    //     }
-    // }
-
-
-    IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
+    private IEnumerator WaitForTargetIndicatorToBeNull(System.Action onComplete)
     {
         while (TargetIndicator != null)
         {
-            yield return null; // wait for next frame
+            yield return null;
         }
+
         onComplete?.Invoke();
     }
 
-    public Dictionary<CubePositionLabels, Vector3> CubePositions { get; private set; } = new Dictionary<CubePositionLabels, Vector3>();
-
-    Dictionary<CubePositionLabels, Vector3> GetCubePositions_Visual(
-        Vector3 viewPoint, Vector3 forwardDir, float minDepth, float maxDepth, float angularDeviation_horizontal, float angularDeviation_vertical)
+    private Dictionary<CubePositionLabels, Vector3> GetCubePositions_Visual(
+        Vector3 viewPoint,
+        Vector3 forwardDir,
+        float minDepth,
+        float maxDepth,
+        float angularDeviation_horizontal,
+        float angularDeviation_vertical)
     {
-        angularDeviation_vertical = angularDeviation_vertical / Mathf.Sqrt(2f); 
-        angularDeviation_horizontal = angularDeviation_horizontal / Mathf.Sqrt(2f);
+        angularDeviation_vertical /= Mathf.Sqrt(2f);
+        angularDeviation_horizontal /= Mathf.Sqrt(2f);
 
-        Dictionary<CubePositionLabels, Vector3> positions = new Dictionary<CubePositionLabels, Vector3>
+        return new Dictionary<CubePositionLabels, Vector3>
         {
-            {CubePositionLabels.FrontUpperLeft,
-            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
-
-            {CubePositionLabels.FrontUpperRight,
-            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
-
-            {CubePositionLabels.FrontLowerLeft,
-            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
-
-            {CubePositionLabels.FrontLowerRight,
-            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth},
-
-            {CubePositionLabels.BackUpperLeft,
-            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
-
-            {CubePositionLabels.BackUpperRight,
-            viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
-
-            {CubePositionLabels.BackLowerLeft,
-            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth},
-
-            {CubePositionLabels.BackLowerRight,
-            viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth}
+            { CubePositionLabels.FrontUpperLeft, viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth },
+            { CubePositionLabels.FrontUpperRight, viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth },
+            { CubePositionLabels.FrontLowerLeft, viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth },
+            { CubePositionLabels.FrontLowerRight, viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * minDepth },
+            { CubePositionLabels.BackUpperLeft, viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth },
+            { CubePositionLabels.BackUpperRight, viewPoint + Quaternion.AngleAxis(-angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth },
+            { CubePositionLabels.BackLowerLeft, viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(-angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth },
+            { CubePositionLabels.BackLowerRight, viewPoint + Quaternion.AngleAxis(angularDeviation_vertical, Vector3.right) * Quaternion.AngleAxis(angularDeviation_horizontal, Vector3.up) * forwardDir.normalized * maxDepth }
         };
-
-
-        return positions;
     }
 
     public CubePositionLabels GetDiagonalPositionLabel(CubePositionLabels label)
@@ -422,10 +306,8 @@ public class StudyControl : Singleton<StudyControl>
         }
     }
 
-
     public List<((float depth_min, float depth_max), float amplitude)> GetShuffledDepth_Amplitude_Combinations(List<(float min, float max)> depthPairs, List<float> amplitudes)
     {
-        // Create all unique combinations
         var combinations = new List<((float, float), float)>();
         foreach (var depth in depthPairs)
         {
@@ -435,41 +317,14 @@ public class StudyControl : Singleton<StudyControl>
             }
         }
 
-        // Shuffle the list
-        combinations = combinations.OrderBy(x => new System.Random().Next()).ToList();
-
-        return combinations;
+        return combinations.OrderBy(_ => new System.Random().Next()).ToList();
     }
 
     public List<CubePositionLabels> GetShuffledStartPositionLabels()
     {
         var positions = System.Enum.GetValues(typeof(CubePositionLabels)).Cast<CubePositionLabels>().ToList();
         System.Random rng = new System.Random();
-        positions = positions.OrderBy(x => rng.Next()).ToList();
-        return positions;
-    }
-
-    public void SwitchToGazePinch() => TechniqueControl.SwitchToGazePinch();
-    public void SwitchToMAGIC() => TechniqueControl.SwitchToMAGIC();
-    public void SwitchToMAGICPITCH() => TechniqueControl.SwitchToMAGICPITCH();
-    public void SwitchToMAGMODPITCH() => TechniqueControl.SwitchToMAGMODPITCH();
-
-    public void SwitchToGazeNPinch() => SwitchToGazePinch();
-    public void SwitchToAnywhereHandBase() => SwitchToMAGICPITCH();
-    public void SwitchToAnywhereHandAttenuated() => SwitchToMAGMODPITCH();
-
-    public void SwitchHead() => WarnLegacyControl(nameof(SwitchHead));
-    public void SwitchGaze() => WarnLegacyControl(nameof(SwitchGaze));
-    public void SwitchCentricType() => WarnLegacyControl(nameof(SwitchCentricType));
-    public void SwitchToVisual() => SwitchToGazePinch();
-    public void SwitchToHandRaycast() => WarnLegacyControl(nameof(SwitchToHandRaycast));
-    public void SwitchToIsomorphic() => WarnLegacyControl(nameof(SwitchToIsomorphic));
-    public void SwitchToPrism() => WarnLegacyControl(nameof(SwitchToPrism));
-    public void Reset() => WarnLegacyControl(nameof(Reset));
-
-    private void WarnLegacyControl(string methodName)
-    {
-        Debug.LogWarning($"Legacy control '{methodName}' is not used by the MagicPitch appendix scene.");
+        return positions.OrderBy(_ => rng.Next()).ToList();
     }
 
     public Vector3 GetVirtualHandPosition(bool isRightHand)
