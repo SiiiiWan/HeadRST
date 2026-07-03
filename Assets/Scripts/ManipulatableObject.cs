@@ -22,22 +22,25 @@ public class ManipulatableObject : MonoBehaviour
 
     void Update()
     {
-        //TODO: issue of target hard to hit by gaze at a distance for multiple manipulations
-        // _isHitbyGaze = EyeGaze.GetInstance().GetGazeHitTrans() == transform;
-        AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, transform.position - EyeGaze.GetInstance().GetGazeRay().origin);
-        IsHitbyGaze = AngleToGaze <= 10f || EyeGaze.GetInstance().GetGazeHitTrans() == transform;
+        TechniqueInputProvider inputProvider = TechniqueInputProvider.GetInstance();
+        inputProvider.Refresh();
+
+        Ray gazeRay = inputProvider.Current.GazeRay;
+        AngleToGaze = Vector3.Angle(gazeRay.direction, transform.position - gazeRay.origin);
+        IsHitbyGaze = AngleToGaze <= 10f || IsHitByGazeRay(gazeRay);
         ManipulationBehavior = StudyControl.GetInstance().ManipulationBehavior;
 
         SetOutlineVisibility(IsHitbyGaze && GrabbedState == GrabbedState.NotGrabbed);
-        //TODO: bug: outline feedback and direct grab not aligned; probably because the direct grab detection allows a little bit more outsied of the cube
+    }
 
-        // if (IsHand)
-        // {
-        //     AngleToGaze = Vector3.Angle(EyeGaze.GetInstance().GetGazeRay().direction, HandData.GetInstance().GetHandPosition(usePinchTip: true) - EyeGaze.GetInstance().GetGazeRay().origin);
-        //     IsHitbyGaze = AngleToGaze <= 20f;
-        // } 
+    private bool IsHitByGazeRay(Ray gazeRay)
+    {
+        if (Physics.Raycast(gazeRay, out RaycastHit hit, 100f))
+        {
+            return hit.transform == transform;
+        }
 
-        // transform.localScale = MathFunctions.Deg2Meter(StudyControl.GetInstance().TargetSize, Vector3.Distance(StudyControl.GetInstance().HeadPosition_OnTrialStart, transform.position)) * Vector3.one;
+        return false;
     }
 
     public void SetGrabbedState(GrabbedState state)

@@ -18,7 +18,7 @@ public class GazePinch : ManipulationTechnique
 
     protected void ApplyGazePinchTransform()
     {
-        VisualGainValue = Mathf.Max(1, GetVisualGain(GrabbedObject.transform.position));
+        VisualGainValue = GetVisualGain(GrabbedObject.transform.position);
         OffsetAddedByHand = PinchPosition_delta * VisualGainValue;
         GrabbedObject.transform.position += OffsetAddedByHand;
 

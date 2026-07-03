@@ -32,6 +32,6 @@ public class Magic : GazePinch
     protected virtual void ApplyHeadStateBehaviour()
     {
         AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
-        if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze;
+        if (IsGazeFixating == false && AngleGazeDirectionToObject > theta_thr) CurrentState = StaticState.Gaze;
     }
 }

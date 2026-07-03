@@ -1,12 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EyeGaze : Singleton<EyeGaze>
 {
     public OVREyeGaze LeftEye, RightEye;
-    public bool FilterBlink = true;
-    public bool EyesOpen { get; private set; } = false;
 
     public bool ShowGazeCursor;
     public Transform GazeCursor;
@@ -42,7 +39,6 @@ public class EyeGaze : Singleton<EyeGaze>
     private OneEuroFilter<Vector3> _gazePosFilter;
     private OneEuroFilter _eyeInHeadAngleFilter;
 
-    enum Eye { Left = 0, Right = 1 };
     protected override void Awake()
     {
         base.Awake();
@@ -70,32 +66,8 @@ public class EyeGaze : Singleton<EyeGaze>
 
     void Update()
     {
-
-        // OVRPlugin.EyeGazesState _eyeGazesState = new OVRPlugin.EyeGazesState();
-        // if (!OVRPlugin.GetEyeGazesState(OVRPlugin.Step.Render, -1, ref _eyeGazesState))
-        // {
-        //     Debug.Log("Failed to get eye gaze state from OVR");
-        // }
-
-        // OVRPlugin.EyeGazeState _leftEyeGazeState = _eyeGazesState.EyeGazes[(int)Eye.Left];
-        // OVRPlugin.EyeGazeState _rightEyeGazeState = _eyeGazesState.EyeGazes[(int)Eye.Right];
-
-        // OVRPose _leftEyePose = _leftEyeGazeState.Pose.ToOVRPose().ToHeadSpacePose();
-        // OVRPose _rightEyePose = _rightEyeGazeState.Pose.ToOVRPose().ToHeadSpacePose();
-
-        // _combinedGazeOrigin = Vector3.Lerp(_leftEyePose.position, _rightEyePose.position, 0.5f);
-        // _combinedGazeDir = Vector3.Scale(Quaternion.Slerp(_leftEyePose.orientation, _rightEyePose.orientation, 0.5f).normalized * Vector3.forward, new Vector3(-1,1,-1));
-
-        if (FilterBlink)
-        {
-            if (EyesOpen) _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
-            if (EyesOpen) _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;
-        }
-        else
-        {
-            _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
-            _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;            
-        }
+        _combinedGazeOrigin = Vector3.Lerp(LeftEye.transform.position, RightEye.transform.position, 0.5f);
+        _combinedGazeDir = Quaternion.Slerp(LeftEye.transform.rotation, RightEye.transform.rotation, 0.5f).normalized * Vector3.forward;
 
         _rawGazeOrigin = _combinedGazeOrigin;
         _rawGazeDir = _combinedGazeDir;
@@ -132,25 +104,8 @@ public class EyeGaze : Singleton<EyeGaze>
         _headRotationBuffer.Add(currentHeadRotation);
         if (_headRotationBuffer.Count > FramOffset)
         {
-            _headRotationBuffer.RemoveAt(0); // Remove oldest
+            _headRotationBuffer.RemoveAt(0);
         }
-    }
-
-    // public void OnBlink()
-    // {
-    //     print("Blink detected");
-    // }
-
-    public void OnEyesClosed()
-    {
-        EyesOpen = false;
-        print("Eyes closed");
-    }
-
-    public void OnEyesOpened()
-    {
-        EyesOpen = true;
-        print("Eyes opened");
     }
 
     public Ray GetGazeRay()

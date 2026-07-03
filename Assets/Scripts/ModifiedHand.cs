@@ -44,9 +44,6 @@ namespace Oculus.Interaction.Input.Filter
 #endif
         #region Tuneable Values
         [Header("Settings", order = -1)]
-        [Tooltip("Applies a One Euro Filter when filter parameters are provided")]
-        [SerializeField, Optional]
-        private HandFilterParameterBlock _filterParameters = null;
         public bool isRightHand = true;
         #endregion Tuneable Values
 

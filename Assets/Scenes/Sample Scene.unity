@@ -2815,7 +2815,6 @@ MonoBehaviour:
   _updateAfter: {fileID: 154065456}
   _iModifyDataFromSourceMono: {fileID: 154065456}
   _applyModifier: 1
-  _filterParameters: {fileID: 0}
   isRightHand: 1
 --- !u!4 &154065458
 Transform:
@@ -17603,13 +17602,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1006584912}
-  - component: {fileID: 1006584926}
   - component: {fileID: 1006584915}
   - component: {fileID: 1006584929}
   - component: {fileID: 1006584927}
   - component: {fileID: 1006584928}
   - component: {fileID: 1006584923}
   - component: {fileID: 1006584925}
+  - component: {fileID: 1006584930}
   m_Layer: 0
   m_Name: Control
   m_TagString: Untagged
@@ -17676,8 +17675,15 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f20f1379cf72cdd4480714d22bb0be07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
+  MinDepth: 1
+  MaxDepth: 11
+  theta_thr: 15
+  v_min: 0.1
+  v_max: 0.6
+  G_min: 0
+  G_max: 0.8
 --- !u!114 &1006584925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17690,20 +17696,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ef77b2b3219c94cbdcd6a70bbc0532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHandSpeed: 0.1
---- !u!114 &1006584926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1006584910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 013cec37d8a328f4ea81bbf80aa76838, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LogData: 0
+  MinDepth: 1
+  MaxDepth: 11
+  theta_thr: 15
+  v_min: 0.1
+  v_max: 0.6
+  G_min: 0
+  G_max: 0.8
+  v_hmax: 0.1
 --- !u!114 &1006584927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17716,6 +17716,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99c8cdde9d08db40ad6f0ff5a8e461e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MinDepth: 1
+  MaxDepth: 11
+  theta_thr: 15
+  v_min: 0.1
+  v_max: 0.6
+  G_min: 0
+  G_max: 0.8
 --- !u!114 &1006584928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17728,6 +17735,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e36c962a3c54b04096d3a0d39f9fd54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MinDepth: 1
+  MaxDepth: 11
+  theta_thr: 15
+  v_min: 0.1
+  v_max: 0.6
+  G_min: 0
+  G_max: 0.8
 --- !u!114 &1006584929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17743,6 +17757,24 @@ MonoBehaviour:
   DominantHand: 1
   selectedTechnique: 0
   manipulationBehavior: {fileID: 1006584927}
+--- !u!114 &1006584930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006584910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b06f8d7c74d47479e3d753b0e1d43fa, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  t_fixation: 0.25
+  theta_fixation: 3
+  HeadFixationDuration: 0.25
+  HeadFixationAngle: 1.5
+  HandStabilizeDuration: 0.25
+  HandStabilizeThreshold: 0.3
 --- !u!1 &1014960979
 GameObject:
   m_ObjectHideFlags: 0
@@ -22127,7 +22159,6 @@ MonoBehaviour:
   _updateAfter: {fileID: 1262288076}
   _iModifyDataFromSourceMono: {fileID: 1262288076}
   _applyModifier: 1
-  _filterParameters: {fileID: 0}
   isRightHand: 0
 --- !u!114 &1262288076
 MonoBehaviour:
@@ -25348,7 +25379,6 @@ MonoBehaviour:
   _updateAfter: {fileID: 1450984775}
   _iModifyDataFromSourceMono: {fileID: 1450984775}
   _applyModifier: 1
-  _filterParameters: {fileID: 0}
   isRightHand: 1
 --- !u!1 &1453091880
 GameObject:
@@ -36905,8 +36935,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1992211211}
   - component: {fileID: 1992211210}
-  - component: {fileID: 1992211213}
-  - component: {fileID: 1992211212}
   m_Layer: 0
   m_Name: Eye Gaze
   m_TagString: Untagged
@@ -36928,7 +36956,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftEye: {fileID: 1619776464}
   RightEye: {fileID: 2085531140}
-  FilterBlink: 0
   ShowGazeCursor: 0
   GazeCursor: {fileID: 36583383}
   SaccadeThr: 150
@@ -36955,72 +36982,6 @@ Transform:
   - {fileID: 36583383}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1992211212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992211209}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b28fedd15893244d936b41668dc63de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  faceExpressions: {fileID: 1992211213}
-  useFixedUpdate: 0
-  maxEyesClosedTime: 1
-  blinkParameters:
-  - faceExpression: 13
-    threshold: 0.5
-  - faceExpression: 12
-    threshold: 0.5
-  verbose: 0
-  onEyeClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1992211210}
-        m_TargetAssemblyTypeName: EyeGaze, Assembly-CSharp
-        m_MethodName: OnEyesClosed
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onEyeOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1992211210}
-        m_TargetAssemblyTypeName: EyeGaze, Assembly-CSharp
-        m_MethodName: OnEyesOpened
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onBlink:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1992211213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992211209}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a95044baf65b10c4e89b246d2f881ac9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1993195094
 GameObject:
   m_ObjectHideFlags: 0

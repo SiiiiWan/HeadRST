@@ -1,5 +1,3 @@
-
-using System;
 using UnityEngine;
 
 public class MagicPitch : Magic
@@ -16,34 +14,32 @@ public class MagicPitch : Magic
         GrabbedObject.transform.position = GazeOrigin + objectDirection * Mathf.Clamp(DistanceToGazeAfterAddingHeadDepth, MinDepth, MaxDepth);
 
         AngleGazeDirectionToObject = Vector3.Angle(GazeDirection, GrabbedObject.transform.position - GazeOrigin);
-        if (IsGazeFixating == false && AngleGazeDirectionToObject > 15f) CurrentState = StaticState.Gaze;
+        if (IsGazeFixating == false && AngleGazeDirectionToObject > theta_thr) CurrentState = StaticState.Gaze;
     }
 
     public virtual Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
-        float maxGain = 0.8f;
-        float minGain = 0;
-
-        BaseGain = VitLerp(Math.Abs(HeadSpeed), minGain, maxGain, MinHeadSpeed, MaxHeadSpeed);
-        EdgeGain = EyeHeadGain();
-        return objectDirection * DeltaHeadY * BaseGain * EdgeGain;
+        BaseGain = VitLerp(Mathf.Abs(HeadSpeed), G_min, G_max, v_min, v_max);
+        EdgeGain = GetFScale();
+        PitchGain = EdgeGain * BaseGain;
+        return objectDirection * DeltaHeadY * PitchGain;
     }
 
-    public float EyeHeadGain()
+    public float GetFScale()
     {
         float eyeRange = GetEyeRange(EyeInHeadXAngle, EyeInHeadYAngle);
         float k = 3;
         float boostStartDeg = eyeRange / k;
 
-        float gain = 1;
+        float scaleFactor = 1f;
         float gazeAngleFromHead = Vector3.Angle(GazeDirection, HeadForward);
 
         if (gazeAngleFromHead >= boostStartDeg & Filtered_EyeInHeadAngle > Filtered_EyeInHeadAngle_Pre)
         {
-            gain = LinearDepthFunctionTwoPoints(gazeAngleFromHead, new Vector2(boostStartDeg, 1), new Vector2(eyeRange, k));
+            scaleFactor = LinearDepthFunctionTwoPoints(gazeAngleFromHead, new Vector2(boostStartDeg, 1), new Vector2(eyeRange, k));
         }
 
-        return gain;
+        return scaleFactor;
     }
 
     private float GetEyeRange(float x, float y, float upLim = 15, float downLim = 30, float sideLim = 30)

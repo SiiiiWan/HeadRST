@@ -50,7 +50,6 @@ public class StudyControl : Singleton<StudyControl>
     public TextMeshPro TaskEndText;
     public GameObject TargetPrefab;
     public GameObject ObjectPrefab;
-    public GameObject LeftHand_Virtual, RightHand_Virtual, LeftHandSynth_Virtual, RightHandSynth_Virtual;
     public Transform TaskButtonsFront;
 
     [HideInInspector] public GameObject ObjectToBeManipulated;
@@ -125,7 +124,10 @@ public class StudyControl : Singleton<StudyControl>
 
         UpdateTaskVisualFeedbacks();
 
-        if (ManipulationBehavior != null && PinchDetector.GetInstance().PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
+        TechniqueInputProvider inputProvider = TechniqueInputProvider.GetInstance();
+        inputProvider.Refresh();
+
+        if (ManipulationBehavior != null && inputProvider.Current.PinchState == PinchState.NotPinching && ManipulationBehavior.GrabbedObject != null)
         {
             if (TargetIndicator.GetComponent<DockingTarget>().PoseAligned_200msAgo || TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
             {
@@ -136,35 +138,6 @@ public class StudyControl : Singleton<StudyControl>
                 TargetIndicator = null;
                 AudioPlay.PlayClickSound();
             }
-        }
-
-
-        // if (ManipulationBehavior.GrabbedObject != null && TargetIndicator.GetComponent<DockingTarget>().IsPoseAligned())
-        // {
-        //     Destroy(ObjectToBeManipulated);
-        //     Destroy(TargetIndicator);
-
-        //     ObjectToBeManipulated = null;
-        //     TargetIndicator = null;
-        //     AudioPlay.PlayClickSound();
-        // }
-    }
-
-    void UpdateHandVisuals()
-    {
-        if (DominantHand == Handedness.right)
-        {
-            RightHand_Virtual.SetActive(true);
-            LeftHand_Virtual.SetActive(false);
-            RightHandSynth_Virtual.SetActive(true);
-            LeftHandSynth_Virtual.SetActive(false);
-        }
-        else
-        {
-            RightHand_Virtual.SetActive(false);
-            LeftHand_Virtual.SetActive(true);
-            RightHandSynth_Virtual.SetActive(false);
-            LeftHandSynth_Virtual.SetActive(true);
         }
     }
 

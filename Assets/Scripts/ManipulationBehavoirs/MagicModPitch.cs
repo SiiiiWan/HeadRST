@@ -1,31 +1,30 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MagicModPitch : MagicPitch
 {
     public override string TechniqueName => "MAGMODPITCH";
 
-    public float MaxHandSpeed = 0.1f;
+    [FormerlySerializedAs("MaxHandSpeed")]
+    public float v_hmax = 0.1f;
 
     public override Vector3 GetHeadDepthOffset(Vector3 objectDirection)
     {
         HeadDepthOffset_base = base.GetHeadDepthOffset(objectDirection);
-        Attenuation = HeadAttenuation(HeadDepthOffset_base);
-        return HeadDepthOffset_base * Attenuation;
+        Attenuation = GetAttenuation(HeadDepthOffset_base);
+        return (1f - Attenuation) * HeadDepthOffset_base;
     }
 
-    private float HeadAttenuation(Vector3 headDepthOffset)
+    private float GetAttenuation(Vector3 headDepthOffset)
     {
-        float attenuation = 1;
+        float attenuation = 0f;
 
         Vector3 projectedHandMovementOnGround = MathFunctions.ProjectVectorOntoPlane(Filtered_HandMovementVector, Vector3.up);
         Vector3 projectedHeadDepthOffsetOnGround = MathFunctions.ProjectVectorOntoPlane(headDepthOffset, Vector3.up);
 
-        if (Vector3.Dot(projectedHeadDepthOffsetOnGround, projectedHandMovementOnGround) < 0 || Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0)
+        if (Vector3.Dot(headDepthOffset, Filtered_HandMovementVector) < 0 || Vector3.Dot(projectedHeadDepthOffsetOnGround, projectedHandMovementOnGround) < 0)
         {
-            float maxSpd = MaxHandSpeed;
-            float projectedSpeed = HandTranslationSpeed;
-            float sqrtPart = Mathf.Sqrt(projectedSpeed / maxSpd);
-            attenuation = -sqrtPart + 1f;
+            attenuation = Mathf.Min(Mathf.Sqrt(HandTranslationSpeed / v_hmax), 1f);
         }
 
         return Mathf.Clamp(attenuation, 0, 1);
